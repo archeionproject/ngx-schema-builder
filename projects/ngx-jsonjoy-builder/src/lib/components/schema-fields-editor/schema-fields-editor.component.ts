@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   inject,
   input,
   model,
@@ -22,49 +23,106 @@ import {
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
   asObjectSchema,
+  getEditorType,
   isBooleanSchema,
+  isObjectSchema,
   type JsonSchema,
   type NewField,
+  type ObjectJsonSchema,
+  type SchemaEditorType,
 } from '../../types/json-schema';
 import { AddFieldButtonComponent } from '../schema-editor-internal/add-field-button.component';
 import { SchemaFieldListComponent } from '../schema-editor-internal/schema-field-list.component';
+import { TypeEditorComponent } from '../schema-editor-internal/type-editor.component';
+
+const ROOT_TYPE_OPTIONS: readonly { id: SchemaEditorType; labelKey: keyof Translation }[] = [
+  { id: 'object', labelKey: 'fieldTypeObjectLabel' },
+  { id: 'string', labelKey: 'fieldTypeTextLabel' },
+  { id: 'number', labelKey: 'fieldTypeNumberLabel' },
+  { id: 'boolean', labelKey: 'fieldTypeBooleanLabel' },
+  { id: 'array', labelKey: 'fieldTypeArrayLabel' },
+  { id: 'anyOf', labelKey: 'schemaTypeAnyOf' },
+  { id: 'oneOf', labelKey: 'schemaTypeOneOf' },
+  { id: 'allOf', labelKey: 'schemaTypeAllOf' },
+];
+
+const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
+  string: { type: 'string' },
+  number: { type: 'number' },
+  integer: { type: 'integer' },
+  boolean: { type: 'boolean' },
+  object: { type: 'object' },
+  array: { type: 'array' },
+  null: { type: 'null' },
+  anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+  oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+  allOf: { allOf: [{ type: 'object' }] },
+};
 
 @Component({
   selector: 'lib-jsonjoy-schema-fields-editor',
   standalone: true,
-  imports: [AddFieldButtonComponent, SchemaFieldListComponent],
+  imports: [
+    AddFieldButtonComponent,
+    SchemaFieldListComponent,
+    forwardRef(() => TypeEditorComponent),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
     <div [class]="rootClasses()">
       @if (!readOnly()) {
-        <div class="mb-6 shrink-0">
-          <lib-jsonjoy-add-field-button
-            [autoFocus]="autoFocus()"
-            (addField)="handleAddField($event)"
-            (addPatternField)="handleAddPatternField($event)"
-          />
+        <div class="mb-4 shrink-0 flex items-center gap-2">
+          <label class="text-sm font-medium text-muted-foreground">Root type:</label>
+          <select
+            class="text-sm rounded-md border bg-background px-2 py-1 shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
+            [value]="rootType()"
+            (change)="onRootTypeChange($event)"
+          >
+            @for (option of rootTypeOptions; track option.id) {
+              <option [value]="option.id">{{ t()[option.labelKey] }}</option>
+            }
+          </select>
         </div>
       }
 
-      <div class="grow overflow-auto">
-        @if (hasFields()) {
-          <lib-jsonjoy-schema-field-list
-            [schema]="value()"
-            [readOnly]="readOnly()"
-            [autoFocus]="autoFocus()"
-            (editField)="handleEditField($event)"
-            (deleteField)="handleDeleteField($event)"
-            (editPatternField)="handleEditPatternField($event)"
-            (deletePatternField)="handleDeletePatternField($event)"
-          />
-        } @else {
-          <div class="text-center py-10 text-muted-foreground">
-            <p class="mb-3">{{ t().visualEditorNoFieldsHint1 }}</p>
-            <p class="text-sm">{{ t().visualEditorNoFieldsHint2 }}</p>
+      @if (rootType() === 'object') {
+        @if (!readOnly()) {
+          <div class="mb-6 shrink-0">
+            <lib-jsonjoy-add-field-button
+              [autoFocus]="autoFocus()"
+              (addField)="handleAddField($event)"
+              (addPatternField)="handleAddPatternField($event)"
+            />
           </div>
         }
-      </div>
+        <div class="grow overflow-auto">
+          @if (hasFields()) {
+            <lib-jsonjoy-schema-field-list
+              [schema]="value()"
+              [readOnly]="readOnly()"
+              [autoFocus]="autoFocus()"
+              (editField)="handleEditField($event)"
+              (deleteField)="handleDeleteField($event)"
+              (editPatternField)="handleEditPatternField($event)"
+              (deletePatternField)="handleDeletePatternField($event)"
+            />
+          } @else {
+            <div class="text-center py-10 text-muted-foreground">
+              <p class="mb-3">{{ t().visualEditorNoFieldsHint1 }}</p>
+              <p class="text-sm">{{ t().visualEditorNoFieldsHint2 }}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="grow overflow-auto">
+          <lib-jsonjoy-type-editor
+            [schema]="value()"
+            [readOnly]="readOnly()"
+            (schemaChange)="value.set($event)"
+          />
+        </div>
+      }
     </div>
   `,
 })
@@ -83,6 +141,28 @@ export class SchemaFieldsEditorComponent {
   protected readonly rootClasses = computed(() =>
     cn('p-4 h-full flex flex-col overflow-auto jsonjoy', this.className()),
   );
+
+  protected readonly rootTypeOptions = ROOT_TYPE_OPTIONS;
+
+  protected readonly rootType = computed<SchemaEditorType>(() =>
+    getEditorType(this.value()),
+  );
+
+  protected onRootTypeChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const nextType = target.value as SchemaEditorType;
+    const current = this.value();
+    const preserved: Partial<ObjectJsonSchema> = isObjectSchema(current)
+      ? {
+          ...(current.title !== undefined ? { title: current.title } : {}),
+          ...(current.description !== undefined
+            ? { description: current.description }
+            : {}),
+        }
+      : {};
+    const next = { ...DEFAULT_SCHEMAS[nextType], ...preserved };
+    this.value.set(next);
+  }
 
   protected readonly hasFields = computed(() => {
     const schema = this.value();

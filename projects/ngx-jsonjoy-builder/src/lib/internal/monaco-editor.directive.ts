@@ -32,6 +32,12 @@ export interface JsonjoyMonacoHandle {
   focus(): void;
   setValue(value: string): void;
   getValue(): string;
+  /**
+   * Force a re-measure of the host element's size. Call this when the editor
+   * is unhidden (e.g. its containing `<dialog>` opens) — Monaco snapshots its
+   * container size on mount and does not auto-recover from 0×0.
+   */
+  layout(): void;
 }
 
 /**
@@ -44,16 +50,28 @@ export interface JsonjoyMonacoHandle {
  * set `self.MonacoEnvironment.getWorker` at app bootstrap. Without it,
  * Monaco falls back to inline workers and JSON diagnostics may not work.
  *
- * Vite/esbuild example (used by `@angular/build:application`):
+ * Angular CLI / Vite example (used by `@angular/build:application`):
+ * create two tiny worker entry files in your app source —
  *
  * ```ts
- * import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
- * import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+ * // src/monaco/editor.worker.ts
+ * import 'monaco-editor/esm/vs/editor/editor.worker.js';
+ * ```
  *
+ * ```ts
+ * // src/monaco/json.worker.ts
+ * import 'monaco-editor/esm/vs/language/json/json.worker.js';
+ * ```
+ *
+ * — then wire them up at bootstrap:
+ *
+ * ```ts
  * (self as any).MonacoEnvironment = {
- *   getWorker(_moduleId: string, label: string) {
- *     if (label === 'json') return new JsonWorker();
- *     return new EditorWorker();
+ *   getWorker(_id: string, label: string) {
+ *     const url = label === 'json'
+ *       ? new URL('./monaco/json.worker', import.meta.url)
+ *       : new URL('./monaco/editor.worker', import.meta.url);
+ *     return new Worker(url, { type: 'module' });
  *   },
  * };
  * ```
@@ -186,6 +204,7 @@ export class JsonjoyMonacoEditorDirective {
         this.editor.setValue(value);
       },
       getValue: () => this.editor?.getValue() ?? '',
+      layout: () => this.editor?.layout(),
     };
   }
 }

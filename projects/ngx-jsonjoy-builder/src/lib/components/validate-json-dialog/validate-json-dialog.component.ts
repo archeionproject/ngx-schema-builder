@@ -93,6 +93,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
               language="json"
               [readOnly]="true"
               [value]="schemaText()"
+              (mounted)="onSchemaEditorMounted($event)"
             ></div>
           </div>
         </div>
@@ -214,6 +215,7 @@ export class ValidateJsonDialogComponent {
 
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
   private jsonEditorHandle: JsonjoyMonacoHandle | null = null;
+  private schemaEditorHandle: JsonjoyMonacoHandle | null = null;
   private validationSeq = 0;
 
   constructor() {
@@ -223,9 +225,13 @@ export class ValidateJsonDialogComponent {
       if (!el) return;
       if (shouldOpen && !el.open) {
         el.showModal();
-        if (this.autoFocus()) {
-          this.jsonEditorHandle?.focus();
-        }
+        requestAnimationFrame(() => {
+          this.jsonEditorHandle?.layout();
+          this.schemaEditorHandle?.layout();
+          if (this.autoFocus()) {
+            this.jsonEditorHandle?.focus();
+          }
+        });
       } else if (!shouldOpen && el.open) {
         el.close();
       }
@@ -254,8 +260,18 @@ export class ValidateJsonDialogComponent {
   protected onJsonEditorMounted(handle: JsonjoyMonacoHandle): void {
     this.jsonEditorHandle = handle;
     this.jsonEditorLoaded.set(true);
-    if (this.open() && this.autoFocus()) {
-      handle.focus();
+    if (this.open()) {
+      handle.layout();
+      if (this.autoFocus()) {
+        handle.focus();
+      }
+    }
+  }
+
+  protected onSchemaEditorMounted(handle: JsonjoyMonacoHandle): void {
+    this.schemaEditorHandle = handle;
+    if (this.open()) {
+      handle.layout();
     }
   }
 

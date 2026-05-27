@@ -43,8 +43,8 @@ import { ButtonDirective } from '../ui/button.directive';
         <p class="text-sm text-muted-foreground">{{ t().inferrerDescription }}</p>
       </div>
 
-      <div class="flex-1 min-h-0 py-2 flex flex-col">
-        <div class="border rounded-md flex-1 overflow-hidden relative h-[450px]">
+      <div class="py-2">
+        <div class="border rounded-md overflow-hidden relative h-[450px]">
           <div
             libJsonjoyMonacoEditor
             class="absolute inset-0"
@@ -115,9 +115,14 @@ export class InferSchemaDialogComponent {
       if (!el) return;
       if (shouldOpen && !el.open) {
         el.showModal();
-        if (this.autoFocus()) {
-          this.editorHandle?.focus();
-        }
+        // Monaco snapshots size on mount; the dialog was display:none then, so
+        // re-measure now that the host has real dimensions.
+        requestAnimationFrame(() => {
+          this.editorHandle?.layout();
+          if (this.autoFocus()) {
+            this.editorHandle?.focus();
+          }
+        });
       } else if (!shouldOpen && el.open) {
         el.close();
       }
@@ -127,8 +132,11 @@ export class InferSchemaDialogComponent {
   protected onEditorMounted(handle: JsonjoyMonacoHandle): void {
     this.editorHandle = handle;
     this.editorLoaded.set(true);
-    if (this.open() && this.autoFocus()) {
-      handle.focus();
+    if (this.open()) {
+      handle.layout();
+      if (this.autoFocus()) {
+        handle.focus();
+      }
     }
   }
 
