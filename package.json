@@ -1,0 +1,45 @@
+{
+  "name": "ngx-jsonjoy-builder-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve demo",
+    "build": "ng build ngx-jsonjoy-builder",
+    "build:demo": "ng build demo",
+    "watch": "ng build ngx-jsonjoy-builder --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint"
+  },
+  "dependencies": {
+    "@angular/animations": "^21.2.14",
+    "@angular/cdk": "^21.2.0",
+    "@angular/common": "^21.2.14",
+    "@angular/compiler": "^21.2.14",
+    "@angular/core": "^21.2.14",
+    "@angular/forms": "^21.2.14",
+    "@angular/platform-browser": "^21.2.14",
+    "@angular/router": "^21.2.14",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "clsx": "^2.1.1",
+    "monaco-editor": "^0.53.0",
+    "rxjs": "~7.8.0",
+    "tailwind-merge": "^2.5.5",
+    "tslib": "^2.3.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.0",
+    "@angular/cli": "^21.2.0",
+    "@angular/compiler-cli": "^21.2.0",
+    "@types/node": "^22.10.0",
+    "ng-packagr": "^21.2.3",
+    "tailwindcss": "^4.1.12",
+    "@tailwindcss/postcss": "^4.1.12",
+    "postcss": "^8.4.49",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.18",
+    "jsdom": "^28.1.0"
+  }
+}
