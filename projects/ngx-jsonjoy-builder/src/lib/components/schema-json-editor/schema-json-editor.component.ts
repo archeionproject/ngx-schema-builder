@@ -1,44 +1,179 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  PLATFORM_ID,
+  computed,
+  effect,
   inject,
   input,
   model,
+  signal,
+  viewChild,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
-import type { Translation } from '../../i18n/translation-keys';
+import { JsonjoyMonacoEditorDirective } from '../../internal/monaco-editor.directive';
 import { JsonjoyTranslationService } from '../../services/translation.service';
+import type { Translation } from '../../i18n/translation-keys';
 import type { JsonSchema } from '../../types/json-schema';
 
 /**
- * Angular equivalent of React `<SchemaJsonEditor>`. Renders only the
+ * Angular equivalent of React `<SchemaJsonEditor>`. Renders the
  * Monaco-backed JSON source editor with the JSON Schema draft-07
- * meta-schema enabled.
+ * meta-schema enabled and a download button.
  */
 @Component({
   selector: 'lib-jsonjoy-schema-json-editor',
   standalone: true,
-  imports: [
-    // TODO (deliverable 4): JsonjoyMonacoEditorDirective, LucideAngularModule.
-  ],
-  templateUrl: './schema-json-editor.component.html',
-  styleUrls: ['./schema-json-editor.component.scss'],
+  imports: [JsonjoyMonacoEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
+  template: `
+    <div class="relative overflow-hidden h-full flex flex-col jsonjoy">
+      <div
+        class="flex items-center justify-between bg-secondary/80 backdrop-blur-xs px-4 py-2 border-b shrink-0"
+      >
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1" />
+            <path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1" />
+          </svg>
+          <span class="font-medium text-sm">{{ t().visualizerSource }}</span>
+        </div>
+        <button
+          type="button"
+          class="p-1.5 hover:bg-secondary rounded-md transition-colors"
+          [title]="t().visualizerDownloadTitle"
+          (click)="onDownload()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </button>
+      </div>
+      <div class="grow flex min-h-0">
+        <div
+          #editorHost
+          libJsonjoyMonacoEditor
+          class="monaco-editor-container w-full h-full"
+          language="json"
+          [readOnly]="readOnly()"
+          [autoFocus]="autoFocus()"
+          [(value)]="jsonText"
+        ></div>
+        @if (!loaded()) {
+          <div
+            class="absolute inset-x-0 bottom-0 top-12 flex items-center justify-center bg-secondary/30"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="animate-spin"
+            >
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+          </div>
+        }
+      </div>
+    </div>
+  `,
 })
 export class SchemaJsonEditorComponent {
   readonly value = model<JsonSchema>({ type: 'object' });
-  readonly defaultValue = input<JsonSchema | undefined>(undefined);
   readonly readOnly = input<boolean>(false);
   readonly autoFocus = input<boolean>(true);
   readonly locale = input<Translation | undefined>(undefined);
   readonly messages = input<Partial<Translation> | undefined>(undefined);
 
   private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.withOverrides(this.locale, this.messages);
+  private readonly platformId = inject(PLATFORM_ID);
+  protected readonly t = this.translations.withOverrides(
+    this.locale,
+    this.messages,
+  );
 
-  // TODO (deliverable 4):
-  //   - JSON.stringify(value(), null, 2) <-> string text bridge
-  //   - try/catch parse on text change; ignore parse errors (Monaco surfaces them)
-  //   - handleDownload via Blob + anchor click
+  private readonly editorDirective = viewChild.required(
+    JsonjoyMonacoEditorDirective,
+  );
+
+  /**
+   * Pretty-printed mirror of the bound schema. Pushed into Monaco via the
+   * directive's two-way `value`. Updated by `effect()` when `value()` changes
+   * externally; the directive writes back to this signal when the user edits.
+   */
+  protected readonly jsonText = signal(this.stringify(this.value()));
+
+  protected readonly loaded = computed(() =>
+    this.editorDirective().loaded(),
+  );
+
+  constructor() {
+    effect(() => {
+      const next = this.stringify(this.value());
+      if (next === this.jsonText()) return;
+      this.jsonText.set(next);
+    });
+
+    effect(() => {
+      const raw = this.jsonText();
+      if (this.readOnly()) return;
+      try {
+        const parsed = JSON.parse(raw) as JsonSchema;
+        const current = this.stringify(this.value());
+        if (current === raw) return;
+        this.value.set(parsed);
+      } catch {
+        // Monaco surfaces the parse error inline — silently ignore here.
+      }
+    });
+  }
+
+  protected onDownload(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const content = this.stringify(this.value());
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = this.t().visualizerDownloadFileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  }
+
+  private stringify(value: JsonSchema): string {
+    return JSON.stringify(value, null, 2);
+  }
 }

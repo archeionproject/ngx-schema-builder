@@ -1,23 +1,62 @@
 import {
+  DestroyRef,
   Directive,
   ElementRef,
+  PLATFORM_ID,
+  afterNextRender,
+  effect,
   inject,
   input,
   model,
   output,
+  signal,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import type * as Monaco from 'monaco-editor';
 
 import {
-  type MonacoEditorOptions,
+  DEFAULT_MONACO_EDITOR_OPTIONS,
   JsonjoyMonacoThemeService,
+  type MonacoEditorOptions,
 } from '../services/monaco-theme.service';
 import type { JsonSchema } from '../types/json-schema';
+
+/**
+ * Imperative handle emitted via the `mounted` output once Monaco has
+ * finished loading. Consumers (e.g. `ValidateJsonDialog`) use this to
+ * reveal a line/column without leaking the raw editor instance across
+ * the directive boundary.
+ */
+export interface JsonjoyMonacoHandle {
+  revealError(line: number, column: number): void;
+  focus(): void;
+  setValue(value: string): void;
+  getValue(): string;
+}
 
 /**
  * Replaces `@monaco-editor/react`. Attached to a host `<div>`, lazy-loads
  * `monaco-editor`, creates an editor instance, and bridges Monaco's
  * imperative API to Angular signals.
+ *
+ * **Consumer setup — Monaco workers:** This library does not bundle
+ * Monaco's worker registration (it is bundler-specific). Consumers must
+ * set `self.MonacoEnvironment.getWorker` at app bootstrap. Without it,
+ * Monaco falls back to inline workers and JSON diagnostics may not work.
+ *
+ * Vite/esbuild example (used by `@angular/build:application`):
+ *
+ * ```ts
+ * import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+ * import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+ *
+ * (self as any).MonacoEnvironment = {
+ *   getWorker(_moduleId: string, label: string) {
+ *     if (label === 'json') return new JsonWorker();
+ *     return new EditorWorker();
+ *   },
+ * };
+ * ```
  *
  * Zoneless note: Monaco callbacks run outside Angular's zone. Signal
  * writes inside those callbacks auto-schedule change detection, so no
@@ -28,30 +67,125 @@ import type { JsonSchema } from '../types/json-schema';
   exportAs: 'libJsonjoyMonacoEditor',
 })
 export class JsonjoyMonacoEditorDirective {
-  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly themeService = inject(JsonjoyMonacoThemeService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  /** Editor content. Two-way bound. */
   readonly value = model<string>('');
-  /** Editor language id. Defaults to `'json'`. */
   readonly language = input<string>('json');
-  /** Read-only flag. */
   readonly readOnly = input<boolean>(false);
-  /** Whether to focus the editor once it mounts. */
   readonly autoFocus = input<boolean>(false);
-  /** Override default editor options. */
   readonly options = input<MonacoEditorOptions | undefined>(undefined);
-  /** When set, the JSON language is configured to validate against this schema. */
   readonly schema = input<JsonSchema | undefined>(undefined);
 
-  /** Emits when Monaco has finished loading and the editor is mounted. */
-  readonly mounted = output<unknown>();
+  readonly mounted = output<JsonjoyMonacoHandle>();
 
-  // TODO (deliverable 4):
-  //   - lazy import('monaco-editor')
-  //   - call themeService.defineThemes(monaco) + configureJsonDefaults(monaco, schema)
-  //   - create editor with merged options
-  //   - subscribe to onDidChangeModelContent → this.value.set(model.getValue())
-  //   - apply readOnly / language / schema changes via effect()
-  //   - dispose on destroy
+  private readonly _loaded = signal(false);
+  readonly loaded = this._loaded.asReadonly();
+
+  private editor: Monaco.editor.IStandaloneCodeEditor | null = null;
+  private monaco: typeof Monaco | null = null;
+  private suppressNextChange = false;
+
+  constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+      afterNextRender(() => {
+        void this.bootstrap();
+      });
+    }
+
+    effect(() => {
+      const next = this.value();
+      if (!this.editor) return;
+      if (this.editor.getValue() === next) return;
+      this.suppressNextChange = true;
+      this.editor.setValue(next);
+    });
+
+    effect(() => {
+      const isReadOnly = this.readOnly();
+      this.editor?.updateOptions({ readOnly: isReadOnly });
+    });
+
+    effect(() => {
+      const lang = this.language();
+      if (!this.editor || !this.monaco) return;
+      const model = this.editor.getModel();
+      if (model) this.monaco.editor.setModelLanguage(model, lang);
+    });
+
+    effect(() => {
+      const schema = this.schema();
+      if (!this.monaco) return;
+      this.themeService.configureJsonDefaults(this.monaco, schema);
+    });
+
+    effect(() => {
+      const theme = this.themeService.currentTheme();
+      this.monaco?.editor.setTheme(theme);
+    });
+  }
+
+  private async bootstrap(): Promise<void> {
+    const monaco = await import('monaco-editor');
+    this.monaco = monaco;
+    this.themeService.defineThemes(monaco);
+    this.themeService.configureJsonDefaults(monaco, this.schema());
+
+    const merged = {
+      ...DEFAULT_MONACO_EDITOR_OPTIONS,
+      ...(this.options() ?? {}),
+      readOnly: this.readOnly(),
+      language: this.language(),
+      value: this.value(),
+      theme: this.themeService.currentTheme(),
+    } satisfies Monaco.editor.IStandaloneEditorConstructionOptions;
+
+    this.editor = monaco.editor.create(
+      this.host.nativeElement,
+      merged as Monaco.editor.IStandaloneEditorConstructionOptions,
+    );
+
+    this.editor.onDidChangeModelContent(() => {
+      if (this.suppressNextChange) {
+        this.suppressNextChange = false;
+        return;
+      }
+      const next = this.editor?.getValue() ?? '';
+      this.value.set(next);
+    });
+
+    if (this.autoFocus()) {
+      this.editor.focus();
+    }
+
+    this._loaded.set(true);
+    this.mounted.emit(this.buildHandle());
+
+    this.destroyRef.onDestroy(() => {
+      this.editor?.dispose();
+      this.editor = null;
+      this.monaco = null;
+    });
+  }
+
+  private buildHandle(): JsonjoyMonacoHandle {
+    return {
+      revealError: (line, column) => {
+        const editor = this.editor;
+        if (!editor) return;
+        editor.revealLineInCenter(line);
+        editor.setPosition({ lineNumber: line, column });
+        editor.focus();
+      },
+      focus: () => this.editor?.focus(),
+      setValue: (value) => {
+        if (!this.editor) return;
+        this.suppressNextChange = true;
+        this.editor.setValue(value);
+      },
+      getValue: () => this.editor?.getValue() ?? '',
+    };
+  }
 }

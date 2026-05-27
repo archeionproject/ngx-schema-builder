@@ -34,6 +34,13 @@ export {
   getEditorType,
 } from './lib/types/json-schema';
 
+// --- Schema inference (pure functions) --------------------------------------
+export { inferSchema, createSchemaFromJson } from './lib/internal/schema-inference';
+
+// --- JSON validation (AJV; lazy-loaded) -------------------------------------
+export type { ValidationError, ValidationResult } from './lib/internal/json-validator';
+export { validateJson, findLineNumberForPath } from './lib/internal/json-validator';
+
 // --- Type-level constraint validation (zod-backed) ---------------------------
 export type {
   TypeValidationResult,
@@ -56,7 +63,10 @@ export { JSONJOY_CONFIG } from './lib/tokens';
 export { provideJsonjoy } from './provide';
 
 // --- Public components -------------------------------------------------------
-export { SchemaBuilderComponent } from './lib/components/schema-builder/schema-builder.component';
+export {
+  SchemaBuilderComponent,
+  type SchemaBuilderMode,
+} from './lib/components/schema-builder/schema-builder.component';
 export { SchemaFieldsEditorComponent } from './lib/components/schema-fields-editor/schema-fields-editor.component';
 export { SchemaJsonEditorComponent } from './lib/components/schema-json-editor/schema-json-editor.component';
 export { InferSchemaDialogComponent } from './lib/components/infer-schema-dialog/infer-schema-dialog.component';

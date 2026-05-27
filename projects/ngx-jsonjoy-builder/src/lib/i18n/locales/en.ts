@@ -49,6 +49,7 @@ export const en: Translation = {
   schemaEditorToggleFullscreen: 'Toggle fullscreen',
   schemaEditorEditModeVisual: 'Visual',
   schemaEditorEditModeJson: 'JSON',
+  schemaEditorEditModeBoth: 'Both',
   schemaEditorLoading: 'Loading editor...',
 
   arrayNoConstraint: 'No constraint',

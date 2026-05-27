@@ -787,6 +787,12 @@ export interface Translation {
    */
   readonly schemaEditorEditModeJson: string;
   /**
+   * The translation for the key `schemaEditorEditModeBoth`. English default is:
+   *
+   * > Both
+   */
+  readonly schemaEditorEditModeBoth: string;
+  /**
    * The translation for the key `schemaEditorLoading`. English default is:
    *
    * > Loading editor...
