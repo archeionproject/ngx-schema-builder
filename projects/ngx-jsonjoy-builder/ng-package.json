@@ -1,8 +1,15 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/ngx-jsonjoy-builder",
+  "dest": "../../dist/jsonjoy-builder",
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": ["ajv", "ajv-formats", "zod"]
+  "assets": [
+    {
+      "glob": "**/*",
+      "input": "assets/",
+      "output": "assets/"
+    }
+  ],
+  "allowedNonPeerDependencies": ["ajv", "ajv-formats", "clsx", "tailwind-merge", "zod"]
 }

@@ -5,7 +5,7 @@ import {
   SchemaBuilderComponent,
   ValidateJsonDialogComponent,
   type JsonSchema,
-} from 'ngx-jsonjoy-builder';
+} from '@archeion/jsonjoy-builder';
 
 const INITIAL_SCHEMA: JsonSchema = {
   type: 'object',

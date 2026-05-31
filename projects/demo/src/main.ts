@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideJsonjoy } from 'ngx-jsonjoy-builder';
+import { provideJsonjoy } from '@archeion/jsonjoy-builder';
 
 import { AppComponent } from './app/app';
 

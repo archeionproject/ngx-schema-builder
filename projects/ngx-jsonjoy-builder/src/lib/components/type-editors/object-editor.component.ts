@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   inject,
   input,
   output,
@@ -35,7 +36,7 @@ import type { EnumChangeContext } from '../schema-editor-internal/type-editor.co
 @Component({
   selector: 'lib-jsonjoy-object-editor',
   standalone: true,
-  imports: [AddFieldButtonComponent, SchemaPropertyRowsComponent],
+  imports: [AddFieldButtonComponent, forwardRef(() => SchemaPropertyRowsComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `

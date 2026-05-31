@@ -18,7 +18,7 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom", "dom.iterable"],
     "paths": {
-      "ngx-jsonjoy-builder": ["./projects/ngx-jsonjoy-builder/src/public-api.ts"]
+      "@archeion/jsonjoy-builder": ["./projects/ngx-jsonjoy-builder/src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {

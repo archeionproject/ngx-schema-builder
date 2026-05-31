@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   inject,
   input,
   linkedSignal,
@@ -98,7 +99,7 @@ const nextId = () => `combinator-${++idCounter}`;
 @Component({
   selector: 'lib-jsonjoy-combinator-editor',
   standalone: true,
-  imports: [InputDirective, TypeDropdownComponent, TypeEditorComponent],
+  imports: [InputDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `

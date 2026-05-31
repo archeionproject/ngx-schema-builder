@@ -4,6 +4,7 @@ import {
   ElementRef,
   computed,
   effect,
+  forwardRef,
   inject,
   input,
   output,
@@ -30,7 +31,7 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
 @Component({
   selector: 'lib-jsonjoy-schema-property-editor',
   standalone: true,
-  imports: [BadgeDirective, InputDirective, TypeDropdownComponent, TypeEditorComponent],
+  imports: [BadgeDirective, InputDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy block' },
   template: `

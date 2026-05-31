@@ -55,6 +55,7 @@ export {
 // --- Localization ------------------------------------------------------------
 export type { Translation } from './lib/i18n/translation-keys';
 export { en } from './lib/i18n/locales/en';
+export { it } from './lib/i18n/locales/it';
 // Additional locales (de, es, fr, pl, ru, uk, zh) are exported in deliverable 4.
 
 // --- Library configuration & DI ---------------------------------------------

@@ -5,7 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
-    "build": "ng build ngx-jsonjoy-builder",
+    "build": "npm run build:styles && ng build ngx-jsonjoy-builder",
+    "build:styles": "tailwindcss -i projects/ngx-jsonjoy-builder/assets/styles/jsonjoy.source.css -o projects/ngx-jsonjoy-builder/assets/styles/jsonjoy.css --minify",
     "build:demo": "ng build demo",
     "watch": "ng build ngx-jsonjoy-builder --watch --configuration development",
     "test": "ng test",
@@ -33,13 +34,14 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
-    "@types/node": "^22.10.0",
-    "ng-packagr": "^21.2.3",
-    "tailwindcss": "^4.1.12",
+    "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/node": "^22.10.0",
+    "jsdom": "^28.1.0",
+    "ng-packagr": "^21.2.3",
     "postcss": "^8.4.49",
+    "tailwindcss": "^4.1.12",
     "typescript": "~5.9.3",
-    "vitest": "^4.0.18",
-    "jsdom": "^28.1.0"
+    "vitest": "^4.0.18"
   }
 }
