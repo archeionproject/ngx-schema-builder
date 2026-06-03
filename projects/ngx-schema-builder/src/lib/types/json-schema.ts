@@ -68,6 +68,7 @@ export type JsonSchema =
   | boolean
   | (z.infer<typeof baseSchema> & {
       $defs?: Record<string, JsonSchema>;
+      definitions?: Record<string, JsonSchema>;
       contentSchema?: JsonSchema;
       items?: JsonSchema;
       prefixItems?: JsonSchema[];
@@ -93,6 +94,7 @@ export const jsonSchemaType: z.ZodMiniType<JsonSchema> = z.lazy(() =>
     z.object({
       ...baseSchema.shape,
       $defs: z.optional(z.record(z.string(), jsonSchemaType)),
+      definitions: z.optional(z.record(z.string(), jsonSchemaType)),
       contentSchema: z.optional(jsonSchemaType),
       items: z.optional(jsonSchemaType),
       prefixItems: z.optional(z.array(jsonSchemaType)),

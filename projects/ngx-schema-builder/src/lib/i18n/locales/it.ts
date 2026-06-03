@@ -197,4 +197,19 @@ export const it: Translation = {
   refPointerPlaceholder: '/properties/indirizzo',
   refSuggestionsLabel: 'Suggerimenti',
   refNoSuggestions: 'Nessun suggerimento disponibile',
+
+  definitionsPanelTitle: 'Definizioni riutilizzabili',
+  definitionsAddButton: 'Aggiungi definizione',
+  definitionsEmpty: 'Nessuna definizione riutilizzabile',
+  definitionsNameLabel: 'Nome',
+  definitionsNamePlaceholder: 'es. LegalEntity',
+  definitionsDelete: 'Elimina definizione',
+
+  propertyTitleLabel: 'Titolo',
+  propertyTitlePlaceholder: 'Titolo leggibile',
+  propertyDefaultLabel: 'Valore di default',
+  propertyDefaultPlaceholder: 'es. "ciao", 42, true',
+
+  propertiesTabLabel: 'Campi',
+  definitionsTabLabel: 'Definizioni',
 };

@@ -25,13 +25,14 @@ import {
 import type { ValidationTreeNode } from '../../types/validation';
 import { BadgeDirective } from '../ui/badge.directive';
 import { InputDirective } from '../ui/input.directive';
+import { LabelDirective } from '../ui/label.directive';
 import { TypeDropdownComponent } from './type-dropdown.component';
 import { TypeEditorComponent, type EnumChangeContext } from './type-editor.component';
 
 @Component({
   selector: 'lib-jsonjoy-schema-property-editor',
   standalone: true,
-  imports: [BadgeDirective, InputDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
+  imports: [BadgeDirective, InputDirective, LabelDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy block' },
   template: `
@@ -127,7 +128,7 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
                 >
                   {{ required() ? t().propertyRequired : t().propertyOptional }}
                 </button>
-              } @else {
+              } @else if (mode() === 'pattern') {
                 <span
                   class="text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center whitespace-nowrap bg-secondary text-muted-foreground flex items-center justify-center gap-1"
                   [title]="t().propertyNameRegexDescription"
@@ -169,6 +170,40 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
           @if (readOnly() && tempDesc()) {
             <p class="pb-2">{{ tempDesc() }}</p>
           }
+
+          @if (!isRef()) {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+              <div class="space-y-1">
+                <label libJsonjoyLabel [attr.for]="titleId">{{ t().propertyTitleLabel }}</label>
+                <input
+                  libJsonjoyInput
+                  [id]="titleId"
+                  type="text"
+                  class="h-8"
+                  [value]="tempTitle()"
+                  [disabled]="readOnly()"
+                  [placeholder]="t().propertyTitlePlaceholder"
+                  (input)="onTempTitleInput($event)"
+                  (blur)="submitTitle()"
+                />
+              </div>
+              <div class="space-y-1">
+                <label libJsonjoyLabel [attr.for]="defaultId">{{ t().propertyDefaultLabel }}</label>
+                <input
+                  libJsonjoyInput
+                  [id]="defaultId"
+                  type="text"
+                  class="h-8"
+                  [value]="tempDefault()"
+                  [disabled]="readOnly()"
+                  [placeholder]="t().propertyDefaultPlaceholder"
+                  (input)="onTempDefaultInput($event)"
+                  (blur)="submitDefault()"
+                />
+              </div>
+            </div>
+          }
+
           <lib-jsonjoy-type-editor
             [schema]="schema()"
             [readOnly]="readOnly()"
@@ -193,7 +228,7 @@ export class SchemaPropertyEditorComponent {
   readonly autoFocus = input<boolean>(true);
   readonly depth = input<number>(0);
   readonly validationNode = input<ValidationTreeNode | undefined>(undefined);
-  readonly mode = input<'property' | 'pattern'>('property');
+  readonly mode = input<'property' | 'pattern' | 'definition'>('property');
 
   readonly delete = output<void>();
   readonly nameChange = output<string>();
@@ -205,11 +240,18 @@ export class SchemaPropertyEditorComponent {
   private readonly translations = inject(JsonjoyTranslationService);
   protected readonly t = this.translations.providerLocale;
 
+  private static nextId = 0;
+  private readonly editorId = (SchemaPropertyEditorComponent.nextId += 1);
+  protected readonly titleId = `jsonjoy-title-${this.editorId}`;
+  protected readonly defaultId = `jsonjoy-default-${this.editorId}`;
+
   protected readonly expanded = signal(false);
   protected readonly isEditingName = signal(false);
   protected readonly isEditingDesc = signal(false);
   protected readonly tempName = signal('');
   protected readonly tempDesc = signal('');
+  protected readonly tempTitle = signal('');
+  protected readonly tempDefault = signal('');
 
   protected readonly type = computed(() => getEditorType(this.schema()));
   protected readonly isRef = computed(() => this.type() === '$ref');
@@ -252,6 +294,11 @@ export class SchemaPropertyEditorComponent {
     effect(() => {
       this.tempName.set(this.name());
       this.tempDesc.set(getSchemaDescription(this.schema()));
+      const s = asObjectSchema(this.schema());
+      this.tempTitle.set(typeof s.title === 'string' ? s.title : '');
+      this.tempDefault.set(
+        s.default === undefined ? '' : formatDefault(s.default),
+      );
     });
 
     effect(() => {
@@ -313,6 +360,39 @@ export class SchemaPropertyEditorComponent {
     this.isEditingDesc.set(false);
   }
 
+  protected onTempTitleInput(event: Event): void {
+    this.tempTitle.set((event.target as HTMLInputElement).value);
+  }
+
+  protected submitTitle(): void {
+    const trimmed = this.tempTitle().trim();
+    const base = asObjectSchema(this.schema());
+    const current = typeof base.title === 'string' ? base.title : '';
+    if (trimmed === current) return;
+    const { title: _t, ...rest } = base;
+    this.schemaChange.emit(
+      trimmed ? { ...rest, title: trimmed } : rest,
+    );
+  }
+
+  protected onTempDefaultInput(event: Event): void {
+    this.tempDefault.set((event.target as HTMLInputElement).value);
+  }
+
+  protected submitDefault(): void {
+    const raw = this.tempDefault().trim();
+    const base = asObjectSchema(this.schema());
+    if (!raw) {
+      if (base.default === undefined) return;
+      const { default: _d, ...rest } = base;
+      this.schemaChange.emit(rest);
+      return;
+    }
+    const value = parseDefault(raw);
+    if (deepEqual(value, base.default)) return;
+    this.schemaChange.emit({ ...base, default: value });
+  }
+
   protected toggleRequired(): void {
     if (this.readOnly()) return;
     this.requiredChange.emit(!this.required());
@@ -347,10 +427,38 @@ export class SchemaPropertyEditorComponent {
       this.schemaChange.emit({ $ref: updated.$ref });
       return;
     }
-    const description = getSchemaDescription(this.schema());
-    this.schemaChange.emit({
-      ...updated,
-      description: description || undefined,
-    });
+    const base = asObjectSchema(this.schema());
+    const merged: ObjectJsonSchema = { ...updated };
+    const desc = getSchemaDescription(this.schema());
+    if (desc) merged.description = desc;
+    if (typeof base.title === 'string' && base.title) merged.title = base.title;
+    if (base.default !== undefined) merged.default = base.default;
+    this.schemaChange.emit(merged);
+  }
+}
+
+function formatDefault(value: unknown): string {
+  if (typeof value === 'string') return value;
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return '';
+  }
+}
+
+function parseDefault(raw: string): unknown {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
+}
+
+function deepEqual(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  try {
+    return JSON.stringify(a) === JSON.stringify(b);
+  } catch {
+    return false;
   }
 }

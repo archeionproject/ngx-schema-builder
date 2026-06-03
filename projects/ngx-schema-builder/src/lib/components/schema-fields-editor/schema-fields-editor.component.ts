@@ -6,6 +6,7 @@ import {
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 
 import type { Translation } from '../../i18n/translation-keys';
@@ -32,6 +33,7 @@ import {
   type SchemaEditorType,
 } from '../../types/json-schema';
 import { AddFieldButtonComponent } from '../schema-editor-internal/add-field-button.component';
+import { DefinitionsEditorComponent } from '../schema-editor-internal/definitions-editor.component';
 import { SchemaFieldListComponent } from '../schema-editor-internal/schema-field-list.component';
 import { TypeEditorComponent } from '../schema-editor-internal/type-editor.component';
 
@@ -65,6 +67,7 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   standalone: true,
   imports: [
     AddFieldButtonComponent,
+    forwardRef(() => DefinitionsEditorComponent),
     SchemaFieldListComponent,
     forwardRef(() => TypeEditorComponent),
   ],
@@ -72,7 +75,44 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   host: { class: 'jsonjoy' },
   template: `
     <div [class]="rootClasses()">
-      @if (!readOnly()) {
+      @if (rootType() === 'object') {
+        <div class="mb-4 shrink-0 flex items-center justify-between gap-2 border-b border-border">
+          <div class="flex">
+            <button
+              type="button"
+              [class]="tabClasses('properties')"
+              (click)="activeTab.set('properties')"
+            >
+              {{ t().propertiesTabLabel }}
+            </button>
+            <button
+              type="button"
+              [class]="tabClasses('definitions')"
+              (click)="activeTab.set('definitions')"
+            >
+              {{ t().definitionsTabLabel }}
+              @if (definitionsCount() > 0) {
+                <span class="ml-1.5 text-xs text-muted-foreground">({{ definitionsCount() }})</span>
+              }
+            </button>
+          </div>
+
+          @if (!readOnly() && activeTab() === 'properties') {
+            <div class="flex items-center gap-2 pb-2">
+              <label class="text-xs text-muted-foreground">Root type:</label>
+              <select
+                class="text-xs rounded-md border bg-background px-2 py-1 shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
+                [value]="rootType()"
+                (change)="onRootTypeChange($event)"
+              >
+                @for (option of rootTypeOptions; track option.id) {
+                  <option [value]="option.id">{{ t()[option.labelKey] }}</option>
+                }
+              </select>
+            </div>
+          }
+        </div>
+      } @else if (!readOnly()) {
         <div class="mb-4 shrink-0 flex items-center gap-2">
           <label class="text-sm font-medium text-muted-foreground">Root type:</label>
           <select
@@ -88,33 +128,41 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
       }
 
       @if (rootType() === 'object') {
-        @if (!readOnly()) {
-          <div class="mb-6 shrink-0">
-            <lib-jsonjoy-add-field-button
-              [autoFocus]="autoFocus()"
-              (addField)="handleAddField($event)"
-              (addPatternField)="handleAddPatternField($event)"
-            />
-          </div>
-        }
-        <div class="grow overflow-auto">
-          @if (hasFields()) {
-            <lib-jsonjoy-schema-field-list
-              [schema]="value()"
-              [readOnly]="readOnly()"
-              [autoFocus]="autoFocus()"
-              (editField)="handleEditField($event)"
-              (deleteField)="handleDeleteField($event)"
-              (editPatternField)="handleEditPatternField($event)"
-              (deletePatternField)="handleDeletePatternField($event)"
-            />
-          } @else {
-            <div class="text-center py-10 text-muted-foreground">
-              <p class="mb-3">{{ t().visualEditorNoFieldsHint1 }}</p>
-              <p class="text-sm">{{ t().visualEditorNoFieldsHint2 }}</p>
+        @if (activeTab() === 'properties') {
+          @if (!readOnly()) {
+            <div class="mb-6 shrink-0">
+              <lib-jsonjoy-add-field-button
+                [autoFocus]="autoFocus()"
+                (addField)="handleAddField($event)"
+                (addPatternField)="handleAddPatternField($event)"
+              />
             </div>
           }
-        </div>
+          <div class="grow overflow-auto">
+            @if (hasFields()) {
+              <lib-jsonjoy-schema-field-list
+                [schema]="value()"
+                [readOnly]="readOnly()"
+                [autoFocus]="autoFocus()"
+                (editField)="handleEditField($event)"
+                (deleteField)="handleDeleteField($event)"
+                (editPatternField)="handleEditPatternField($event)"
+                (deletePatternField)="handleDeletePatternField($event)"
+              />
+            } @else {
+              <div class="text-center py-10 text-muted-foreground">
+                <p class="mb-3">{{ t().visualEditorNoFieldsHint1 }}</p>
+                <p class="text-sm">{{ t().visualEditorNoFieldsHint2 }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <lib-jsonjoy-definitions-editor
+            [schema]="value()"
+            [readOnly]="readOnly()"
+            (schemaChange)="value.set($event)"
+          />
+        }
       } @else {
         <div class="grow overflow-auto">
           <lib-jsonjoy-type-editor
@@ -175,6 +223,35 @@ export class SchemaFieldsEditorComponent {
       (!!patternProperties && Object.keys(patternProperties).length > 0)
     );
   });
+
+  protected readonly hasDefinitions = computed(() => {
+    const schema = this.value();
+    if (isBooleanSchema(schema)) return false;
+    return (
+      (!!schema.$defs && Object.keys(schema.$defs).length > 0) ||
+      (!!schema.definitions && Object.keys(schema.definitions).length > 0)
+    );
+  });
+
+  protected readonly definitionsCount = computed(() => {
+    const schema = this.value();
+    if (isBooleanSchema(schema)) return 0;
+    return (
+      Object.keys(schema.$defs ?? {}).length +
+      Object.keys(schema.definitions ?? {}).length
+    );
+  });
+
+  protected readonly activeTab = signal<'properties' | 'definitions'>('properties');
+
+  protected tabClasses(tab: 'properties' | 'definitions'): string {
+    return cn(
+      'text-sm font-medium px-4 py-2 -mb-px border-b-2 transition-colors',
+      this.activeTab() === tab
+        ? 'border-primary text-foreground'
+        : 'border-transparent text-muted-foreground hover:text-foreground',
+    );
+  }
 
   protected handleAddField(field: NewField): void {
     const fieldSchema = createFieldSchema(field);

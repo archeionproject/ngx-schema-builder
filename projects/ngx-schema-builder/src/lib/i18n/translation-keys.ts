@@ -990,4 +990,79 @@ export interface Translation {
    * > No suggestions available
    */
   readonly refNoSuggestions: string;
+
+  /**
+   * The translation for the key `definitionsPanelTitle`. English default is:
+   *
+   * > Reusable definitions
+   */
+  readonly definitionsPanelTitle: string;
+  /**
+   * The translation for the key `definitionsAddButton`. English default is:
+   *
+   * > Add definition
+   */
+  readonly definitionsAddButton: string;
+  /**
+   * The translation for the key `definitionsEmpty`. English default is:
+   *
+   * > No reusable definitions yet
+   */
+  readonly definitionsEmpty: string;
+  /**
+   * The translation for the key `definitionsNameLabel`. English default is:
+   *
+   * > Name
+   */
+  readonly definitionsNameLabel: string;
+  /**
+   * The translation for the key `definitionsNamePlaceholder`. English default is:
+   *
+   * > e.g. LegalEntity
+   */
+  readonly definitionsNamePlaceholder: string;
+  /**
+   * The translation for the key `definitionsDelete`. English default is:
+   *
+   * > Delete definition
+   */
+  readonly definitionsDelete: string;
+
+  /**
+   * The translation for the key `propertyTitleLabel`. English default is:
+   *
+   * > Title
+   */
+  readonly propertyTitleLabel: string;
+  /**
+   * The translation for the key `propertyTitlePlaceholder`. English default is:
+   *
+   * > Human-readable title
+   */
+  readonly propertyTitlePlaceholder: string;
+  /**
+   * The translation for the key `propertyDefaultLabel`. English default is:
+   *
+   * > Default
+   */
+  readonly propertyDefaultLabel: string;
+  /**
+   * The translation for the key `propertyDefaultPlaceholder`. English default is:
+   *
+   * > e.g. "hello", 42, true
+   */
+  readonly propertyDefaultPlaceholder: string;
+
+  /**
+   * The translation for the key `propertiesTabLabel`. English default is:
+   *
+   * > Properties
+   */
+  readonly propertiesTabLabel: string;
+  /**
+   * The translation for the key `definitionsTabLabel`. English default is:
+   *
+   * > Definitions
+   */
+  readonly definitionsTabLabel: string;
 }

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  forwardRef,
   input,
   output,
 } from '@angular/core';
@@ -23,7 +24,7 @@ function joinSchemaKey(prefix: string | undefined, name: string): string {
 @Component({
   selector: 'lib-jsonjoy-schema-property-rows',
   standalone: true,
-  imports: [SchemaPropertyEditorComponent],
+  imports: [forwardRef(() => SchemaPropertyEditorComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy contents' },
   template: `

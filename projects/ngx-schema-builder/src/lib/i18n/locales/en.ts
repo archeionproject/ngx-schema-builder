@@ -191,4 +191,19 @@ export const en: Translation = {
   refPointerPlaceholder: '/properties/address',
   refSuggestionsLabel: 'Suggestions',
   refNoSuggestions: 'No suggestions available',
+
+  definitionsPanelTitle: 'Reusable definitions',
+  definitionsAddButton: 'Add definition',
+  definitionsEmpty: 'No reusable definitions yet',
+  definitionsNameLabel: 'Name',
+  definitionsNamePlaceholder: 'e.g. LegalEntity',
+  definitionsDelete: 'Delete definition',
+
+  propertyTitleLabel: 'Title',
+  propertyTitlePlaceholder: 'Human-readable title',
+  propertyDefaultLabel: 'Default',
+  propertyDefaultPlaceholder: 'e.g. "hello", 42, true',
+
+  propertiesTabLabel: 'Properties',
+  definitionsTabLabel: 'Definitions',
 };
