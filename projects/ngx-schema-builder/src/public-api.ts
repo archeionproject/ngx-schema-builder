@@ -1,5 +1,5 @@
 /*
- * Public API surface of ngx-jsonjoy-builder.
+ * Public API surface of ngx-schema-builder.
  *
  * The React-side equivalents from `jsonjoy-builder` map to these exports
  * as follows (see README "Migrating from jsonjoy-builder (React)"):
@@ -9,8 +9,8 @@
  *   <SchemaJsonEditor>       → <lib-jsonjoy-schema-json-editor>      (SchemaJsonEditorComponent)
  *   <InferSchemaDialog>      → <lib-jsonjoy-infer-schema-dialog>     (InferSchemaDialogComponent)
  *   <ValidateJsonDialog>     → <lib-jsonjoy-validate-json-dialog>    (ValidateJsonDialogComponent)
- *   <SchemaBuilderProvider>  → provideJsonjoy({ locale, messages }) + JSONJOY_CONFIG
- *   useSchemaBuilderConfig() → inject(JSONJOY_CONFIG, { optional: true })
+ *   <SchemaBuilderProvider>  → provideSchemaBuilder({ locale, messages }) + SCHEMA_BUILDER_CONFIG
+ *   useSchemaBuilderConfig() → inject(SCHEMA_BUILDER_CONFIG, { optional: true })
  */
 
 // --- Schema types & helpers --------------------------------------------------
@@ -62,9 +62,9 @@ export { it } from './lib/i18n/locales/it';
 // Additional locales (de, es, fr, pl, ru, uk, zh) are exported in deliverable 4.
 
 // --- Library configuration & DI ---------------------------------------------
-export type { JsonjoyConfig, RefSuggestion, RefSuggestionsFactory } from './lib/interfaces';
-export { JSONJOY_CONFIG, JSONJOY_REF_SUGGESTIONS } from './lib/tokens';
-export { provideJsonjoy, provideJsonjoyRefSuggestions } from './provide';
+export type { SchemaBuilderConfig, RefSuggestion, RefSuggestionsFactory } from './lib/interfaces';
+export { SCHEMA_BUILDER_CONFIG, SCHEMA_BUILDER_REF_SUGGESTIONS } from './lib/tokens';
+export { provideSchemaBuilder, provideSchemaBuilderRefSuggestions } from './provide';
 
 // --- Public components -------------------------------------------------------
 export {

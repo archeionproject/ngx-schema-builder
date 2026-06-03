@@ -1,14 +1,14 @@
 {
-  "name": "ngx-jsonjoy-builder-workspace",
+  "name": "ngx-schema-builder-workspace",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo",
-    "build": "npm run build:styles && ng build ngx-jsonjoy-builder",
-    "build:styles": "tailwindcss -i projects/ngx-jsonjoy-builder/assets/styles/jsonjoy.source.css -o projects/ngx-jsonjoy-builder/assets/styles/jsonjoy.css --minify",
+    "build": "npm run build:styles && ng build ngx-schema-builder",
+    "build:styles": "tailwindcss -i projects/ngx-schema-builder/assets/styles/jsonjoy.source.css -o projects/ngx-schema-builder/assets/styles/jsonjoy.css --minify",
     "build:demo": "ng build demo",
-    "watch": "ng build ngx-jsonjoy-builder --watch --configuration development",
+    "watch": "ng build ngx-schema-builder --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
   },

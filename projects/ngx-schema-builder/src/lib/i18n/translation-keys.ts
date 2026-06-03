@@ -3,7 +3,7 @@
  * The full set of translatable strings used by the schema builder.
  *
  * Every key must be present in a `Translation` object — partial overrides
- * should use `Partial<Translation>` via `provideJsonjoy({ messages })` or
+ * should use `Partial<Translation>` via `provideSchemaBuilder({ messages })` or
  * the `messages` input on the public components.
  *
  * @public

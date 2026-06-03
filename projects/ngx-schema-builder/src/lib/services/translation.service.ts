@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { en } from '../i18n/locales/en';
 import type { Translation } from '../i18n/translation-keys';
-import { JSONJOY_CONFIG } from '../tokens';
+import { SCHEMA_BUILDER_CONFIG } from '../tokens';
 
 /**
  * Replaces React's `useTranslation()` hook and `SchemaBuilderConfigContext`.
@@ -13,7 +13,7 @@ import { JSONJOY_CONFIG } from '../tokens';
  */
 @Injectable({ providedIn: 'root' })
 export class JsonjoyTranslationService {
-  private readonly config = inject(JSONJOY_CONFIG, { optional: true });
+  private readonly config = inject(SCHEMA_BUILDER_CONFIG, { optional: true });
 
   /**
    * The merged provider-level locale: `en` baseline overlaid with the

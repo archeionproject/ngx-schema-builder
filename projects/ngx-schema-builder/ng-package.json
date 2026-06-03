@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/jsonjoy-builder",
+  "dest": "../../dist/ngx-schema-builder",
   "lib": {
     "entryFile": "src/public-api.ts"
   },

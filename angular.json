@@ -3,24 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-jsonjoy-builder": {
+    "ngx-schema-builder": {
       "projectType": "library",
-      "root": "projects/ngx-jsonjoy-builder",
-      "sourceRoot": "projects/ngx-jsonjoy-builder/src",
+      "root": "projects/ngx-schema-builder",
+      "sourceRoot": "projects/ngx-schema-builder/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "options": {
-            "project": "projects/ngx-jsonjoy-builder/ng-package.json",
-            "tsConfig": "projects/ngx-jsonjoy-builder/tsconfig.lib.json"
+            "project": "projects/ngx-schema-builder/ng-package.json",
+            "tsConfig": "projects/ngx-schema-builder/tsconfig.lib.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-jsonjoy-builder/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-schema-builder/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ngx-jsonjoy-builder/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-schema-builder/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -28,7 +28,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/ngx-jsonjoy-builder/tsconfig.spec.json",
+            "tsConfig": "projects/ngx-schema-builder/tsconfig.spec.json",
             "runner": "vitest"
           }
         }

@@ -4,8 +4,8 @@ import {
   makeEnvironmentProviders,
 } from '@angular/core';
 
-import type { JsonjoyConfig, RefSuggestionsFactory } from './lib/interfaces';
-import { JSONJOY_CONFIG, JSONJOY_REF_SUGGESTIONS } from './lib/tokens';
+import type { SchemaBuilderConfig, RefSuggestionsFactory } from './lib/interfaces';
+import { SCHEMA_BUILDER_CONFIG, SCHEMA_BUILDER_REF_SUGGESTIONS } from './lib/tokens';
 
 /**
  * Registers the JSONJoy schema builder configuration for a section of the
@@ -16,11 +16,11 @@ import { JSONJOY_CONFIG, JSONJOY_REF_SUGGESTIONS } from './lib/tokens';
  *
  * @public
  */
-export function provideJsonjoy(
-  config: JsonjoyConfig = {},
+export function provideSchemaBuilder(
+  config: SchemaBuilderConfig = {},
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
-    { provide: JSONJOY_CONFIG, useValue: config },
+    { provide: SCHEMA_BUILDER_CONFIG, useValue: config },
   ]);
 }
 
@@ -32,8 +32,8 @@ export function provideJsonjoy(
  *
  * @public
  */
-export function provideJsonjoyRefSuggestions(
+export function provideSchemaBuilderRefSuggestions(
   factory: RefSuggestionsFactory,
 ): Provider[] {
-  return [{ provide: JSONJOY_REF_SUGGESTIONS, useFactory: factory }];
+  return [{ provide: SCHEMA_BUILDER_REF_SUGGESTIONS, useFactory: factory }];
 }

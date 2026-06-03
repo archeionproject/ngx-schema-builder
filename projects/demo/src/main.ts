@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideJsonjoy } from '@archeion/jsonjoy-builder';
+import { provideSchemaBuilder } from '@archeion/ngx-schema-builder';
 
 import { AppComponent } from './app/app';
 
@@ -23,7 +23,7 @@ import { AppComponent } from './app/app';
 };
 
 bootstrapApplication(AppComponent, {
-  providers: [provideJsonjoy()],
+  providers: [provideSchemaBuilder()],
 }).catch((err) => {
   console.error(err);
 });

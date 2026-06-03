@@ -11,7 +11,7 @@ import {
 
 import type { RefSuggestion } from '../../interfaces/ref-suggestion.interface';
 import { JsonjoyTranslationService } from '../../services/translation.service';
-import { JSONJOY_REF_SUGGESTIONS } from '../../tokens/ref-suggestions.token';
+import { SCHEMA_BUILDER_REF_SUGGESTIONS } from '../../tokens/ref-suggestions.token';
 import {
   asRefSchema,
   type JsonSchema,
@@ -104,7 +104,7 @@ export class RefEditorComponent {
   protected readonly t = inject(JsonjoyTranslationService).providerLocale;
 
   private readonly suggestionsSignal: Signal<readonly RefSuggestion[]> =
-    inject(JSONJOY_REF_SUGGESTIONS, { optional: true }) ??
+    inject(SCHEMA_BUILDER_REF_SUGGESTIONS, { optional: true }) ??
     computed(() => [] as readonly RefSuggestion[]);
 
   private readonly id = ++nextRefEditorId;

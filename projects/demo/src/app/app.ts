@@ -5,7 +5,7 @@ import {
   SchemaBuilderComponent,
   ValidateJsonDialogComponent,
   type JsonSchema,
-} from '@archeion/jsonjoy-builder';
+} from '@archeion/ngx-schema-builder';
 
 const INITIAL_SCHEMA: JsonSchema = {
   type: 'object',
@@ -80,7 +80,7 @@ const INITIAL_SCHEMA: JsonSchema = {
   template: `
     <main class="max-w-6xl mx-auto p-6 space-y-6">
       <header class="space-y-1">
-        <h1 class="text-2xl font-semibold">ngx-jsonjoy-builder demo</h1>
+        <h1 class="text-2xl font-semibold">ngx-schema-builder demo</h1>
         <p class="text-sm text-muted-foreground">
           Edit any property type (string, number, boolean, object, array, anyOf/oneOf/allOf), toggle Visual/JSON/Both panes, infer a schema from JSON, or validate a JSON document against the current schema.
         </p>
