@@ -178,6 +178,34 @@
   font-family: var(--font-sans);
 }
 
+/*
+ * Scoped form-control reset.
+ *
+ * Tailwind preflight is intentionally omitted (host keeps its own resets),
+ * which means native <button>/<input>/<select>/<textarea> keep their UA
+ * defaults (e.g. `background-color: buttonface`). On dark-themed OSes this
+ * paints unstyled buttons gray. Normalize ONLY inside `.jsonjoy` so pills
+ * and type-dropdowns inherit the editor's theme.
+ */
+:where(.jsonjoy) :where(button, [type="button"], [type="submit"], [type="reset"]) {
+  background-color: transparent;
+  background-image: none;
+  color: inherit;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+:where(.jsonjoy) :where(input, select, textarea) {
+  background-color: transparent;
+  color: inherit;
+  border: 0;
+  font: inherit;
+}
+
 .jsonjoy.dark,
 .dark .jsonjoy {
   --color-background: hsl(222.2 84% 4.9%);
