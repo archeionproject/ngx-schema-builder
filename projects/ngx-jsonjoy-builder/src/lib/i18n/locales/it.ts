@@ -189,4 +189,12 @@ export const it: Translation = {
     'I valori di lunghezza non possono essere negativi.',
   typeValidationErrorIntValue: 'Il valore deve essere un intero.',
   typeValidationErrorPositive: 'Il valore deve essere positivo.',
+
+  schemaTypeRef: 'Riferimento',
+  refUrlLabel: 'URL di riferimento',
+  refUrlPlaceholder: 'https://esempio.com/blueprints/UUID/schema',
+  refPointerLabel: 'JSON Pointer (opzionale)',
+  refPointerPlaceholder: '/properties/indirizzo',
+  refSuggestionsLabel: 'Suggerimenti',
+  refNoSuggestions: 'Nessun suggerimento disponibile',
 };

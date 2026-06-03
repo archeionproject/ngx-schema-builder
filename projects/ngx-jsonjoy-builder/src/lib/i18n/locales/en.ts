@@ -183,4 +183,12 @@ export const en: Translation = {
   typeValidationErrorNegativeLength: 'Length values cannot be negative.',
   typeValidationErrorIntValue: 'Value must be an integer.',
   typeValidationErrorPositive: 'Value must be positive.',
+
+  schemaTypeRef: 'Reference',
+  refUrlLabel: 'Reference URL',
+  refUrlPlaceholder: 'https://example.com/blueprints/UUID/schema',
+  refPointerLabel: 'JSON Pointer (optional)',
+  refPointerPlaceholder: '/properties/address',
+  refSuggestionsLabel: 'Suggestions',
+  refNoSuggestions: 'No suggestions available',
 };

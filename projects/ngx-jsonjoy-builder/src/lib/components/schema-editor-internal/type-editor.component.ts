@@ -20,6 +20,7 @@ import {
 } from '../type-editors/combinator-editor.component';
 import { NumberEditorComponent } from '../type-editors/number-editor.component';
 import { ObjectEditorComponent } from '../type-editors/object-editor.component';
+import { RefEditorComponent } from '../type-editors/ref-editor.component';
 import { StringEditorComponent } from '../type-editors/string-editor.component';
 
 export interface EnumChangeContext {
@@ -37,6 +38,7 @@ export interface EnumChangeContext {
     CombinatorEditorComponent,
     NumberEditorComponent,
     ObjectEditorComponent,
+    RefEditorComponent,
     StringEditorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,6 +155,16 @@ export interface EnumChangeContext {
           (schemaChange)="schemaChange.emit($event)"
           (addEnum)="addEnum.emit($event)"
           (deleteEnum)="deleteEnum.emit($event)"
+        />
+      }
+      @case ('$ref') {
+        <lib-jsonjoy-ref-editor
+          [schema]="schema()"
+          [readOnly]="readOnly()"
+          [validationNode]="validationNode()"
+          [schemaKey]="schemaKey()"
+          [depth]="depth()"
+          (schemaChange)="schemaChange.emit($event)"
         />
       }
       @default {

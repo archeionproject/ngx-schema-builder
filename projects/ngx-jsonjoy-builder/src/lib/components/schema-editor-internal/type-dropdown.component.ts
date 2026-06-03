@@ -23,6 +23,7 @@ const TYPE_OPTIONS: readonly SchemaEditorType[] = [
   'anyOf',
   'oneOf',
   'allOf',
+  '$ref',
 ] as const;
 
 @Component({

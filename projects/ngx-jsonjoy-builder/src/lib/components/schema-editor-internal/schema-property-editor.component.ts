@@ -77,36 +77,38 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
                 </button>
               }
 
-              @if (!readOnly() && isEditingDesc()) {
-                <input
-                  #descInput
-                  libJsonjoyInput
-                  [value]="tempDesc()"
-                  [placeholder]="t().propertyDescriptionPlaceholder"
-                  class="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px] z-10"
-                  (input)="onTempDescInput($event)"
-                  (blur)="submitDesc()"
-                  (keydown.enter)="submitDesc()"
-                  (focus)="selectAll($event)"
-                />
-              } @else if (tempDesc()) {
-                <button
-                  type="button"
-                  class="text-xs text-muted-foreground italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all text-left truncate flex-1 max-w-[40%] mr-2"
-                  (click)="beginEditDesc()"
-                  (keydown.enter)="beginEditDesc()"
-                >
-                  {{ tempDesc() }}
-                </button>
-              } @else {
-                <button
-                  type="button"
-                  class="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
-                  (click)="beginEditDesc()"
-                  (keydown.enter)="beginEditDesc()"
-                >
-                  {{ t().propertyDescriptionButton }}
-                </button>
+              @if (!isRef()) {
+                @if (!readOnly() && isEditingDesc()) {
+                  <input
+                    #descInput
+                    libJsonjoyInput
+                    [value]="tempDesc()"
+                    [placeholder]="t().propertyDescriptionPlaceholder"
+                    class="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px] z-10"
+                    (input)="onTempDescInput($event)"
+                    (blur)="submitDesc()"
+                    (keydown.enter)="submitDesc()"
+                    (focus)="selectAll($event)"
+                  />
+                } @else if (tempDesc()) {
+                  <button
+                    type="button"
+                    class="text-xs text-muted-foreground italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all text-left truncate flex-1 max-w-[40%] mr-2"
+                    (click)="beginEditDesc()"
+                    (keydown.enter)="beginEditDesc()"
+                  >
+                    {{ tempDesc() }}
+                  </button>
+                } @else {
+                  <button
+                    type="button"
+                    class="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
+                    (click)="beginEditDesc()"
+                    (keydown.enter)="beginEditDesc()"
+                  >
+                    {{ t().propertyDescriptionButton }}
+                  </button>
+                }
               }
             </div>
 
@@ -210,6 +212,7 @@ export class SchemaPropertyEditorComponent {
   protected readonly tempDesc = signal('');
 
   protected readonly type = computed(() => getEditorType(this.schema()));
+  protected readonly isRef = computed(() => this.type() === '$ref');
   protected readonly errorCount = computed(
     () => this.validationNode()?.cumulativeChildrenErrors ?? 0,
   );
@@ -321,20 +324,29 @@ export class SchemaPropertyEditorComponent {
 
   protected onTypeChange(newType: SchemaEditorType): void {
     const current = asObjectSchema(this.schema());
+    if (newType === '$ref') {
+      this.schemaChange.emit({ $ref: '' });
+      this.expanded.set(true);
+      return;
+    }
     if (newType === 'anyOf' || newType === 'oneOf' || newType === 'allOf') {
-      const { type: _type, anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;
+      const { type: _type, $ref: _r, anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;
       const initial =
         newType === 'allOf'
           ? { allOf: [{ type: 'object' as const }] }
           : { [newType]: [{ type: 'string' as const }, { type: 'number' as const }] };
       this.schemaChange.emit({ ...rest, ...initial });
     } else {
-      const { anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;
+      const { $ref: _r, anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;
       this.schemaChange.emit({ ...rest, type: newType });
     }
   }
 
   protected onChildSchemaChange(updated: ObjectJsonSchema): void {
+    if (typeof updated.$ref === 'string') {
+      this.schemaChange.emit({ $ref: updated.$ref });
+      return;
+    }
     const description = getSchemaDescription(this.schema());
     this.schemaChange.emit({
       ...updated,

@@ -947,4 +947,47 @@ export interface Translation {
    * > Value must be positive.
    */
   readonly typeValidationErrorPositive: string;
+
+  /**
+   * The translation for the key `schemaTypeRef`. English default is:
+   *
+   * > Reference
+   */
+  readonly schemaTypeRef: string;
+  /**
+   * The translation for the key `refUrlLabel`. English default is:
+   *
+   * > Reference URL
+   */
+  readonly refUrlLabel: string;
+  /**
+   * The translation for the key `refUrlPlaceholder`. English default is:
+   *
+   * > https://example.com/blueprints/UUID/schema
+   */
+  readonly refUrlPlaceholder: string;
+  /**
+   * The translation for the key `refPointerLabel`. English default is:
+   *
+   * > JSON Pointer (optional)
+   */
+  readonly refPointerLabel: string;
+  /**
+   * The translation for the key `refPointerPlaceholder`. English default is:
+   *
+   * > /properties/address
+   */
+  readonly refPointerPlaceholder: string;
+  /**
+   * The translation for the key `refSuggestionsLabel`. English default is:
+   *
+   * > Suggestions
+   */
+  readonly refSuggestionsLabel: string;
+  /**
+   * The translation for the key `refNoSuggestions`. English default is:
+   *
+   * > No suggestions available
+   */
+  readonly refNoSuggestions: string;
 }

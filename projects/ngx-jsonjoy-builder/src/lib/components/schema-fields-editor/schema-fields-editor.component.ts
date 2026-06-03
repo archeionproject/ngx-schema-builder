@@ -57,6 +57,7 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
   oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
   allOf: { allOf: [{ type: 'object' }] },
+  $ref: { $ref: '' },
 };
 
 @Component({

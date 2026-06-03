@@ -23,6 +23,7 @@ const typeColorClasses: Record<SchemaEditorType, string> = {
   anyOf: 'text-teal-500 bg-teal-50',
   oneOf: 'text-cyan-500 bg-cyan-50',
   allOf: 'text-indigo-500 bg-indigo-50',
+  $ref: 'text-amber-600 bg-amber-50',
 };
 
 export function getTypeColor(type: SchemaEditorType): string {
@@ -50,5 +51,7 @@ export function getTypeLabel(t: Translation, type: SchemaEditorType): string {
       return t.schemaTypeOneOf;
     case 'allOf':
       return t.schemaTypeAllOf;
+    case '$ref':
+      return t.schemaTypeRef;
   }
 }

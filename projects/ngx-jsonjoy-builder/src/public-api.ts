@@ -19,6 +19,7 @@ export type {
   ObjectJsonSchema,
   SchemaType,
   SchemaEditorType,
+  RefJsonSchema,
   NewField,
   SchemaEditorState,
 } from './lib/types/json-schema';
@@ -31,6 +32,8 @@ export {
   isAnyOfSchema,
   isOneOfSchema,
   isAllOfSchema,
+  isRefSchema,
+  asRefSchema,
   getEditorType,
 } from './lib/types/json-schema';
 
@@ -59,9 +62,9 @@ export { it } from './lib/i18n/locales/it';
 // Additional locales (de, es, fr, pl, ru, uk, zh) are exported in deliverable 4.
 
 // --- Library configuration & DI ---------------------------------------------
-export type { JsonjoyConfig } from './lib/interfaces';
-export { JSONJOY_CONFIG } from './lib/tokens';
-export { provideJsonjoy } from './provide';
+export type { JsonjoyConfig, RefSuggestion, RefSuggestionsFactory } from './lib/interfaces';
+export { JSONJOY_CONFIG, JSONJOY_REF_SUGGESTIONS } from './lib/tokens';
+export { provideJsonjoy, provideJsonjoyRefSuggestions } from './provide';
 
 // --- Public components -------------------------------------------------------
 export {

@@ -273,6 +273,10 @@ export class ArrayEditorComponent {
   protected onItemTypeChange(newType: SchemaEditorType): void {
     const items = this.itemsSchema();
     const rest = stripTypeAndCombinators(asObjectSchema(items));
+    if (newType === '$ref') {
+      this.onItemSchemaChange({ $ref: '' });
+      return;
+    }
     if (newType === 'anyOf' || newType === 'oneOf' || newType === 'allOf') {
       const initial =
         newType === 'allOf'
@@ -318,6 +322,7 @@ export class ArrayEditorComponent {
 function stripTypeAndCombinators(schema: ObjectJsonSchema): ObjectJsonSchema {
   const {
     type: _type,
+    $ref: _ref,
     anyOf: _anyOf,
     oneOf: _oneOf,
     allOf: _allOf,
