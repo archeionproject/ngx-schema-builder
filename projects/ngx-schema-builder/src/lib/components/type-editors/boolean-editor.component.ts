@@ -9,6 +9,7 @@ import {
 
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
+  isBooleanSchema,
   withObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
@@ -133,10 +134,15 @@ export class BooleanEditorComponent {
       action = 'delete';
     }
 
+    const currentSchema = this.schema();
+    const base: ObjectJsonSchema = isBooleanSchema(currentSchema)
+      ? { type: 'boolean' }
+      : { ...currentSchema, type: 'boolean' };
     if (nextEnum) {
-      this.schemaChange.emit({ type: 'boolean', enum: nextEnum });
+      this.schemaChange.emit({ ...base, enum: nextEnum });
     } else {
-      this.schemaChange.emit({ type: 'boolean' });
+      const { enum: _enum, ...rest } = base;
+      this.schemaChange.emit(rest as ObjectJsonSchema);
     }
 
     if (action === 'add' && nextEnum) {

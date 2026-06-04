@@ -331,8 +331,8 @@ export class CombinatorEditorComponent {
 
   protected readonly rowClasses = computed(() =>
     cn(
-      'group rounded-lg border transition-all duration-200',
-      this.depth() > 0 && 'ml-0 sm:ml-4 border-l border-l-border/40',
+      'group rounded-lg border border-border transition-all duration-200',
+      this.depth() > 0 && 'ml-0 sm:ml-4 border-l-2 border-l-border',
     ),
   );
 

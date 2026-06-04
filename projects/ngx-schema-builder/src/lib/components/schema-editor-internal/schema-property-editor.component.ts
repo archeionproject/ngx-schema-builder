@@ -261,8 +261,8 @@ export class SchemaPropertyEditorComponent {
 
   protected readonly rootClasses = computed(() =>
     cn(
-      'mb-2 animate-in rounded-lg border transition-all duration-200',
-      this.depth() > 0 && 'ml-0 sm:ml-4 border-l border-l-border/40',
+      'mb-2 animate-in rounded-lg border border-border transition-all duration-200',
+      this.depth() > 0 && 'ml-0 sm:ml-4 border-l-2 border-l-border',
     ),
   );
 

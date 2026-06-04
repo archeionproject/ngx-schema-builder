@@ -328,16 +328,15 @@ export class StringEditorComponent {
 
   private applyValidationChange(property: StringValidationProperty, value: unknown): void {
     const current = this.schema();
-    const base: ObjectJsonSchema = isBooleanSchema(current)
+    const next: ObjectJsonSchema = isBooleanSchema(current)
       ? { type: 'string' }
-      : { ...current };
-    const { type: _type, description: _description, ...rest } = base;
-    const updated: ObjectJsonSchema = {
-      ...rest,
-      type: 'string',
-      [property]: value,
-    };
-    this.schemaChange.emit(updated);
+      : { ...current, type: 'string' };
+    if (value === undefined) {
+      delete next[property];
+    } else {
+      (next as Record<string, unknown>)[property] = value;
+    }
+    this.schemaChange.emit(next);
   }
 
   private applyEnumValues(values: readonly string[]): void {

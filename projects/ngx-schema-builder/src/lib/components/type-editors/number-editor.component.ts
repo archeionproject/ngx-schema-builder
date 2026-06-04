@@ -357,16 +357,10 @@ export class NumberEditorComponent {
 
   private applyValidationChange(property: NumberConstraint, value: unknown): void {
     const current = this.schema();
-    const next: ObjectJsonSchema = { type: this.integer() ? 'integer' : 'number' };
-
-    if (!isBooleanSchema(current)) {
-      if (current.minimum !== undefined) next.minimum = current.minimum;
-      if (current.maximum !== undefined) next.maximum = current.maximum;
-      if (current.exclusiveMinimum !== undefined) next.exclusiveMinimum = current.exclusiveMinimum;
-      if (current.exclusiveMaximum !== undefined) next.exclusiveMaximum = current.exclusiveMaximum;
-      if (current.multipleOf !== undefined) next.multipleOf = current.multipleOf;
-      if (current.enum !== undefined) next.enum = current.enum;
-    }
+    const type: 'integer' | 'number' = this.integer() ? 'integer' : 'number';
+    const next: ObjectJsonSchema = isBooleanSchema(current)
+      ? { type }
+      : { ...current, type };
 
     if (value === undefined) {
       delete next[property];

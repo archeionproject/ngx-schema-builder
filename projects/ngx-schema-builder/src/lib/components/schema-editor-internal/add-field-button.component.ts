@@ -79,18 +79,33 @@ let nextAddFieldId = 0;
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="space-y-4 min-w-[280px]">
             <div>
-              <label libJsonjoyLabel [attr.for]="fieldNameId" class="text-sm font-medium">
-                {{ t().fieldNameLabel }}
-              </label>
+              <div class="flex items-center justify-between gap-2">
+                <label libJsonjoyLabel [attr.for]="fieldNameId" class="text-sm font-medium">
+                  {{ useRegex() ? t().fieldNameRegexLabel : t().fieldNameLabel }}
+                </label>
+                <button
+                  type="button"
+                  class="text-xs text-muted-foreground hover:text-foreground underline shrink-0"
+                  (click)="useRegex.set(!useRegex())"
+                >
+                  {{ useRegex() ? t().fieldNameUseExactName : t().fieldNameUseRegex }}
+                </button>
+              </div>
               <input
                 libJsonjoyInput
                 [id]="fieldNameId"
                 [value]="fieldName()"
-                [placeholder]="t().fieldNamePlaceholder"
+                [placeholder]="useRegex() ? t().fieldNameRegexPlaceholder : t().fieldNamePlaceholder"
                 class="font-mono text-sm w-full mt-1.5"
+                [class.border-destructive]="!!regexError()"
                 required
                 (input)="fieldName.set(($any($event.target)).value)"
               />
+              @if (regexError()) {
+                <p class="text-xs text-destructive mt-1">{{ t().fieldNameRegexError }}</p>
+              } @else if (useRegex()) {
+                <p class="text-xs text-muted-foreground mt-1">{{ t().fieldNameRegexHelp }}</p>
+              }
             </div>
 
             <div>
@@ -107,18 +122,20 @@ let nextAddFieldId = 0;
               />
             </div>
 
-            <div class="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
-              <input
-                type="checkbox"
-                [id]="fieldRequiredId"
-                [checked]="fieldRequired()"
-                class="rounded border-gray-300 shrink-0"
-                (change)="fieldRequired.set(($any($event.target)).checked)"
-              />
-              <label libJsonjoyLabel [attr.for]="fieldRequiredId" class="text-sm">
-                {{ t().fieldRequiredLabel }}
-              </label>
-            </div>
+            @if (!useRegex()) {
+              <div class="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
+                <input
+                  type="checkbox"
+                  [id]="fieldRequiredId"
+                  [checked]="fieldRequired()"
+                  class="rounded border-gray-300 shrink-0"
+                  (change)="fieldRequired.set(($any($event.target)).checked)"
+                />
+                <label libJsonjoyLabel [attr.for]="fieldRequiredId" class="text-sm">
+                  {{ t().fieldRequiredLabel }}
+                </label>
+              </div>
+            }
           </div>
 
           <div class="space-y-4 min-w-[280px]">
@@ -167,8 +184,23 @@ export class AddFieldButtonComponent {
   protected readonly fieldType = signal<SchemaEditorType>('string');
   protected readonly fieldDesc = signal('');
   protected readonly fieldRequired = signal(false);
+  protected readonly useRegex = signal(false);
 
-  protected readonly canSubmit = computed(() => this.fieldName().trim().length > 0);
+  protected readonly regexError = computed(() => {
+    if (!this.useRegex()) return false;
+    const pattern = this.fieldName().trim();
+    if (!pattern) return false;
+    try {
+      new RegExp(pattern);
+      return false;
+    } catch {
+      return true;
+    }
+  });
+
+  protected readonly canSubmit = computed(
+    () => this.fieldName().trim().length > 0 && !this.regexError(),
+  );
 
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
 
@@ -188,12 +220,22 @@ export class AddFieldButtonComponent {
     event.preventDefault();
     const name = this.fieldName().trim();
     if (!name) return;
-    this.addField.emit({
-      name,
-      type: this.fieldType(),
-      description: this.fieldDesc(),
-      required: this.fieldRequired(),
-    });
+    if (this.useRegex()) {
+      if (this.regexError()) return;
+      this.addPatternField.emit({
+        name,
+        type: this.fieldType(),
+        description: this.fieldDesc(),
+        required: false,
+      });
+    } else {
+      this.addField.emit({
+        name,
+        type: this.fieldType(),
+        description: this.fieldDesc(),
+        required: this.fieldRequired(),
+      });
+    }
     this.closeDialog();
   }
 
@@ -202,5 +244,6 @@ export class AddFieldButtonComponent {
     this.fieldType.set('string');
     this.fieldDesc.set('');
     this.fieldRequired.set(false);
+    this.useRegex.set(false);
   }
 }
