@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   input,
   output,
 } from '@angular/core';
@@ -32,12 +33,15 @@ export interface EnumChangeContext {
 @Component({
   selector: 'lib-jsonjoy-type-editor',
   standalone: true,
+  // Array/Object/Combinator editors recurse back into this component, so
+  // reference them lazily via forwardRef to keep the imports array resilient
+  // to module evaluation order (avoids NG0919 when a leaf editor loads first).
   imports: [
-    ArrayEditorComponent,
+    forwardRef(() => ArrayEditorComponent),
     BooleanEditorComponent,
-    CombinatorEditorComponent,
+    forwardRef(() => CombinatorEditorComponent),
     NumberEditorComponent,
-    ObjectEditorComponent,
+    forwardRef(() => ObjectEditorComponent),
     RefEditorComponent,
     StringEditorComponent,
   ],
