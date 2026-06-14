@@ -3,8 +3,16 @@
  *
  * Built with Tailwind CSS v4. Preflight (global reset) is intentionally
  * omitted via layered imports — the host application keeps its own resets.
- * All design tokens are scoped under `.jsonjoy` so they cannot leak into
- * surrounding UI.
+ *
+ * Scope notes:
+ *   - Design tokens (CSS custom properties) and the form-control resets are
+ *     scoped under `.jsonjoy`, so the editor's theming does not bleed into
+ *     surrounding UI.
+ *   - Utility classes (e.g. `.flex`, `.p-4`) and the `@theme` `:root` tokens
+ *     are emitted globally, as Tailwind requires. They only paint elements
+ *     that carry those classes (i.e. the editor's own markup), but a host app
+ *     that also runs Tailwind may see duplicate utility definitions. This is
+ *     expected and harmless ordering, not a correctness issue.
  *
  * Regenerate with `npm run build:styles` (or via `npm run build`).
  */

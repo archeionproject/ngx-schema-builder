@@ -59,7 +59,9 @@ export {
 export type { Translation } from './lib/i18n/translation-keys';
 export { en } from './lib/i18n/locales/en';
 export { it } from './lib/i18n/locales/it';
-// Additional locales (de, es, fr, pl, ru, uk, zh) are exported in deliverable 4.
+// Further locales may be added in future releases. Until then, supply your
+// own via `provideSchemaBuilder({ locale })` or the per-component `locale`
+// input using the exported `Translation` contract.
 
 // --- Library configuration & DI ---------------------------------------------
 export type { SchemaBuilderConfig, RefSuggestion, RefSuggestionsFactory } from './lib/interfaces';
