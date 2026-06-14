@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { provideSchemaBuilder } from '../../../provide';
-import type { JsonSchema } from '../../types/json-schema';
-import { SchemaFieldsEditorComponent } from './schema-fields-editor.component';
+import { provideSchemaBuilder } from '../src/provide';
+import type { JsonSchema } from '../src/lib/types/json-schema';
+import { SchemaFieldsEditorComponent } from '../src/lib/components/schema-fields-editor/schema-fields-editor.component';
 
 describe('SchemaFieldsEditorComponent', () => {
   beforeEach(() => {
