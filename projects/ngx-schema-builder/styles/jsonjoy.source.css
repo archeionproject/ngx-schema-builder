@@ -12,7 +12,7 @@
 @import "tailwindcss/theme.css";
 @import "tailwindcss/utilities.css";
 
-@source "../../src/lib/**/*.ts";
+@source "../src/lib/**/*.ts";
 
 @theme {
   /* Archeion palette — neutral monochrome (see @archeion/ui-kit variables.scss).

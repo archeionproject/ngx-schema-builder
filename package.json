@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve demo",
     "build": "npm run build:styles && ng build ngx-schema-builder",
-    "build:styles": "tailwindcss -i projects/ngx-schema-builder/assets/styles/jsonjoy.source.css -o projects/ngx-schema-builder/assets/styles/jsonjoy.css --minify",
+    "build:styles": "tailwindcss -i projects/ngx-schema-builder/styles/jsonjoy.source.css -o projects/ngx-schema-builder/assets/styles/jsonjoy.css --minify",
     "build:demo": "ng build demo",
     "watch": "ng build ngx-schema-builder --watch --configuration development",
     "test": "ng test",
