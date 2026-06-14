@@ -2,6 +2,16 @@
   "name": "@archeion/ngx-schema-builder",
   "version": "0.0.1",
   "description": "Visual JSON Schema editor for Angular — port of jsonjoy-builder by Ophir LOJKINE.",
+  "keywords": [
+    "angular",
+    "json-schema",
+    "schema-editor",
+    "schema-builder",
+    "json",
+    "jsonjoy",
+    "codemirror"
+  ],
+  "author": "Archeion",
   "contributors": [
     {
       "name": "Ophir LOJKINE",
@@ -11,8 +21,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/archeionproject/ngx-schema-builder"
+    "url": "git+https://github.com/archeionproject/ngx-schema-builder.git"
   },
+  "bugs": {
+    "url": "https://github.com/archeionproject/ngx-schema-builder/issues"
+  },
+  "homepage": "https://github.com/archeionproject/ngx-schema-builder#readme",
   "license": "MIT",
   "sideEffects": false,
   "peerDependencies": {
@@ -37,7 +51,8 @@
   },
   "exports": {
     "./assets/styles/*": {
-      "style": "./assets/styles/*"
+      "style": "./assets/styles/*",
+      "default": "./assets/styles/*"
     }
   }
 }
