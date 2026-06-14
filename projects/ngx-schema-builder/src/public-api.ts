@@ -2,7 +2,7 @@
  * Public API surface of ngx-schema-builder.
  *
  * The React-side equivalents from `jsonjoy-builder` map to these exports
- * as follows (see README "Migrating from jsonjoy-builder (React)"):
+ * as follows:
  *
  *   <SchemaBuilder>          → <lib-jsonjoy-schema-builder>          (SchemaBuilderComponent)
  *   <SchemaFieldsEditor>     → <lib-jsonjoy-schema-fields-editor>    (SchemaFieldsEditorComponent)
