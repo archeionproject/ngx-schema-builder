@@ -11,5 +11,18 @@
       "output": "assets/"
     }
   ],
-  "allowedNonPeerDependencies": ["ajv", "ajv-formats", "clsx", "tailwind-merge", "zod"]
+  "allowedNonPeerDependencies": [
+    "@codemirror/commands",
+    "@codemirror/lang-json",
+    "@codemirror/language",
+    "@codemirror/lint",
+    "@codemirror/state",
+    "@codemirror/view",
+    "ajv",
+    "ajv-formats",
+    "clsx",
+    "codemirror",
+    "tailwind-merge",
+    "zod"
+  ]
 }

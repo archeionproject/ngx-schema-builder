@@ -13,9 +13,9 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import {
-  type JsonjoyMonacoHandle,
-  JsonjoyMonacoEditorDirective,
-} from '../../internal/monaco-editor.directive';
+  type JsonjoyEditorHandle,
+  JsonjoyEditorDirective,
+} from '../../internal/editor.directive';
 import { createSchemaFromJson } from '../../internal/schema-inference';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import type { JsonSchema } from '../../types/json-schema';
@@ -23,13 +23,13 @@ import { ButtonDirective } from '../ui/button.directive';
 
 /**
  * Native `<dialog>`-based equivalent of React `<InferSchemaDialog>`. Opens a
- * Monaco-backed JSON input pane; on submit, infers a JSON Schema and emits
+ * CodeMirror-backed JSON input pane; on submit, infers a JSON Schema and emits
  * via `inferred`.
  */
 @Component({
   selector: 'lib-jsonjoy-infer-schema-dialog',
   standalone: true,
-  imports: [ButtonDirective, JsonjoyMonacoEditorDirective],
+  imports: [ButtonDirective, JsonjoyEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -46,7 +46,7 @@ import { ButtonDirective } from '../ui/button.directive';
       <div class="py-2">
         <div class="border rounded-md overflow-hidden relative h-[450px]">
           <div
-            libJsonjoyMonacoEditor
+            libJsonjoyEditor
             class="absolute inset-0"
             language="json"
             [autoFocus]="autoFocus()"
@@ -106,7 +106,7 @@ export class InferSchemaDialogComponent {
   protected readonly editorLoaded = signal(false);
 
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
-  private editorHandle: JsonjoyMonacoHandle | null = null;
+  private editorHandle: JsonjoyEditorHandle | null = null;
 
   constructor() {
     effect(() => {
@@ -115,8 +115,8 @@ export class InferSchemaDialogComponent {
       if (!el) return;
       if (shouldOpen && !el.open) {
         el.showModal();
-        // Monaco snapshots size on mount; the dialog was display:none then, so
-        // re-measure now that the host has real dimensions.
+        // The editor mounts while the dialog is display:none; re-measure now
+        // that the host has real dimensions.
         requestAnimationFrame(() => {
           this.editorHandle?.layout();
           if (this.autoFocus()) {
@@ -129,7 +129,7 @@ export class InferSchemaDialogComponent {
     });
   }
 
-  protected onEditorMounted(handle: JsonjoyMonacoHandle): void {
+  protected onEditorMounted(handle: JsonjoyEditorHandle): void {
     this.editorHandle = handle;
     this.editorLoaded.set(true);
     if (this.open()) {

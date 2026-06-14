@@ -13,9 +13,9 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import {
-  type JsonjoyMonacoHandle,
-  JsonjoyMonacoEditorDirective,
-} from '../../internal/monaco-editor.directive';
+  type JsonjoyEditorHandle,
+  JsonjoyEditorDirective,
+} from '../../internal/editor.directive';
 import {
   type ValidationResult,
   validateJson,
@@ -30,13 +30,13 @@ const VALIDATION_DEBOUNCE_MS = 500;
 
 /**
  * Native `<dialog>`-based equivalent of React `<ValidateJsonDialog>`. Two
- * Monaco editors side-by-side: writable user JSON validated against the
+ * CodeMirror editors side-by-side: writable user JSON validated against the
  * provided schema, and a read-only schema viewer. Validation runs debounced.
  */
 @Component({
   selector: 'lib-jsonjoy-validate-json-dialog',
   standalone: true,
-  imports: [JsonjoyMonacoEditorDirective],
+  imports: [JsonjoyEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -55,7 +55,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
           <div class="text-sm font-medium mb-2">{{ t().validatorContent }}</div>
           <div class="border rounded-md flex-1 h-full relative overflow-hidden">
             <div
-              libJsonjoyMonacoEditor
+              libJsonjoyEditor
               class="absolute inset-0"
               language="json"
               [autoFocus]="autoFocus()"
@@ -88,7 +88,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
           <div class="text-sm font-medium mb-2">{{ t().validatorCurrentSchema }}</div>
           <div class="border rounded-md flex-1 h-full relative overflow-hidden">
             <div
-              libJsonjoyMonacoEditor
+              libJsonjoyEditor
               class="absolute inset-0"
               language="json"
               [readOnly]="true"
@@ -214,8 +214,8 @@ export class ValidateJsonDialogComponent {
   });
 
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
-  private jsonEditorHandle: JsonjoyMonacoHandle | null = null;
-  private schemaEditorHandle: JsonjoyMonacoHandle | null = null;
+  private jsonEditorHandle: JsonjoyEditorHandle | null = null;
+  private schemaEditorHandle: JsonjoyEditorHandle | null = null;
   private validationSeq = 0;
 
   constructor() {
@@ -257,7 +257,7 @@ export class ValidateJsonDialogComponent {
     });
   }
 
-  protected onJsonEditorMounted(handle: JsonjoyMonacoHandle): void {
+  protected onJsonEditorMounted(handle: JsonjoyEditorHandle): void {
     this.jsonEditorHandle = handle;
     this.jsonEditorLoaded.set(true);
     if (this.open()) {
@@ -268,7 +268,7 @@ export class ValidateJsonDialogComponent {
     }
   }
 
-  protected onSchemaEditorMounted(handle: JsonjoyMonacoHandle): void {
+  protected onSchemaEditorMounted(handle: JsonjoyEditorHandle): void {
     this.schemaEditorHandle = handle;
     if (this.open()) {
       handle.layout();

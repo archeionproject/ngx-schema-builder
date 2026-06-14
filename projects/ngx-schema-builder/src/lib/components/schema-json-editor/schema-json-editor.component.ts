@@ -12,20 +12,19 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-import { JsonjoyMonacoEditorDirective } from '../../internal/monaco-editor.directive';
+import { JsonjoyEditorDirective } from '../../internal/editor.directive';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import type { Translation } from '../../i18n/translation-keys';
 import type { JsonSchema } from '../../types/json-schema';
 
 /**
  * Angular equivalent of React `<SchemaJsonEditor>`. Renders the
- * Monaco-backed JSON source editor with the JSON Schema draft-07
- * meta-schema enabled and a download button.
+ * CodeMirror-backed JSON source editor with a download button.
  */
 @Component({
   selector: 'lib-jsonjoy-schema-json-editor',
   standalone: true,
-  imports: [JsonjoyMonacoEditorDirective],
+  imports: [JsonjoyEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -78,8 +77,8 @@ import type { JsonSchema } from '../../types/json-schema';
       <div class="grow flex min-h-0">
         <div
           #editorHost
-          libJsonjoyMonacoEditor
-          class="monaco-editor-container w-full h-full"
+          libJsonjoyEditor
+          class="editor-container w-full h-full"
           language="json"
           [readOnly]="readOnly()"
           [autoFocus]="autoFocus()"
@@ -124,11 +123,11 @@ export class SchemaJsonEditorComponent {
   );
 
   private readonly editorDirective = viewChild.required(
-    JsonjoyMonacoEditorDirective,
+    JsonjoyEditorDirective,
   );
 
   /**
-   * Pretty-printed mirror of the bound schema. Pushed into Monaco via the
+   * Pretty-printed mirror of the bound schema. Pushed into the editor via the
    * directive's two-way `value`. Updated by `effect()` when `value()` changes
    * externally; the directive writes back to this signal when the user edits.
    */
@@ -154,7 +153,7 @@ export class SchemaJsonEditorComponent {
         if (current === raw) return;
         this.value.set(parsed);
       } catch {
-        // Monaco surfaces the parse error inline — silently ignore here.
+        // The editor surfaces the parse error inline — silently ignore here.
       }
     });
   }
