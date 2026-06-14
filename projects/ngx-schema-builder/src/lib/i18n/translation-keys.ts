@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+ 
 /**
  * The full set of translatable strings used by the schema builder.
  *

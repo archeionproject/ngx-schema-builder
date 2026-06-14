@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 
 import { en } from '../i18n/locales/en';
 import type { Translation } from '../i18n/translation-keys';
