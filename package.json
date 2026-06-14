@@ -10,7 +10,12 @@
     "build:demo": "ng build demo",
     "watch": "ng build ngx-schema-builder --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "release": "release-it --config .release-it.ngx-schema-builder.json",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "projects/ngx-schema-builder/**/*.{ts,html}": "eslint --fix"
   },
   "dependencies": {
     "@angular/animations": "^21.2.14",
@@ -40,15 +45,22 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.39.4",
+    "@release-it/bumper": "^6.0.1",
+    "@release-it/conventional-changelog": "^8.0.2",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^22.10.0",
     "angular-eslint": "^21.4.0",
     "eslint": "^9.39.4",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
+    "lint-staged": "^15.5.2",
     "ng-packagr": "^21.2.3",
     "postcss": "^8.4.49",
+    "release-it": "^17.11.0",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.61.0",

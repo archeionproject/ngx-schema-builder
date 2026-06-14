@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version bump type (alpha, patch, minor, major)"
+        required: true
+        default: "alpha"
+
+jobs:
+  release:
+    permissions:
+      id-token: write
+      contents: write
+      deployments: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensure we get tags
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Run release-it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION_TYPE=${{ github.event.inputs.version_type }}
+
+          if [[ "$VERSION_TYPE" == "alpha" ]]; then
+            DEBUG=release-it:* npx release-it --config .release-it.ngx-schema-builder.json --npm.publishArgs="--registry=https://registry.npmjs.org" --preRelease=alpha --ci
+          else
+            DEBUG=release-it:* npx release-it --config .release-it.ngx-schema-builder.json --npm.publishArgs="--registry=https://registry.npmjs.org" $VERSION_TYPE --ci
+          fi
+
+      - name: Manual publish to npm
+        working-directory: ./dist/ngx-schema-builder
+        run: |
+          VERSION_TYPE=${{ github.event.inputs.version_type }}
+
+          if [[ "$VERSION_TYPE" == "alpha" ]]; then
+            npm publish --tag alpha --access public
+          else
+            npm publish --tag latest --access public
+          fi

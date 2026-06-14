@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/release-it/schema/release-it.json",
+  "git": {
+    "commitMessage": "chore(ngx-schema-builder): release ${version}",
+    "tagName": "ngx-schema-builder/v${version}"
+  },
+  "npm": {
+    "publish": true,
+    "publishPath": "./dist/ngx-schema-builder"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "ngx-schema-builder release ${version}"
+  },
+  "hooks": {
+    "before:bump": "npm run build"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "tagPrefix": "ngx-schema-builder/v",
+      "preset": {
+        "name": "angular"
+      },
+      "infile": "./projects/ngx-schema-builder/CHANGELOG.md",
+      "gitRawCommitsOpts": {
+        "path": "./projects/ngx-schema-builder"
+      }
+    },
+    "@release-it/bumper": {
+      "in": "./projects/ngx-schema-builder/package.json",
+      "out": [
+        "./projects/ngx-schema-builder/package.json",
+        "./dist/ngx-schema-builder/package.json"
+      ]
+    }
+  }
+}
