@@ -11,11 +11,16 @@
     "watch": "ng build ngx-schema-builder --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "release": "release-it --config .release-it.ngx-schema-builder.json",
     "prepare": "husky"
   },
   "lint-staged": {
-    "projects/ngx-schema-builder/**/*.{ts,html}": "eslint --fix"
+    "projects/ngx-schema-builder/**/*.{ts,html}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "@angular/animations": "^21.2.14",
@@ -52,6 +57,7 @@
     "@release-it/conventional-changelog": "^8.0.2",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^22.10.0",
     "angular-eslint": "^21.4.0",
     "eslint": "^9.39.4",
@@ -60,6 +66,7 @@
     "lint-staged": "^15.5.2",
     "ng-packagr": "^21.2.3",
     "postcss": "^8.4.49",
+    "prettier": "^3.8.4",
     "release-it": "^17.11.0",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.3",

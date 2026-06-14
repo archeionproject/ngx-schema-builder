@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 
 import type { Translation } from '../i18n/translation-keys';
-import { baseSchema, type JsonSchema } from './json-schema';
+import { type JsonSchema, baseSchema } from './json-schema';
 
 function refineRangeConsistency(
   min: number | undefined,
@@ -331,7 +331,10 @@ export function buildValidationTree(
         children[propName] = buildValidationTree(propSchema, t);
       }
     }
-    if (sch['patternProperties'] && typeof sch['patternProperties'] === 'object') {
+    if (
+      sch['patternProperties'] &&
+      typeof sch['patternProperties'] === 'object'
+    ) {
       for (const [patternName, patternSchema] of Object.entries(
         sch['patternProperties'] as Record<string, JsonSchema>,
       )) {

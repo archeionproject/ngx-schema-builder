@@ -6,8 +6,8 @@ import {
   model,
 } from '@angular/core';
 
-import { cn } from '../../internal/cn';
 import type { Translation } from '../../i18n/translation-keys';
+import { cn } from '../../internal/cn';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import type { SchemaEditorType } from '../../types/json-schema';
 
@@ -19,14 +19,54 @@ interface TypeOption {
 }
 
 const TYPE_OPTIONS: readonly TypeOption[] = [
-  { id: 'string', label: 'fieldTypeTextLabel', description: 'fieldTypeTextDescription', group: 'basic' },
-  { id: 'number', label: 'fieldTypeNumberLabel', description: 'fieldTypeNumberDescription', group: 'basic' },
-  { id: 'boolean', label: 'fieldTypeBooleanLabel', description: 'fieldTypeBooleanDescription', group: 'basic' },
-  { id: 'object', label: 'fieldTypeObjectLabel', description: 'fieldTypeObjectDescription', group: 'basic' },
-  { id: 'array', label: 'fieldTypeArrayLabel', description: 'fieldTypeArrayDescription', group: 'basic' },
-  { id: 'anyOf', label: 'schemaTypeAnyOf', description: 'anyOfDescription', group: 'composition' },
-  { id: 'oneOf', label: 'schemaTypeOneOf', description: 'oneOfDescription', group: 'composition' },
-  { id: 'allOf', label: 'schemaTypeAllOf', description: 'allOfDescription', group: 'composition' },
+  {
+    id: 'string',
+    label: 'fieldTypeTextLabel',
+    description: 'fieldTypeTextDescription',
+    group: 'basic',
+  },
+  {
+    id: 'number',
+    label: 'fieldTypeNumberLabel',
+    description: 'fieldTypeNumberDescription',
+    group: 'basic',
+  },
+  {
+    id: 'boolean',
+    label: 'fieldTypeBooleanLabel',
+    description: 'fieldTypeBooleanDescription',
+    group: 'basic',
+  },
+  {
+    id: 'object',
+    label: 'fieldTypeObjectLabel',
+    description: 'fieldTypeObjectDescription',
+    group: 'basic',
+  },
+  {
+    id: 'array',
+    label: 'fieldTypeArrayLabel',
+    description: 'fieldTypeArrayDescription',
+    group: 'basic',
+  },
+  {
+    id: 'anyOf',
+    label: 'schemaTypeAnyOf',
+    description: 'anyOfDescription',
+    group: 'composition',
+  },
+  {
+    id: 'oneOf',
+    label: 'schemaTypeOneOf',
+    description: 'oneOfDescription',
+    group: 'composition',
+  },
+  {
+    id: 'allOf',
+    label: 'schemaTypeAllOf',
+    description: 'allOfDescription',
+    group: 'composition',
+  },
 ];
 
 @Component({
@@ -35,7 +75,10 @@ const TYPE_OPTIONS: readonly TypeOption[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
-    <div [id]="inputId()" class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2">
+    <div
+      [id]="inputId()"
+      class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2"
+    >
       @for (type of typeOptions; track type.id) {
         <button
           type="button"
@@ -44,7 +87,9 @@ const TYPE_OPTIONS: readonly TypeOption[] = [
           (click)="value.set(type.id)"
         >
           <div class="font-medium text-sm">{{ t()[type.label] }}</div>
-          <div class="text-xs text-muted-foreground line-clamp-1">{{ t()[type.description] }}</div>
+          <div class="text-xs text-muted-foreground line-clamp-1">
+            {{ t()[type.description] }}
+          </div>
         </button>
       }
     </div>

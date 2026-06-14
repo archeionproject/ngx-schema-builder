@@ -8,13 +8,13 @@ import {
 
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
-  getSchemaDescription,
-  withObjectSchema,
   type JsonSchema,
   type NewField,
   type ObjectJsonSchema,
   type SchemaType,
+  asObjectSchema,
+  getSchemaDescription,
+  withObjectSchema,
 } from '../../types/json-schema';
 import { SchemaPropertyEditorComponent } from './schema-property-editor.component';
 
@@ -64,7 +64,9 @@ export class SchemaFieldComponent {
 
   protected onSchemaChange(updatedSchema: ObjectJsonSchema): void {
     const declared = updatedSchema.type ?? 'object';
-    const type = (Array.isArray(declared) ? declared[0] : declared) as SchemaType;
+    const type = (
+      Array.isArray(declared) ? declared[0] : declared
+    ) as SchemaType;
     this.edit.emit({
       name: this.name(),
       type,
@@ -76,8 +78,14 @@ export class SchemaFieldComponent {
 
   private buildField(overrides: Partial<NewField>): NewField {
     const schema = this.schema();
-    const declared = withObjectSchema(schema, (s) => s.type ?? 'object', 'object');
-    const type = (Array.isArray(declared) ? declared[0] : declared) as SchemaType;
+    const declared = withObjectSchema(
+      schema,
+      (s) => s.type ?? 'object',
+      'object',
+    );
+    const type = (
+      Array.isArray(declared) ? declared[0] : declared
+    ) as SchemaType;
     return {
       name: this.name(),
       type,

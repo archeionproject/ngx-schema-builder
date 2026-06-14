@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,11 +11,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 
+import type { Translation } from '../../i18n/translation-keys';
 import { JsonjoyEditorDirective } from '../../internal/editor.directive';
 import { JsonjoyTranslationService } from '../../services/translation.service';
-import type { Translation } from '../../i18n/translation-keys';
 import type { JsonSchema } from '../../types/json-schema';
 
 /**
@@ -44,10 +44,16 @@ import type { JsonSchema } from '../../types/json-schema';
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+            />
             <polyline points="14 2 14 8 20 8" />
-            <path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1" />
-            <path d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1" />
+            <path
+              d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"
+            />
+            <path
+              d="M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"
+            />
           </svg>
           <span class="font-medium text-sm">{{ t().visualizerSource }}</span>
         </div>
@@ -122,9 +128,7 @@ export class SchemaJsonEditorComponent {
     this.messages,
   );
 
-  private readonly editorDirective = viewChild.required(
-    JsonjoyEditorDirective,
-  );
+  private readonly editorDirective = viewChild.required(JsonjoyEditorDirective);
 
   /**
    * Pretty-printed mirror of the bound schema. Pushed into the editor via the
@@ -133,9 +137,7 @@ export class SchemaJsonEditorComponent {
    */
   protected readonly jsonText = signal(this.stringify(this.value()));
 
-  protected readonly loaded = computed(() =>
-    this.editorDirective().loaded(),
-  );
+  protected readonly loaded = computed(() => this.editorDirective().loaded());
 
   constructor() {
     effect(() => {

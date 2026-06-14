@@ -1,5 +1,5 @@
-import { validateJson, findLineNumberForPath } from './json-validator';
 import type { JsonSchema } from '../types/json-schema';
+import { findLineNumberForPath, validateJson } from './json-validator';
 
 const schema: JsonSchema = {
   type: 'object',

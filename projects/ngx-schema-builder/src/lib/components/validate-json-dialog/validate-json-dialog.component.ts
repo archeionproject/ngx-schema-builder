@@ -13,16 +13,16 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import {
-  type JsonjoyEditorHandle,
   JsonjoyEditorDirective,
+  type JsonjoyEditorHandle,
 } from '../../internal/editor.directive';
 import {
   type ValidationResult,
   validateJson,
 } from '../../internal/json-validator';
 import {
-  formatTranslation,
   JsonjoyTranslationService,
+  formatTranslation,
 } from '../../services/translation.service';
 import type { JsonSchema } from '../../types/json-schema';
 
@@ -47,10 +47,14 @@ const VALIDATION_DEBOUNCE_MS = 500;
     >
       <div class="mb-4">
         <h2 class="text-xl font-semibold">{{ t().validatorTitle }}</h2>
-        <p class="text-sm text-muted-foreground">{{ t().validatorDescription }}</p>
+        <p class="text-sm text-muted-foreground">
+          {{ t().validatorDescription }}
+        </p>
       </div>
 
-      <div class="flex-1 flex flex-col md:flex-row gap-4 py-2 overflow-hidden h-[500px]">
+      <div
+        class="flex-1 flex flex-col md:flex-row gap-4 py-2 overflow-hidden h-[500px]"
+      >
         <div class="flex-1 flex flex-col h-full min-w-0">
           <div class="text-sm font-medium mb-2">{{ t().validatorContent }}</div>
           <div class="border rounded-md flex-1 h-full relative overflow-hidden">
@@ -64,7 +68,9 @@ const VALIDATION_DEBOUNCE_MS = 500;
               (mounted)="onJsonEditorMounted($event)"
             ></div>
             @if (!jsonEditorLoaded()) {
-              <div class="absolute inset-0 flex items-center justify-center bg-secondary/30">
+              <div
+                class="absolute inset-0 flex items-center justify-center bg-secondary/30"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -85,7 +91,9 @@ const VALIDATION_DEBOUNCE_MS = 500;
         </div>
 
         <div class="flex-1 flex flex-col h-full min-w-0">
-          <div class="text-sm font-medium mb-2">{{ t().validatorCurrentSchema }}</div>
+          <div class="text-sm font-medium mb-2">
+            {{ t().validatorCurrentSchema }}
+          </div>
           <div class="border rounded-md flex-1 h-full relative overflow-hidden">
             <div
               libJsonjoyEditor
@@ -159,12 +167,20 @@ const VALIDATION_DEBOUNCE_MS = 500;
                       <div class="flex items-start justify-between">
                         <div class="flex-1">
                           <p class="text-sm font-medium text-red-700">
-                            {{ error.path === '/' ? t().validatorErrorPathRoot : error.path }}
+                            {{
+                              error.path === '/'
+                                ? t().validatorErrorPathRoot
+                                : error.path
+                            }}
                           </p>
-                          <p class="text-sm text-gray-600 mt-1">{{ error.message }}</p>
+                          <p class="text-sm text-gray-600 mt-1">
+                            {{ error.message }}
+                          </p>
                         </div>
                         @if (error.line) {
-                          <div class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                          <div
+                            class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600"
+                          >
                             {{ formatLocation(error.line, error.column) }}
                           </div>
                         }
@@ -188,7 +204,10 @@ export class ValidateJsonDialogComponent {
   readonly messages = input<Partial<Translation> | undefined>(undefined);
 
   private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.withOverrides(this.locale, this.messages);
+  protected readonly t = this.translations.withOverrides(
+    this.locale,
+    this.messages,
+  );
 
   protected readonly jsonInput = signal('');
   protected readonly validationResult = signal<ValidationResult | null>(null);
@@ -213,7 +232,8 @@ export class ValidateJsonDialogComponent {
     });
   });
 
-  private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
+  private readonly dialogRef =
+    viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
   private jsonEditorHandle: JsonjoyEditorHandle | null = null;
   private schemaEditorHandle: JsonjoyEditorHandle | null = null;
   private validationSeq = 0;
@@ -275,7 +295,10 @@ export class ValidateJsonDialogComponent {
     }
   }
 
-  protected goToError(line: number | undefined, column: number | undefined): void {
+  protected goToError(
+    line: number | undefined,
+    column: number | undefined,
+  ): void {
     if (!line) return;
     this.jsonEditorHandle?.revealError(line, column ?? 1);
   }

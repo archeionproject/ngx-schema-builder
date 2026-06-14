@@ -10,23 +10,23 @@ import {
   signal,
 } from '@angular/core';
 
+import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
 import { JsonjoyTranslationService } from '../../services/translation.service';
-import type { Translation } from '../../i18n/translation-keys';
 import {
-  getEditorType,
-  getSchemaDescription,
-  isBooleanSchema,
   type JsonSchema,
   type ObjectJsonSchema,
   type SchemaEditorType,
   type SchemaType,
+  getEditorType,
+  getSchemaDescription,
+  isBooleanSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
-import { InputDirective } from '../ui/input.directive';
 import { TypeDropdownComponent } from '../schema-editor-internal/type-dropdown.component';
 import { TypeEditorComponent } from '../schema-editor-internal/type-editor.component';
 import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
+import { InputDirective } from '../ui/input.directive';
 
 export type CombinatorKind = 'anyOf' | 'oneOf' | 'allOf';
 
@@ -100,7 +100,11 @@ const nextId = () => `combinator-${++idCounter}`;
 @Component({
   selector: 'lib-jsonjoy-combinator-editor',
   standalone: true,
-  imports: [InputDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
+  imports: [
+    InputDirective,
+    TypeDropdownComponent,
+    forwardRef(() => TypeEditorComponent),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -393,14 +397,10 @@ export class CombinatorEditorComponent {
     this.commitOptions(newOptions);
   }
 
-  protected onOptionTypeChange(
-    index: number,
-    newType: SchemaEditorType,
-  ): void {
+  protected onOptionTypeChange(index: number, newType: SchemaEditorType): void {
     const options = this.options();
     const prevDesc = getSchemaDescription(options[index]);
-    let next: ObjectJsonSchema =
-      DEFAULT_SCHEMAS[newType as SchemaType] ??
+    let next: ObjectJsonSchema = DEFAULT_SCHEMAS[newType as SchemaType] ??
       DEFAULT_SCHEMAS[newType] ?? { type: 'string' };
     if (prevDesc !== '') {
       next = { ...next, description: prevDesc };
@@ -447,7 +447,8 @@ export class CombinatorEditorComponent {
       [combinator]: _old,
       type: _type,
       ...rest
-    } = base as ObjectJsonSchema & Record<CombinatorKind, JsonSchema[] | undefined>;
+    } = base as ObjectJsonSchema &
+      Record<CombinatorKind, JsonSchema[] | undefined>;
     this.schemaChange.emit({ ...rest, [combinator]: [...newOptions] });
   }
 }

@@ -26,7 +26,9 @@ export type SchemaBuilderMode = 'visual' | 'json' | 'both';
   host: { class: 'jsonjoy block' },
   template: `
     <div [class]="rootClasses()">
-      <div class="flex items-center justify-between px-4 py-3 border-b w-full shrink-0">
+      <div
+        class="flex items-center justify-between px-4 py-3 border-b w-full shrink-0"
+      >
         <h3 class="font-medium">{{ t().schemaEditorTitle }}</h3>
         <div
           class="grid grid-cols-3 w-[280px] h-9 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground"
@@ -96,7 +98,10 @@ export class SchemaBuilderComponent {
   readonly mode = model<SchemaBuilderMode>('both');
 
   private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.withOverrides(this.locale, this.messages);
+  protected readonly t = this.translations.withOverrides(
+    this.locale,
+    this.messages,
+  );
 
   protected readonly rootClasses = computed(() =>
     cn('json-editor-container w-full jsonjoy flex flex-col', this.className()),

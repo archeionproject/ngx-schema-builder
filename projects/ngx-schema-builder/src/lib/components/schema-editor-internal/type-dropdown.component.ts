@@ -35,11 +35,7 @@ const TYPE_OPTIONS: readonly SchemaEditorType[] = [
     '(document:click)': 'onDocumentClick($event)',
   },
   template: `
-    <button
-      type="button"
-      [class]="triggerClasses()"
-      (click)="toggle($event)"
-    >
+    <button type="button" [class]="triggerClasses()" (click)="toggle($event)">
       <span>{{ getTypeLabel(t(), value()) }}</span>
       @if (!readOnly()) {
         <svg

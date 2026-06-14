@@ -13,21 +13,21 @@ import { cn } from '../../internal/cn';
 import { getArrayItemsSchema } from '../../internal/schema-editor';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
-  isBooleanSchema,
-  withObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
   type SchemaEditorType,
   type SchemaType,
+  asObjectSchema,
+  isBooleanSchema,
+  withObjectSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
-import { InputDirective } from '../ui/input.directive';
-import { LabelDirective } from '../ui/label.directive';
-import { SwitchComponent } from '../ui/switch.component';
 import { TypeDropdownComponent } from '../schema-editor-internal/type-dropdown.component';
 import { TypeEditorComponent } from '../schema-editor-internal/type-editor.component';
 import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
+import { InputDirective } from '../ui/input.directive';
+import { LabelDirective } from '../ui/label.directive';
+import { SwitchComponent } from '../ui/switch.component';
 
 let nextArrayId = 0;
 
@@ -52,9 +52,7 @@ let nextArrayId = 0;
               <label
                 libJsonjoyLabel
                 [attr.for]="minItemsId"
-                [class.text-destructive]="
-                  !!minMaxError() || !!minItemsError()
-                "
+                [class.text-destructive]="!!minMaxError() || !!minItemsError()"
               >
                 {{ t().arrayMinimumLabel }}
               </label>
@@ -76,9 +74,7 @@ let nextArrayId = 0;
               <label
                 libJsonjoyLabel
                 [attr.for]="maxItemsId"
-                [class.text-destructive]="
-                  !!minMaxError() || !!maxItemsError()
-                "
+                [class.text-destructive]="!!minMaxError() || !!maxItemsError()"
               >
                 {{ t().arrayMaximumLabel }}
               </label>
@@ -95,9 +91,7 @@ let nextArrayId = 0;
               />
             </div>
           }
-          @if (
-            !!minMaxError() || !!minItemsError() || !!maxItemsError()
-          ) {
+          @if (!!minMaxError() || !!minItemsError() || !!maxItemsError()) {
             <div
               class="text-xs text-destructive italic md:col-span-2 whitespace-pre-line"
             >
@@ -125,9 +119,7 @@ let nextArrayId = 0;
         </div>
       }
 
-      <div
-        [class]="itemSectionClasses()"
-      >
+      <div [class]="itemSectionClasses()">
         <div class="flex items-center justify-between mb-4">
           <label libJsonjoyLabel>{{ t().arrayItemTypeLabel }}</label>
           <lib-jsonjoy-type-dropdown
@@ -203,8 +195,7 @@ export class ArrayEditorComponent {
   });
 
   protected readonly minMaxError = computed(
-    () =>
-      this.errorsByPath().find((err) => err.path[0] === 'minmax')?.message,
+    () => this.errorsByPath().find((err) => err.path[0] === 'minmax')?.message,
   );
 
   protected readonly minItemsError = computed(
@@ -293,11 +284,13 @@ export class ArrayEditorComponent {
     }
   }
 
-  private buildValidationProps(overrides: {
-    minItems?: number;
-    maxItems?: number;
-    uniqueItems?: boolean;
-  } = {}): ObjectJsonSchema {
+  private buildValidationProps(
+    overrides: {
+      minItems?: number;
+      maxItems?: number;
+      uniqueItems?: boolean;
+    } = {},
+  ): ObjectJsonSchema {
     const schema = this.schema();
     const next: ObjectJsonSchema = {
       type: 'array',

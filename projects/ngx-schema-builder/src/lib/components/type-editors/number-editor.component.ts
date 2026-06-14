@@ -11,16 +11,16 @@ import {
 import { cn } from '../../internal/cn';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  isBooleanSchema,
-  withObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
+  isBooleanSchema,
+  withObjectSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
+import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 import { ButtonDirective } from '../ui/button.directive';
 import { InputDirective } from '../ui/input.directive';
 import { LabelDirective } from '../ui/label.directive';
-import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 
 type NumberConstraint =
   | 'minimum'
@@ -41,23 +41,33 @@ let nextNumberEditorId = 0;
   template: `
     <div class="space-y-4">
       @if (readOnly() && !hasConstraint()) {
-        <p class="text-sm text-muted-foreground italic">{{ t().numberNoConstraint }}</p>
+        <p class="text-sm text-muted-foreground italic">
+          {{ t().numberNoConstraint }}
+        </p>
       }
 
       @if (!readOnly() || hasConstraint()) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-0 md:col-span-2">
             @if (minMaxError()) {
-              <div class="text-xs text-destructive italic">{{ minMaxError() }}</div>
+              <div class="text-xs text-destructive italic">
+                {{ minMaxError() }}
+              </div>
             }
             @if (redundantMinError()) {
-              <div class="text-xs text-destructive italic">{{ redundantMinError() }}</div>
+              <div class="text-xs text-destructive italic">
+                {{ redundantMinError() }}
+              </div>
             }
             @if (redundantMaxError()) {
-              <div class="text-xs text-destructive italic">{{ redundantMaxError() }}</div>
+              <div class="text-xs text-destructive italic">
+                {{ redundantMaxError() }}
+              </div>
             }
             @if (enumError()) {
-              <div class="text-xs text-destructive italic">{{ enumError() }}</div>
+              <div class="text-xs text-destructive italic">
+                {{ enumError() }}
+              </div>
             }
           </div>
 
@@ -66,7 +76,10 @@ let nextNumberEditorId = 0;
               <label
                 libJsonjoyLabel
                 [attr.for]="minimumId"
-                [class.text-destructive]="minimum() !== undefined && (!!minMaxError() || !!redundantMinError())"
+                [class.text-destructive]="
+                  minimum() !== undefined &&
+                  (!!minMaxError() || !!redundantMinError())
+                "
               >
                 {{ t().numberMinimumLabel }}
               </label>
@@ -89,7 +102,10 @@ let nextNumberEditorId = 0;
               <label
                 libJsonjoyLabel
                 [attr.for]="maximumId"
-                [class.text-destructive]="maximum() !== undefined && (!!minMaxError() || !!redundantMaxError())"
+                [class.text-destructive]="
+                  maximum() !== undefined &&
+                  (!!minMaxError() || !!redundantMaxError())
+                "
               >
                 {{ t().numberMaximumLabel }}
               </label>
@@ -109,14 +125,21 @@ let nextNumberEditorId = 0;
         </div>
       }
 
-      @if (!readOnly() || exclusiveMinimum() !== undefined || exclusiveMaximum() !== undefined) {
+      @if (
+        !readOnly() ||
+        exclusiveMinimum() !== undefined ||
+        exclusiveMaximum() !== undefined
+      ) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           @if (!readOnly() || exclusiveMinimum() !== undefined) {
             <div class="space-y-2">
               <label
                 libJsonjoyLabel
                 [attr.for]="exclusiveMinimumId"
-                [class.text-destructive]="exclusiveMinimum() !== undefined && (!!minMaxError() || !!redundantMinError())"
+                [class.text-destructive]="
+                  exclusiveMinimum() !== undefined &&
+                  (!!minMaxError() || !!redundantMinError())
+                "
               >
                 {{ t().numberExclusiveMinimumLabel }}
               </label>
@@ -139,7 +162,10 @@ let nextNumberEditorId = 0;
               <label
                 libJsonjoyLabel
                 [attr.for]="exclusiveMaximumId"
-                [class.text-destructive]="exclusiveMaximum() !== undefined && (!!minMaxError() || !!redundantMaxError())"
+                [class.text-destructive]="
+                  exclusiveMaximum() !== undefined &&
+                  (!!minMaxError() || !!redundantMaxError())
+                "
               >
                 {{ t().numberExclusiveMaximumLabel }}
               </label>
@@ -161,7 +187,11 @@ let nextNumberEditorId = 0;
 
       @if (!readOnly() || multipleOf() !== undefined) {
         <div class="space-y-2">
-          <label libJsonjoyLabel [attr.for]="multipleOfId" [class.text-destructive]="!!multipleOfError()">
+          <label
+            libJsonjoyLabel
+            [attr.for]="multipleOfId"
+            [class.text-destructive]="!!multipleOfError()"
+          >
             {{ t().numberMultipleOfLabel }}
           </label>
           <input
@@ -177,7 +207,9 @@ let nextNumberEditorId = 0;
             (input)="onBoundInput('multipleOf', $event)"
           />
           @if (multipleOfError()) {
-            <div class="text-xs text-destructive italic whitespace-pre-line">{{ multipleOfError() }}</div>
+            <div class="text-xs text-destructive italic whitespace-pre-line">
+              {{ multipleOfError() }}
+            </div>
           }
         </div>
       }
@@ -191,19 +223,36 @@ let nextNumberEditorId = 0;
           <div class="flex flex-wrap gap-2 mb-4">
             @if (enumValues().length > 0) {
               @for (value of enumValues(); track value) {
-                <div class="flex items-center bg-muted/40 border rounded-md px-2 py-1 text-xs">
+                <div
+                  class="flex items-center bg-muted/40 border rounded-md px-2 py-1 text-xs"
+                >
                   <span class="mr-1">{{ value }}</span>
                   <button
                     type="button"
                     class="text-muted-foreground hover:text-destructive"
                     (click)="removeEnumValue(value)"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
                   </button>
                 </div>
               }
             } @else {
-              <p class="text-xs text-muted-foreground italic">{{ t().numberAllowedValuesEnumNone }}</p>
+              <p class="text-xs text-muted-foreground italic">
+                {{ t().numberAllowedValuesEnumNone }}
+              </p>
             }
           </div>
 
@@ -218,7 +267,13 @@ let nextNumberEditorId = 0;
               (input)="onEnumDraftInput($event)"
               (keydown.enter)="addEnumValue()"
             />
-            <button libJsonjoyButton type="button" variant="secondary" size="sm" (click)="addEnumValue()">
+            <button
+              libJsonjoyButton
+              type="button"
+              variant="secondary"
+              size="sm"
+              (click)="addEnumValue()"
+            >
               {{ t().numberAllowedValuesEnumAddLabel }}
             </button>
           </div>
@@ -267,7 +322,11 @@ export class NumberEditorComponent {
     withObjectSchema(this.schema(), (s) => s.multipleOf, undefined),
   );
   protected readonly enumValues = computed<readonly number[]>(() =>
-    withObjectSchema(this.schema(), (s) => (s.enum as number[] | undefined) ?? [], []),
+    withObjectSchema(
+      this.schema(),
+      (s) => (s.enum as number[] | undefined) ?? [],
+      [],
+    ),
   );
 
   protected readonly hasConstraint = computed(
@@ -281,10 +340,16 @@ export class NumberEditorComponent {
   );
 
   protected readonly minMaxError = computed(() => this.errorAt('minMax'));
-  protected readonly redundantMinError = computed(() => this.errorAt('redundantMinimum'));
-  protected readonly redundantMaxError = computed(() => this.errorAt('redundantMaximum'));
+  protected readonly redundantMinError = computed(() =>
+    this.errorAt('redundantMinimum'),
+  );
+  protected readonly redundantMaxError = computed(() =>
+    this.errorAt('redundantMaximum'),
+  );
   protected readonly enumError = computed(() => this.errorAt('enum'));
-  protected readonly multipleOfError = computed(() => this.errorAt('multipleOf'));
+  protected readonly multipleOfError = computed(() =>
+    this.errorAt('multipleOf'),
+  );
 
   protected get stepAttr(): string {
     return this.integer() ? '1' : 'any';
@@ -299,9 +364,11 @@ export class NumberEditorComponent {
   ): string {
     const errored =
       field === 'minimum'
-        ? this.minimum() !== undefined && (!!this.minMaxError() || !!this.redundantMinError())
+        ? this.minimum() !== undefined &&
+          (!!this.minMaxError() || !!this.redundantMinError())
         : field === 'maximum'
-          ? this.maximum() !== undefined && (!!this.minMaxError() || !!this.redundantMaxError())
+          ? this.maximum() !== undefined &&
+            (!!this.minMaxError() || !!this.redundantMaxError())
           : field === 'exclusiveMinimum'
             ? this.exclusiveMinimum() !== undefined &&
               (!!this.minMaxError() || !!this.redundantMinError())
@@ -311,7 +378,12 @@ export class NumberEditorComponent {
   }
 
   protected onBoundInput(
-    field: 'minimum' | 'maximum' | 'exclusiveMinimum' | 'exclusiveMaximum' | 'multipleOf',
+    field:
+      | 'minimum'
+      | 'maximum'
+      | 'exclusiveMinimum'
+      | 'exclusiveMaximum'
+      | 'multipleOf',
     event: Event,
   ): void {
     const raw = (event.target as HTMLInputElement).value;
@@ -333,7 +405,11 @@ export class NumberEditorComponent {
     if (!current.includes(value)) {
       const next = [...current, value];
       this.applyEnumValues(next);
-      this.addEnum.emit({ value, index: current.length, schemaKey: this.schemaKey() });
+      this.addEnum.emit({
+        value,
+        index: current.length,
+        schemaKey: this.schemaKey(),
+      });
     }
     this.enumDraft.set('');
   }
@@ -355,7 +431,10 @@ export class NumberEditorComponent {
     }
   }
 
-  private applyValidationChange(property: NumberConstraint, value: unknown): void {
+  private applyValidationChange(
+    property: NumberConstraint,
+    value: unknown,
+  ): void {
     const current = this.schema();
     const type: 'integer' | 'number' = this.integer() ? 'integer' : 'number';
     const next: ObjectJsonSchema = isBooleanSchema(current)
@@ -374,6 +453,7 @@ export class NumberEditorComponent {
   private errorAt(pathKey: string): string | undefined {
     const node = this.validationNode();
     if (!node || node.validation.success) return undefined;
-    return node.validation.errors?.find((err) => err.path[0] === pathKey)?.message;
+    return node.validation.errors?.find((err) => err.path[0] === pathKey)
+      ?.message;
   }
 }

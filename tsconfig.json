@@ -18,7 +18,9 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom", "dom.iterable"],
     "paths": {
-      "@archeion/ngx-schema-builder": ["./projects/ngx-schema-builder/src/public-api.ts"]
+      "@archeion/ngx-schema-builder": [
+        "./projects/ngx-schema-builder/src/public-api.ts"
+      ]
     }
   },
   "angularCompilerOptions": {

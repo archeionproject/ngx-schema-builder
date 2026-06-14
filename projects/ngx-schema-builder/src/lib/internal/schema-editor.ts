@@ -141,7 +141,9 @@ export function createFieldSchema(field: NewField): JsonSchema {
 
   if (type === '$ref') {
     const ref =
-      validation && isObjectSchema(validation) && typeof validation.$ref === 'string'
+      validation &&
+      isObjectSchema(validation) &&
+      typeof validation.$ref === 'string'
         ? validation.$ref
         : '';
     return { $ref: ref };
@@ -245,12 +247,7 @@ export function renameObjectPatternProperty(
   oldName: string,
   newName: string,
 ): ObjectJsonSchema {
-  return renameObjectSchemaEntry(
-    schema,
-    'patternProperties',
-    oldName,
-    newName,
-  );
+  return renameObjectSchemaEntry(schema, 'patternProperties', oldName, newName);
 }
 
 function renameObjectSchemaEntry(

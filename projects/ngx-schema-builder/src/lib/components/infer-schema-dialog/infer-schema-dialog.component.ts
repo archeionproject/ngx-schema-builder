@@ -13,8 +13,8 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import {
-  type JsonjoyEditorHandle,
   JsonjoyEditorDirective,
+  type JsonjoyEditorHandle,
 } from '../../internal/editor.directive';
 import { createSchemaFromJson } from '../../internal/schema-inference';
 import { JsonjoyTranslationService } from '../../services/translation.service';
@@ -40,7 +40,9 @@ import { ButtonDirective } from '../ui/button.directive';
     >
       <div class="mb-4">
         <h2 class="text-xl font-semibold">{{ t().inferrerTitle }}</h2>
-        <p class="text-sm text-muted-foreground">{{ t().inferrerDescription }}</p>
+        <p class="text-sm text-muted-foreground">
+          {{ t().inferrerDescription }}
+        </p>
       </div>
 
       <div class="py-2">
@@ -80,7 +82,13 @@ import { ButtonDirective } from '../ui/button.directive';
       </div>
 
       <div class="mt-4 gap-2 flex flex-wrap justify-end">
-        <button libJsonjoyButton type="button" variant="outline" size="sm" (click)="close()">
+        <button
+          libJsonjoyButton
+          type="button"
+          variant="outline"
+          size="sm"
+          (click)="close()"
+        >
           {{ t().inferrerCancel }}
         </button>
         <button libJsonjoyButton type="button" size="sm" (click)="generate()">
@@ -99,13 +107,17 @@ export class InferSchemaDialogComponent {
   readonly inferred = output<JsonSchema>();
 
   private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.withOverrides(this.locale, this.messages);
+  protected readonly t = this.translations.withOverrides(
+    this.locale,
+    this.messages,
+  );
 
   protected readonly jsonInput = signal('');
   protected readonly error = signal<string | null>(null);
   protected readonly editorLoaded = signal(false);
 
-  private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
+  private readonly dialogRef =
+    viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
   private editorHandle: JsonjoyEditorHandle | null = null;
 
   constructor() {

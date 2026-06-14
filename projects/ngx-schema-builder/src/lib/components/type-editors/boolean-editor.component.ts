@@ -9,15 +9,15 @@ import {
 
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  isBooleanSchema,
-  withObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
+  isBooleanSchema,
+  withObjectSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
+import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 import { LabelDirective } from '../ui/label.directive';
 import { SwitchComponent } from '../ui/switch.component';
-import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 
 let nextBooleanEditorId = 0;
 
@@ -30,7 +30,9 @@ let nextBooleanEditorId = 0;
   template: `
     <div class="space-y-4">
       @if (readOnly() && !hasEnum()) {
-        <p class="text-sm text-muted-foreground italic">{{ t().booleanNoConstraint }}</p>
+        <p class="text-sm text-muted-foreground italic">
+          {{ t().booleanNoConstraint }}
+        </p>
       }
 
       @if (!readOnly() || !allowsTrue() || !allowsFalse()) {
@@ -46,7 +48,11 @@ let nextBooleanEditorId = 0;
                   [attr.id]="allowTrueId"
                   (checkedChange)="handleAllowedChange(true, $event)"
                 />
-                <label libJsonjoyLabel [attr.for]="allowTrueId" class="cursor-pointer">
+                <label
+                  libJsonjoyLabel
+                  [attr.for]="allowTrueId"
+                  class="cursor-pointer"
+                >
                   {{ t().booleanAllowTrueLabel }}
                 </label>
               </div>
@@ -58,7 +64,11 @@ let nextBooleanEditorId = 0;
                   [attr.id]="allowFalseId"
                   (checkedChange)="handleAllowedChange(false, $event)"
                 />
-                <label libJsonjoyLabel [attr.for]="allowFalseId" class="cursor-pointer">
+                <label
+                  libJsonjoyLabel
+                  [attr.for]="allowFalseId"
+                  class="cursor-pointer"
+                >
                   {{ t().booleanAllowFalseLabel }}
                 </label>
               </div>
@@ -66,7 +76,9 @@ let nextBooleanEditorId = 0;
           }
 
           @if (!allowsTrue() && !allowsFalse()) {
-            <p class="text-xs text-amber-600 mt-2">{{ t().booleanNeitherWarning }}</p>
+            <p class="text-xs text-amber-600 mt-2">
+              {{ t().booleanNeitherWarning }}
+            </p>
           }
         </div>
       }
@@ -92,10 +104,16 @@ export class BooleanEditorComponent {
   protected readonly allowFalseId = `jjbe-${this.idSeq}-false`;
 
   protected readonly enumValues = computed<readonly boolean[] | null>(() =>
-    withObjectSchema(this.schema(), (s) => (s.enum as boolean[] | undefined) ?? null, null),
+    withObjectSchema(
+      this.schema(),
+      (s) => (s.enum as boolean[] | undefined) ?? null,
+      null,
+    ),
   );
 
-  protected readonly hasRestrictions = computed(() => Array.isArray(this.enumValues()));
+  protected readonly hasRestrictions = computed(() =>
+    Array.isArray(this.enumValues()),
+  );
 
   protected readonly allowsTrue = computed(() => {
     const restricted = this.hasRestrictions();
@@ -158,7 +176,8 @@ export class BooleanEditorComponent {
         schemaKey: this.schemaKey(),
       });
     } else if (action === 'delete') {
-      const fallbackIndex = current?.indexOf(value) ?? [true, false].indexOf(value);
+      const fallbackIndex =
+        current?.indexOf(value) ?? [true, false].indexOf(value);
       this.deleteEnum.emit({
         value,
         index: Math.max(fallbackIndex, 0),

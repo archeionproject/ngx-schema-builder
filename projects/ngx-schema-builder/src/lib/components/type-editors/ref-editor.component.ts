@@ -1,21 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  type Signal,
   computed,
   inject,
   input,
   output,
   signal,
-  type Signal,
 } from '@angular/core';
 
 import type { RefSuggestion } from '../../interfaces/ref-suggestion.interface';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import { SCHEMA_BUILDER_REF_SUGGESTIONS } from '../../tokens/ref-suggestions.token';
 import {
-  asRefSchema,
   type JsonSchema,
   type ObjectJsonSchema,
+  asRefSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
 import { InputDirective } from '../ui/input.directive';
@@ -67,9 +67,13 @@ let nextRefEditorId = 0;
         <div class="space-y-2">
           <label libJsonjoyLabel>{{ t().refSuggestionsLabel }}</label>
           @if (filteredSuggestions().length === 0) {
-            <p class="text-xs text-muted-foreground italic">{{ t().refNoSuggestions }}</p>
+            <p class="text-xs text-muted-foreground italic">
+              {{ t().refNoSuggestions }}
+            </p>
           } @else {
-            <ul class="flex flex-col gap-1 max-h-48 overflow-y-auto rounded-md border border-border p-1">
+            <ul
+              class="flex flex-col gap-1 max-h-48 overflow-y-auto rounded-md border border-border p-1"
+            >
               @for (s of filteredSuggestions(); track s.id) {
                 <li>
                   <button
@@ -79,9 +83,15 @@ let nextRefEditorId = 0;
                   >
                     <span class="block text-sm font-medium">{{ s.label }}</span>
                     @if (s.description) {
-                      <span class="block text-xs text-muted-foreground truncate">{{ s.description }}</span>
+                      <span
+                        class="block text-xs text-muted-foreground truncate"
+                        >{{ s.description }}</span
+                      >
                     }
-                    <span class="block text-xs text-muted-foreground font-mono truncate">{{ s.url }}</span>
+                    <span
+                      class="block text-xs text-muted-foreground font-mono truncate"
+                      >{{ s.url }}</span
+                    >
                   </button>
                 </li>
               }
@@ -113,7 +123,9 @@ export class RefEditorComponent {
 
   private readonly currentRef = computed(() => asRefSchema(this.schema()).$ref);
   protected readonly urlValue = computed(() => splitRef(this.currentRef()).url);
-  protected readonly pointerValue = computed(() => splitRef(this.currentRef()).pointer);
+  protected readonly pointerValue = computed(
+    () => splitRef(this.currentRef()).pointer,
+  );
 
   private readonly urlOverride = signal<string | null>(null);
   private readonly pointerOverride = signal<string | null>(null);

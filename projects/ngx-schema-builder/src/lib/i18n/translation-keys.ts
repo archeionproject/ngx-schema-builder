@@ -1,4 +1,3 @@
- 
 /**
  * The full set of translatable strings used by the schema builder.
  *

@@ -72,7 +72,9 @@ let nextAddFieldId = 0;
             {{ t().fieldAddNewBadge }}
           </span>
         </div>
-        <p class="text-sm text-muted-foreground">{{ t().fieldAddNewDescription }}</p>
+        <p class="text-sm text-muted-foreground">
+          {{ t().fieldAddNewDescription }}
+        </p>
       </div>
 
       <form class="space-y-6" [id]="formId" (submit)="onSubmit($event)">
@@ -80,36 +82,58 @@ let nextAddFieldId = 0;
           <div class="space-y-4 min-w-[280px]">
             <div>
               <div class="flex items-center justify-between gap-2">
-                <label libJsonjoyLabel [attr.for]="fieldNameId" class="text-sm font-medium">
-                  {{ useRegex() ? t().fieldNameRegexLabel : t().fieldNameLabel }}
+                <label
+                  libJsonjoyLabel
+                  [attr.for]="fieldNameId"
+                  class="text-sm font-medium"
+                >
+                  {{
+                    useRegex() ? t().fieldNameRegexLabel : t().fieldNameLabel
+                  }}
                 </label>
                 <button
                   type="button"
                   class="text-xs text-muted-foreground hover:text-foreground underline shrink-0"
                   (click)="useRegex.set(!useRegex())"
                 >
-                  {{ useRegex() ? t().fieldNameUseExactName : t().fieldNameUseRegex }}
+                  {{
+                    useRegex()
+                      ? t().fieldNameUseExactName
+                      : t().fieldNameUseRegex
+                  }}
                 </button>
               </div>
               <input
                 libJsonjoyInput
                 [id]="fieldNameId"
                 [value]="fieldName()"
-                [placeholder]="useRegex() ? t().fieldNameRegexPlaceholder : t().fieldNamePlaceholder"
+                [placeholder]="
+                  useRegex()
+                    ? t().fieldNameRegexPlaceholder
+                    : t().fieldNamePlaceholder
+                "
                 class="font-mono text-sm w-full mt-1.5"
                 [class.border-destructive]="!!regexError()"
                 required
-                (input)="fieldName.set(($any($event.target)).value)"
+                (input)="fieldName.set($any($event.target).value)"
               />
               @if (regexError()) {
-                <p class="text-xs text-destructive mt-1">{{ t().fieldNameRegexError }}</p>
+                <p class="text-xs text-destructive mt-1">
+                  {{ t().fieldNameRegexError }}
+                </p>
               } @else if (useRegex()) {
-                <p class="text-xs text-muted-foreground mt-1">{{ t().fieldNameRegexHelp }}</p>
+                <p class="text-xs text-muted-foreground mt-1">
+                  {{ t().fieldNameRegexHelp }}
+                </p>
               }
             </div>
 
             <div>
-              <label libJsonjoyLabel [attr.for]="fieldDescId" class="block text-sm font-medium">
+              <label
+                libJsonjoyLabel
+                [attr.for]="fieldDescId"
+                class="block text-sm font-medium"
+              >
                 {{ t().fieldDescription }}
               </label>
               <input
@@ -118,20 +142,26 @@ let nextAddFieldId = 0;
                 [value]="fieldDesc()"
                 [placeholder]="t().fieldDescriptionPlaceholder"
                 class="text-sm w-full mt-1.5"
-                (input)="fieldDesc.set(($any($event.target)).value)"
+                (input)="fieldDesc.set($any($event.target).value)"
               />
             </div>
 
             @if (!useRegex()) {
-              <div class="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
+              <div
+                class="flex items-center gap-3 p-3 rounded-lg border bg-muted/50"
+              >
                 <input
                   type="checkbox"
                   [id]="fieldRequiredId"
                   [checked]="fieldRequired()"
                   class="rounded border-gray-300 shrink-0"
-                  (change)="fieldRequired.set(($any($event.target)).checked)"
+                  (change)="fieldRequired.set($any($event.target).checked)"
                 />
-                <label libJsonjoyLabel [attr.for]="fieldRequiredId" class="text-sm">
+                <label
+                  libJsonjoyLabel
+                  [attr.for]="fieldRequiredId"
+                  class="text-sm"
+                >
                   {{ t().fieldRequiredLabel }}
                 </label>
               </div>
@@ -140,7 +170,11 @@ let nextAddFieldId = 0;
 
           <div class="space-y-4 min-w-[280px]">
             <div>
-              <label libJsonjoyLabel [attr.for]="fieldTypeId" class="block text-sm font-medium mb-1.5">
+              <label
+                libJsonjoyLabel
+                [attr.for]="fieldTypeId"
+                class="block text-sm font-medium mb-1.5"
+              >
                 {{ t().fieldType }}
               </label>
               <lib-jsonjoy-schema-type-selector
@@ -152,10 +186,22 @@ let nextAddFieldId = 0;
         </div>
 
         <div class="mt-6 gap-2 flex flex-wrap justify-end">
-          <button libJsonjoyButton type="button" variant="outline" size="sm" (click)="closeDialog()">
+          <button
+            libJsonjoyButton
+            type="button"
+            variant="outline"
+            size="sm"
+            (click)="closeDialog()"
+          >
             {{ t().fieldAddNewCancel }}
           </button>
-          <button libJsonjoyButton type="submit" size="sm" [attr.form]="formId" [disabled]="!canSubmit()">
+          <button
+            libJsonjoyButton
+            type="submit"
+            size="sm"
+            [attr.form]="formId"
+            [disabled]="!canSubmit()"
+          >
             {{ t().fieldAddNewConfirm }}
           </button>
         </div>
@@ -202,7 +248,8 @@ export class AddFieldButtonComponent {
     () => this.fieldName().trim().length > 0 && !this.regexError(),
   );
 
-  private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
+  private readonly dialogRef =
+    viewChild<ElementRef<HTMLDialogElement>>('dialogRef');
 
   protected openDialog(): void {
     this.dialogRef()?.nativeElement.showModal();

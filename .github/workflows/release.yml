@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version_type:
-        description: "Version bump type (alpha, patch, minor, major)"
+        description: 'Version bump type (alpha, patch, minor, major)'
         required: true
-        default: "alpha"
+        default: 'alpha'
 
 jobs:
   release:
@@ -24,8 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Configure Git
         run: |

@@ -22,11 +22,11 @@ import {
 } from '../../internal/schema-editor';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
-  isBooleanSchema,
   type JsonSchema,
   type NewField,
   type ObjectJsonSchema,
+  asObjectSchema,
+  isBooleanSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
 import { AddFieldButtonComponent } from '../schema-editor-internal/add-field-button.component';
@@ -36,7 +36,10 @@ import type { EnumChangeContext } from '../schema-editor-internal/type-editor.co
 @Component({
   selector: 'lib-jsonjoy-object-editor',
   standalone: true,
-  imports: [AddFieldButtonComponent, forwardRef(() => SchemaPropertyRowsComponent)],
+  imports: [
+    AddFieldButtonComponent,
+    forwardRef(() => SchemaPropertyRowsComponent),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -129,8 +132,7 @@ export class ObjectEditorComponent {
   );
 
   protected readonly additionalPropertiesClasses = computed(() => {
-    const base =
-      'text-xs px-3 py-1.5 rounded-md font-medium transition-colors';
+    const base = 'text-xs px-3 py-1.5 rounded-md font-medium transition-colors';
     const variant = this.additionalPropertiesForbidden()
       ? 'bg-amber-50 text-amber-600 hover:bg-amber-100'
       : 'bg-lime-50 text-lime-600 hover:bg-lime-100';

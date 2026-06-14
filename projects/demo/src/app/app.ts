@@ -1,10 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core';
 import {
   InferSchemaDialogComponent,
+  type JsonSchema,
   SchemaBuilderComponent,
   ValidateJsonDialogComponent,
-  type JsonSchema,
 } from '@archeion/ngx-schema-builder';
 
 const INITIAL_SCHEMA: JsonSchema = {
@@ -82,7 +86,9 @@ const INITIAL_SCHEMA: JsonSchema = {
       <header class="space-y-1">
         <h1 class="text-2xl font-semibold">ngx-schema-builder demo</h1>
         <p class="text-sm text-muted-foreground">
-          Edit any property type (string, number, boolean, object, array, anyOf/oneOf/allOf), toggle Visual/JSON/Both panes, infer a schema from JSON, or validate a JSON document against the current schema.
+          Edit any property type (string, number, boolean, object, array,
+          anyOf/oneOf/allOf), toggle Visual/JSON/Both panes, infer a schema from
+          JSON, or validate a JSON document against the current schema.
         </p>
       </header>
 
@@ -108,8 +114,14 @@ const INITIAL_SCHEMA: JsonSchema = {
       </section>
 
       <section class="space-y-2">
-        <h2 class="text-sm font-medium text-muted-foreground uppercase tracking-wide">Live schema</h2>
-        <pre class="rounded-md border bg-muted/40 p-4 text-xs overflow-x-auto"><code>{{ schemaJson() }}</code></pre>
+        <h2
+          class="text-sm font-medium text-muted-foreground uppercase tracking-wide"
+        >
+          Live schema
+        </h2>
+        <pre
+          class="rounded-md border bg-muted/40 p-4 text-xs overflow-x-auto"
+        ><code>{{ schemaJson() }}</code></pre>
       </section>
 
       <lib-jsonjoy-infer-schema-dialog
@@ -125,7 +137,9 @@ const INITIAL_SCHEMA: JsonSchema = {
 })
 export class AppComponent {
   protected readonly schema = signal<JsonSchema>(INITIAL_SCHEMA);
-  protected readonly schemaJson = computed(() => JSON.stringify(this.schema(), null, 2));
+  protected readonly schemaJson = computed(() =>
+    JSON.stringify(this.schema(), null, 2),
+  );
 
   protected readonly inferOpen = signal(false);
   protected readonly validateOpen = signal(false);

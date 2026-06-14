@@ -15,29 +15,40 @@ import {
 import { cn } from '../../internal/cn';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
-  getEditorType,
-  getSchemaDescription,
   type JsonSchema,
   type ObjectJsonSchema,
   type SchemaEditorType,
+  asObjectSchema,
+  getEditorType,
+  getSchemaDescription,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
 import { BadgeDirective } from '../ui/badge.directive';
 import { InputDirective } from '../ui/input.directive';
 import { LabelDirective } from '../ui/label.directive';
 import { TypeDropdownComponent } from './type-dropdown.component';
-import { TypeEditorComponent, type EnumChangeContext } from './type-editor.component';
+import {
+  type EnumChangeContext,
+  TypeEditorComponent,
+} from './type-editor.component';
 
 @Component({
   selector: 'lib-jsonjoy-schema-property-editor',
   standalone: true,
-  imports: [BadgeDirective, InputDirective, LabelDirective, TypeDropdownComponent, forwardRef(() => TypeEditorComponent)],
+  imports: [
+    BadgeDirective,
+    InputDirective,
+    LabelDirective,
+    TypeDropdownComponent,
+    forwardRef(() => TypeEditorComponent),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy block' },
   template: `
     <div [class]="rootClasses()">
-      <div class="relative json-field-row justify-between group flex items-center">
+      <div
+        class="relative json-field-row justify-between group flex items-center"
+      >
         <div class="flex items-center gap-2 grow min-w-0">
           <button
             type="button"
@@ -46,9 +57,33 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
             (click)="toggleExpanded()"
           >
             @if (expanded()) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
             } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             }
           </button>
 
@@ -133,7 +168,23 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
                   class="text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center whitespace-nowrap bg-secondary text-muted-foreground flex items-center justify-center gap-1"
                   [title]="t().propertyNameRegexDescription"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3v10"/><path d="m12.67 5.5 8.66 5"/><path d="m12.67 10.5 8.66-5"/><path d="M9 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M17 3v10" />
+                    <path d="m12.67 5.5 8.66 5" />
+                    <path d="m12.67 10.5 8.66-5" />
+                    <path d="M9 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
+                  </svg>
                   regex
                 </span>
               }
@@ -159,7 +210,20 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
               [attr.aria-label]="t().propertyDelete"
               (click)="delete.emit()"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
             </button>
           </div>
         }
@@ -174,7 +238,9 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
           @if (!isRef()) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
               <div class="space-y-1">
-                <label libJsonjoyLabel [attr.for]="titleId">{{ t().propertyTitleLabel }}</label>
+                <label libJsonjoyLabel [attr.for]="titleId">{{
+                  t().propertyTitleLabel
+                }}</label>
                 <input
                   libJsonjoyInput
                   [id]="titleId"
@@ -188,7 +254,9 @@ import { TypeEditorComponent, type EnumChangeContext } from './type-editor.compo
                 />
               </div>
               <div class="space-y-1">
-                <label libJsonjoyLabel [attr.for]="defaultId">{{ t().propertyDefaultLabel }}</label>
+                <label libJsonjoyLabel [attr.for]="defaultId">{{
+                  t().propertyDefaultLabel
+                }}</label>
                 <input
                   libJsonjoyInput
                   [id]="defaultId"
@@ -274,7 +342,9 @@ export class SchemaPropertyEditorComponent {
   );
 
   protected readonly nameAriaLabel = computed(() =>
-    this.mode() === 'pattern' ? `${this.t().fieldNameRegexLabel}: ${this.name()}` : null,
+    this.mode() === 'pattern'
+      ? `${this.t().fieldNameRegexLabel}: ${this.name()}`
+      : null,
   );
   protected readonly nameTitle = computed(() =>
     this.mode() === 'pattern' ? this.t().propertyNameRegexDescription : null,
@@ -283,12 +353,16 @@ export class SchemaPropertyEditorComponent {
   protected readonly requiredToggleClasses = computed(() =>
     cn(
       'text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center cursor-pointer hover:shadow-xs hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all whitespace-nowrap',
-      this.required() ? 'bg-red-50 text-red-500' : 'bg-secondary text-muted-foreground',
+      this.required()
+        ? 'bg-red-50 text-red-500'
+        : 'bg-secondary text-muted-foreground',
     ),
   );
 
-  private readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
-  private readonly descInput = viewChild<ElementRef<HTMLInputElement>>('descInput');
+  private readonly nameInput =
+    viewChild<ElementRef<HTMLInputElement>>('nameInput');
+  private readonly descInput =
+    viewChild<ElementRef<HTMLInputElement>>('descInput');
 
   constructor() {
     effect(() => {
@@ -370,9 +444,7 @@ export class SchemaPropertyEditorComponent {
     const current = typeof base.title === 'string' ? base.title : '';
     if (trimmed === current) return;
     const { title: _t, ...rest } = base;
-    this.schemaChange.emit(
-      trimmed ? { ...rest, title: trimmed } : rest,
-    );
+    this.schemaChange.emit(trimmed ? { ...rest, title: trimmed } : rest);
   }
 
   protected onTempDefaultInput(event: Event): void {
@@ -410,11 +482,23 @@ export class SchemaPropertyEditorComponent {
       return;
     }
     if (newType === 'anyOf' || newType === 'oneOf' || newType === 'allOf') {
-      const { type: _type, $ref: _r, anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;
+      const {
+        type: _type,
+        $ref: _r,
+        anyOf: _a,
+        oneOf: _o,
+        allOf: _al,
+        ...rest
+      } = current;
       const initial =
         newType === 'allOf'
           ? { allOf: [{ type: 'object' as const }] }
-          : { [newType]: [{ type: 'string' as const }, { type: 'number' as const }] };
+          : {
+              [newType]: [
+                { type: 'string' as const },
+                { type: 'number' as const },
+              ],
+            };
       this.schemaChange.emit({ ...rest, ...initial });
     } else {
       const { $ref: _r, anyOf: _a, oneOf: _o, allOf: _al, ...rest } = current;

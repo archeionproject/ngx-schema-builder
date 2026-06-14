@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   DestroyRef,
   Directive,
@@ -11,17 +12,21 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { indentWithTab } from '@codemirror/commands';
+import { json, jsonParseLinter } from '@codemirror/lang-json';
+import {
+  type Diagnostic,
+  forceLinting,
+  lintGutter,
+  linter,
+} from '@codemirror/lint';
 import { Annotation, Compartment, EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { indentWithTab } from '@codemirror/commands';
 import { keymap } from '@codemirror/view';
-import { json, jsonParseLinter } from '@codemirror/lang-json';
-import { type Diagnostic, forceLinting, linter, lintGutter } from '@codemirror/lint';
 import { basicSetup } from 'codemirror';
 
-import { validateJson } from './json-validator';
 import type { JsonSchema } from '../types/json-schema';
+import { validateJson } from './json-validator';
 
 /**
  * Imperative handle emitted via the `mounted` output once the editor has
@@ -197,7 +202,10 @@ export class JsonjoyEditorDirective {
   }
 
   private readOnlyExtension(readOnly: boolean) {
-    return [EditorState.readOnly.of(readOnly), EditorView.editable.of(!readOnly)];
+    return [
+      EditorState.readOnly.of(readOnly),
+      EditorView.editable.of(!readOnly),
+    ];
   }
 
   private themeExtension(dark: boolean) {
@@ -220,7 +228,8 @@ export class JsonjoyEditorDirective {
           color: 'var(--color-muted-foreground)',
         },
         '.cm-activeLine, .cm-activeLineGutter': {
-          backgroundColor: 'color-mix(in srgb, var(--color-muted) 40%, transparent)',
+          backgroundColor:
+            'color-mix(in srgb, var(--color-muted) 40%, transparent)',
         },
       },
       { dark },

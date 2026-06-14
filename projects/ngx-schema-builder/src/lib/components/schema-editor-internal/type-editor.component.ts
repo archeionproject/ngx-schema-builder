@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 
 import {
-  getEditorType,
   type JsonSchema,
   type ObjectJsonSchema,
+  getEditorType,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
 import { ArrayEditorComponent } from '../type-editors/array-editor.component';

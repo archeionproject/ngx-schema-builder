@@ -149,7 +149,12 @@ export interface SchemaEditorState {
 export type ObjectJsonSchema = Exclude<JsonSchema, boolean>;
 
 /** Virtual type used in the editor UI to represent combinator and reference schemas */
-export type SchemaEditorType = SchemaType | 'anyOf' | 'oneOf' | 'allOf' | '$ref';
+export type SchemaEditorType =
+  | SchemaType
+  | 'anyOf'
+  | 'oneOf'
+  | 'allOf'
+  | '$ref';
 
 export interface RefJsonSchema {
   $ref: string;

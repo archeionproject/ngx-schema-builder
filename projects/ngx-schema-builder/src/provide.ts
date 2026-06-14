@@ -4,8 +4,14 @@ import {
   makeEnvironmentProviders,
 } from '@angular/core';
 
-import type { SchemaBuilderConfig, RefSuggestionsFactory } from './lib/interfaces';
-import { SCHEMA_BUILDER_CONFIG, SCHEMA_BUILDER_REF_SUGGESTIONS } from './lib/tokens';
+import type {
+  RefSuggestionsFactory,
+  SchemaBuilderConfig,
+} from './lib/interfaces';
+import {
+  SCHEMA_BUILDER_CONFIG,
+  SCHEMA_BUILDER_REF_SUGGESTIONS,
+} from './lib/tokens';
 
 /**
  * Registers the JSONJoy schema builder configuration for a section of the

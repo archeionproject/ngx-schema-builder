@@ -10,9 +10,9 @@ import {
 
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
+  asObjectSchema,
 } from '../../types/json-schema';
 import { SchemaPropertyEditorComponent } from './schema-property-editor.component';
 

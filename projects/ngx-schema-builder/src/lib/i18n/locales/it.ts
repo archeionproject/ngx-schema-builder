@@ -14,8 +14,8 @@ export const it: Translation = {
   fieldNameRegexLabel: 'Espressione regolare per nomi di proprieta',
   fieldNameRegexPlaceholder: 'es. ^S_',
   fieldNameRegexHelp:
-    'Ammette qualsiasi proprieta il cui nome corrisponda a questa espressione regolare. Le proprieta corrispondenti devono seguire questo schema. Usa ^ e $ per identificare l\'intero nome.',
-  fieldNameRegexError: 'Inserisci un\'espressione regolare valida.',
+    "Ammette qualsiasi proprieta il cui nome corrisponda a questa espressione regolare. Le proprieta corrispondenti devono seguire questo schema. Usa ^ e $ per identificare l'intero nome.",
+  fieldNameRegexError: "Inserisci un'espressione regolare valida.",
   fieldRequiredLabel: 'Campo obbligatorio',
   fieldType: 'Tipo campo',
   fieldTypeExample: 'Esempio:',
@@ -92,7 +92,7 @@ export const it: Translation = {
   numberValidationErrorBothExclusiveAndInclusiveMax:
     "'exclusiveMaximum' e 'maximum' non possono essere impostati contemporaneamente.",
   numberValidationErrorEnumOutOfRange:
-    'I valori dell\'enum devono rientrare nell\'intervallo definito.',
+    "I valori dell'enum devono rientrare nell'intervallo definito.",
 
   objectPropertiesNone: 'Nessuna proprieta definita',
   objectValidationErrorMinMax:
@@ -162,8 +162,7 @@ export const it: Translation = {
     'Incolla qui sotto il documento JSON per generarne uno schema.',
   inferrerCancel: 'Annulla',
   inferrerGenerate: 'Genera schema',
-  inferrerErrorInvalidJson:
-    'Formato JSON non valido. Controlla il tuo input.',
+  inferrerErrorInvalidJson: 'Formato JSON non valido. Controlla il tuo input.',
 
   validatorTitle: 'Convalida JSON',
   validatorDescription:

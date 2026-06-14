@@ -38,11 +38,20 @@ export {
 } from './lib/types/json-schema';
 
 // --- Schema inference (pure functions) --------------------------------------
-export { inferSchema, createSchemaFromJson } from './lib/internal/schema-inference';
+export {
+  inferSchema,
+  createSchemaFromJson,
+} from './lib/internal/schema-inference';
 
 // --- JSON validation (AJV; lazy-loaded) -------------------------------------
-export type { ValidationError, ValidationResult } from './lib/internal/json-validator';
-export { validateJson, findLineNumberForPath } from './lib/internal/json-validator';
+export type {
+  ValidationError,
+  ValidationResult,
+} from './lib/internal/json-validator';
+export {
+  validateJson,
+  findLineNumberForPath,
+} from './lib/internal/json-validator';
 
 // --- Type-level constraint validation (zod-backed) ---------------------------
 export type {
@@ -64,9 +73,19 @@ export { it } from './lib/i18n/locales/it';
 // input using the exported `Translation` contract.
 
 // --- Library configuration & DI ---------------------------------------------
-export type { SchemaBuilderConfig, RefSuggestion, RefSuggestionsFactory } from './lib/interfaces';
-export { SCHEMA_BUILDER_CONFIG, SCHEMA_BUILDER_REF_SUGGESTIONS } from './lib/tokens';
-export { provideSchemaBuilder, provideSchemaBuilderRefSuggestions } from './provide';
+export type {
+  SchemaBuilderConfig,
+  RefSuggestion,
+  RefSuggestionsFactory,
+} from './lib/interfaces';
+export {
+  SCHEMA_BUILDER_CONFIG,
+  SCHEMA_BUILDER_REF_SUGGESTIONS,
+} from './lib/tokens';
+export {
+  provideSchemaBuilder,
+  provideSchemaBuilderRefSuggestions,
+} from './provide';
 
 // --- Public components -------------------------------------------------------
 export {

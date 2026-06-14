@@ -11,18 +11,23 @@ import {
 import { cn } from '../../internal/cn';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  isBooleanSchema,
-  withObjectSchema,
   type JsonSchema,
   type ObjectJsonSchema,
+  isBooleanSchema,
+  withObjectSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
+import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 import { ButtonDirective } from '../ui/button.directive';
 import { InputDirective } from '../ui/input.directive';
 import { LabelDirective } from '../ui/label.directive';
-import type { EnumChangeContext } from '../schema-editor-internal/type-editor.component';
 
-type StringValidationProperty = 'enum' | 'minLength' | 'maxLength' | 'pattern' | 'format';
+type StringValidationProperty =
+  | 'enum'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern'
+  | 'format';
 
 let nextStringEditorId = 0;
 
@@ -49,7 +54,9 @@ const STRING_FORMATS = [
     <div class="space-y-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         @if (readOnly() && !needsDetail()) {
-          <p class="text-sm text-muted-foreground italic">{{ t().stringNoConstraint }}</p>
+          <p class="text-sm text-muted-foreground italic">
+            {{ t().stringNoConstraint }}
+          </p>
         }
 
         @if (!readOnly() || minLengthValue() !== '') {
@@ -99,7 +106,9 @@ const STRING_FORMATS = [
         }
 
         @if (lengthErrorText()) {
-          <div class="text-xs text-destructive italic md:col-span-2 whitespace-pre-line">
+          <div
+            class="text-xs text-destructive italic md:col-span-2 whitespace-pre-line"
+          >
             {{ lengthErrorText() }}
           </div>
         }
@@ -107,7 +116,11 @@ const STRING_FORMATS = [
 
       @if (!readOnly() || patternValue() !== '') {
         <div class="space-y-2">
-          <label libJsonjoyLabel [attr.for]="patternId" [class.text-destructive]="!!patternError()">
+          <label
+            libJsonjoyLabel
+            [attr.for]="patternId"
+            [class.text-destructive]="!!patternError()"
+          >
             {{ t().stringPatternLabel }}
           </label>
           <input
@@ -125,7 +138,11 @@ const STRING_FORMATS = [
 
       @if (!readOnly() || formatValue() !== 'none') {
         <div class="space-y-2">
-          <label libJsonjoyLabel [attr.for]="formatId" [class.text-destructive]="!!formatError()">
+          <label
+            libJsonjoyLabel
+            [attr.for]="formatId"
+            [class.text-destructive]="!!formatError()"
+          >
             {{ t().stringFormatLabel }}
           </label>
           <select
@@ -156,7 +173,9 @@ const STRING_FORMATS = [
           <div class="flex flex-wrap gap-2 mb-4">
             @if (enumValues().length > 0) {
               @for (value of enumValues(); track value) {
-                <div class="flex items-center bg-muted/40 border rounded-md px-2 py-1 text-xs">
+                <div
+                  class="flex items-center bg-muted/40 border rounded-md px-2 py-1 text-xs"
+                >
                   <span class="mr-1">{{ value }}</span>
                   <button
                     type="button"
@@ -181,7 +200,9 @@ const STRING_FORMATS = [
                 </div>
               }
             } @else {
-              <p class="text-xs text-muted-foreground italic">{{ t().stringAllowedValuesEnumNone }}</p>
+              <p class="text-xs text-muted-foreground italic">
+                {{ t().stringAllowedValuesEnumNone }}
+              </p>
             }
           </div>
 
@@ -245,7 +266,11 @@ export class StringEditorComponent {
     withObjectSchema(this.schema(), (s) => s.format, undefined),
   );
   protected readonly enumValues = computed<readonly string[]>(() =>
-    withObjectSchema(this.schema(), (s) => (s.enum as string[] | undefined) ?? [], []),
+    withObjectSchema(
+      this.schema(),
+      (s) => (s.enum as string[] | undefined) ?? [],
+      [],
+    ),
   );
 
   protected readonly minLengthValue = computed(() => this.minLength() ?? '');
@@ -271,20 +296,30 @@ export class StringEditorComponent {
   protected readonly formatError = computed(() => this.errorAt('format'));
 
   protected readonly lengthErrorText = computed(() => {
-    const parts = [this.minMaxError(), this.minLengthError() ?? this.maxLengthError()].filter(
-      Boolean,
-    );
+    const parts = [
+      this.minMaxError(),
+      this.minLengthError() ?? this.maxLengthError(),
+    ].filter(Boolean);
     return parts.length > 0 ? parts.join('\n') : '';
   });
 
   protected readonly minMaxInputClasses = computed(() =>
-    cn('h-8', (!!this.minMaxError() || !!this.minLengthError()) && 'border-destructive'),
+    cn(
+      'h-8',
+      (!!this.minMaxError() || !!this.minLengthError()) && 'border-destructive',
+    ),
   );
   protected readonly maxMinInputClasses = computed(() =>
-    cn('h-8', (!!this.minMaxError() || !!this.maxLengthError()) && 'border-destructive'),
+    cn(
+      'h-8',
+      (!!this.minMaxError() || !!this.maxLengthError()) && 'border-destructive',
+    ),
   );
 
-  protected onLengthInput(property: 'minLength' | 'maxLength', event: Event): void {
+  protected onLengthInput(
+    property: 'minLength' | 'maxLength',
+    event: Event,
+  ): void {
     const raw = (event.target as HTMLInputElement).value;
     const value = raw === '' ? undefined : Number(raw);
     this.applyValidationChange(property, value);
@@ -312,7 +347,11 @@ export class StringEditorComponent {
     if (!current.includes(trimmed)) {
       const addedIndex = current.length;
       this.applyEnumValues([...current, trimmed]);
-      this.addEnum.emit({ value: trimmed, index: addedIndex, schemaKey: this.schemaKey() });
+      this.addEnum.emit({
+        value: trimmed,
+        index: addedIndex,
+        schemaKey: this.schemaKey(),
+      });
     }
     this.enumDraft.set('');
   }
@@ -326,7 +365,10 @@ export class StringEditorComponent {
     this.deleteEnum.emit({ value, index, schemaKey: this.schemaKey() });
   }
 
-  private applyValidationChange(property: StringValidationProperty, value: unknown): void {
+  private applyValidationChange(
+    property: StringValidationProperty,
+    value: unknown,
+  ): void {
     const current = this.schema();
     const next: ObjectJsonSchema = isBooleanSchema(current)
       ? { type: 'string' }

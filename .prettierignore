@@ -1,0 +1,9 @@
+node_modules
+dist
+out-tsc
+.angular
+coverage
+projects/ngx-schema-builder/assets/styles/jsonjoy.css
+
+# Markdown is hand-formatted (README/CHANGELOG); keep prettier out of prose.
+**/*.md

@@ -8,17 +8,17 @@ import {
 } from '@angular/core';
 
 import {
+  type SchemaProperty,
   getSchemaPatternProperties,
   getSchemaProperties,
-  type SchemaProperty,
 } from '../../internal/schema-editor';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  getEditorType,
   type JsonSchema,
   type NewField,
   type ObjectJsonSchema,
   type SchemaEditorType,
+  getEditorType,
 } from '../../types/json-schema';
 import { buildValidationTree } from '../../types/validation';
 import { SchemaPropertyRowsComponent } from './schema-property-rows.component';
@@ -90,7 +90,9 @@ export class SchemaFieldListComponent {
   private readonly translations = inject(JsonjoyTranslationService);
   private readonly t = this.translations.providerLocale;
 
-  protected readonly properties = computed(() => getSchemaProperties(this.schema()));
+  protected readonly properties = computed(() =>
+    getSchemaProperties(this.schema()),
+  );
   protected readonly patternProperties = computed(() =>
     getSchemaPatternProperties(this.schema()),
   );
@@ -98,26 +100,57 @@ export class SchemaFieldListComponent {
     buildValidationTree(this.schema(), this.t()),
   );
 
-  protected onPropertyNameChange(event: { oldName: string; newName: string }): void {
-    this.emitEdit(this.properties(), this.editField, event.oldName, { name: event.newName });
-  }
-
-  protected onPatternNameChange(event: { oldName: string; newName: string }): void {
-    this.emitEdit(this.patternProperties(), this.editPatternField, event.oldName, {
+  protected onPropertyNameChange(event: {
+    oldName: string;
+    newName: string;
+  }): void {
+    this.emitEdit(this.properties(), this.editField, event.oldName, {
       name: event.newName,
     });
   }
 
+  protected onPatternNameChange(event: {
+    oldName: string;
+    newName: string;
+  }): void {
+    this.emitEdit(
+      this.patternProperties(),
+      this.editPatternField,
+      event.oldName,
+      {
+        name: event.newName,
+      },
+    );
+  }
+
   protected onRequiredChange(event: { name: string; required: boolean }): void {
-    this.emitEdit(this.properties(), this.editField, event.name, { required: event.required });
+    this.emitEdit(this.properties(), this.editField, event.name, {
+      required: event.required,
+    });
   }
 
-  protected onPropertySchemaChange(event: { name: string; schema: ObjectJsonSchema }): void {
-    this.emitEditFromSchema(this.properties(), this.editField, event.name, event.schema);
+  protected onPropertySchemaChange(event: {
+    name: string;
+    schema: ObjectJsonSchema;
+  }): void {
+    this.emitEditFromSchema(
+      this.properties(),
+      this.editField,
+      event.name,
+      event.schema,
+    );
   }
 
-  protected onPatternSchemaChange(event: { name: string; schema: ObjectJsonSchema }): void {
-    this.emitEditFromSchema(this.patternProperties(), this.editPatternField, event.name, event.schema);
+  protected onPatternSchemaChange(event: {
+    name: string;
+    schema: ObjectJsonSchema;
+  }): void {
+    this.emitEditFromSchema(
+      this.patternProperties(),
+      this.editPatternField,
+      event.name,
+      event.schema,
+    );
   }
 
   private emitEdit(

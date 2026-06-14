@@ -23,21 +23,24 @@ import {
 } from '../../internal/schema-editor';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
-  asObjectSchema,
-  getEditorType,
-  isBooleanSchema,
-  isObjectSchema,
   type JsonSchema,
   type NewField,
   type ObjectJsonSchema,
   type SchemaEditorType,
+  asObjectSchema,
+  getEditorType,
+  isBooleanSchema,
+  isObjectSchema,
 } from '../../types/json-schema';
 import { AddFieldButtonComponent } from '../schema-editor-internal/add-field-button.component';
 import { DefinitionsEditorComponent } from '../schema-editor-internal/definitions-editor.component';
 import { SchemaFieldListComponent } from '../schema-editor-internal/schema-field-list.component';
 import { TypeEditorComponent } from '../schema-editor-internal/type-editor.component';
 
-const ROOT_TYPE_OPTIONS: readonly { id: SchemaEditorType; labelKey: keyof Translation }[] = [
+const ROOT_TYPE_OPTIONS: readonly {
+  id: SchemaEditorType;
+  labelKey: keyof Translation;
+}[] = [
   { id: 'object', labelKey: 'fieldTypeObjectLabel' },
   { id: 'string', labelKey: 'fieldTypeTextLabel' },
   { id: 'number', labelKey: 'fieldTypeNumberLabel' },
@@ -76,7 +79,9 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   template: `
     <div [class]="rootClasses()">
       @if (rootType() === 'object') {
-        <div class="mb-4 shrink-0 flex items-center justify-between gap-2 border-b border-border">
+        <div
+          class="mb-4 shrink-0 flex items-center justify-between gap-2 border-b border-border"
+        >
           <div class="flex">
             <button
               type="button"
@@ -92,7 +97,9 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
             >
               {{ t().definitionsTabLabel }}
               @if (definitionsCount() > 0) {
-                <span class="ml-1.5 text-xs text-muted-foreground">({{ definitionsCount() }})</span>
+                <span class="ml-1.5 text-xs text-muted-foreground"
+                  >({{ definitionsCount() }})</span
+                >
               }
             </button>
           </div>
@@ -106,7 +113,9 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
                 (change)="onRootTypeChange($event)"
               >
                 @for (option of rootTypeOptions; track option.id) {
-                  <option [value]="option.id">{{ t()[option.labelKey] }}</option>
+                  <option [value]="option.id">
+                    {{ t()[option.labelKey] }}
+                  </option>
                 }
               </select>
             </div>
@@ -114,7 +123,9 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
         </div>
       } @else if (!readOnly()) {
         <div class="mb-4 shrink-0 flex items-center gap-2">
-          <label class="text-sm font-medium text-muted-foreground">Root type:</label>
+          <label class="text-sm font-medium text-muted-foreground"
+            >Root type:</label
+          >
           <select
             class="text-sm rounded-md border bg-background px-2 py-1 shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
             [value]="rootType()"
@@ -185,7 +196,10 @@ export class SchemaFieldsEditorComponent {
   readonly messages = input<Partial<Translation> | undefined>(undefined);
 
   private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.withOverrides(this.locale, this.messages);
+  protected readonly t = this.translations.withOverrides(
+    this.locale,
+    this.messages,
+  );
 
   protected readonly rootClasses = computed(() =>
     cn('p-4 h-full flex flex-col overflow-auto jsonjoy', this.className()),
@@ -242,7 +256,9 @@ export class SchemaFieldsEditorComponent {
     );
   });
 
-  protected readonly activeTab = signal<'properties' | 'definitions'>('properties');
+  protected readonly activeTab = signal<'properties' | 'definitions'>(
+    'properties',
+  );
 
   protected tabClasses(tab: 'properties' | 'definitions'): string {
     return cn(
@@ -255,7 +271,11 @@ export class SchemaFieldsEditorComponent {
 
   protected handleAddField(field: NewField): void {
     const fieldSchema = createFieldSchema(field);
-    let next = updateObjectProperty(asObjectSchema(this.value()), field.name, fieldSchema);
+    let next = updateObjectProperty(
+      asObjectSchema(this.value()),
+      field.name,
+      fieldSchema,
+    );
     if (field.required) {
       next = updatePropertyRequired(next, field.name, true);
     }
@@ -287,7 +307,10 @@ export class SchemaFieldsEditorComponent {
     this.value.set(next);
   }
 
-  protected handleEditPatternField(event: { name: string; field: NewField }): void {
+  protected handleEditPatternField(event: {
+    name: string;
+    field: NewField;
+  }): void {
     const fieldSchema = createFieldSchema(event.field);
     let next = asObjectSchema(this.value());
 
@@ -306,6 +329,8 @@ export class SchemaFieldsEditorComponent {
   }
 
   protected handleDeletePatternField(name: string): void {
-    this.value.set(removeObjectPatternProperty(asObjectSchema(this.value()), name));
+    this.value.set(
+      removeObjectPatternProperty(asObjectSchema(this.value()), name),
+    );
   }
 }

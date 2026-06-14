@@ -1,5 +1,5 @@
-import { inferSchema, createSchemaFromJson } from './schema-inference';
 import { asObjectSchema } from '../types/json-schema';
+import { createSchemaFromJson, inferSchema } from './schema-inference';
 
 describe('inferSchema', () => {
   it('infers primitive types', () => {
