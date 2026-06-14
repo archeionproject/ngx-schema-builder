@@ -1,7 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { JsonjoyEditorDirective, type JsonjoyEditorHandle } from '../src/lib/internal/editor.directive';
+import {
+  JsonjoyEditorDirective,
+  type JsonjoyEditorHandle,
+} from '../src/lib/internal/editor.directive';
 
 @Component({
   standalone: true,

@@ -48,9 +48,16 @@ export function fuzz(fixture: ComponentFixture<unknown>): void {
   });
   fixture.detectChanges();
 
-  root.querySelectorAll('button').forEach((btn) => {
-    (btn as HTMLButtonElement).click();
-    fixture.detectChanges();
-  });
+  // Click buttons and ARIA-role clickables (the editors use role-based divs and
+  // switches as well as native buttons). Re-query after each click so newly
+  // revealed controls (opened dropdowns, expanded sections) get exercised too.
+  const clickableSelector =
+    'button, [role="button"], [role="option"], [role="menuitem"], [role="switch"], [role="tab"]';
+  for (let pass = 0; pass < 3; pass++) {
+    root.querySelectorAll(clickableSelector).forEach((el) => {
+      (el as HTMLElement).click();
+      fixture.detectChanges();
+    });
+  }
   fixture.detectChanges();
 }

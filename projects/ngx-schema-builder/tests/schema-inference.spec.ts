@@ -1,5 +1,8 @@
+import {
+  createSchemaFromJson,
+  inferSchema,
+} from '../src/lib/internal/schema-inference';
 import { asObjectSchema } from '../src/lib/types/json-schema';
-import { createSchemaFromJson, inferSchema } from '../src/lib/internal/schema-inference';
 
 describe('inferSchema', () => {
   it('infers primitive types', () => {
@@ -18,7 +21,10 @@ describe('inferSchema', () => {
       type: 'string',
       format: 'email',
     });
-    expect(inferSchema('2026-06-14')).toEqual({ type: 'string', format: 'date' });
+    expect(inferSchema('2026-06-14')).toEqual({
+      type: 'string',
+      format: 'date',
+    });
     expect(inferSchema('2026-06-14T10:00:00Z')).toEqual({
       type: 'string',
       format: 'date-time',
@@ -34,7 +40,9 @@ describe('inferSchema', () => {
   });
 
   it('infers object schemas with sorted required keys', () => {
-    const schema = asObjectSchema(inferSchema({ name: 'a', age: 30, maybe: null }));
+    const schema = asObjectSchema(
+      inferSchema({ name: 'a', age: 30, maybe: null }),
+    );
     expect(schema.type).toBe('object');
     expect(schema.properties?.['name']).toEqual({ type: 'string' });
     expect(schema.properties?.['age']).toEqual({ type: 'integer' });
@@ -91,14 +99,18 @@ describe('inferSchema', () => {
       status: i % 2 === 0 ? 'on' : 'off',
     }));
     const schema = asObjectSchema(inferSchema(data));
-    const status = asObjectSchema(asObjectSchema(schema.items!).properties!['status']);
+    const status = asObjectSchema(
+      asObjectSchema(schema.items!).properties!['status'],
+    );
     expect(status.enum).toEqual(['off', 'on']);
   });
 
   it('detects coordinate arrays as fixed-length number arrays', () => {
     const data = Array.from({ length: 3 }, () => ({ coordinates: [1.1, 2.2] }));
     const schema = asObjectSchema(inferSchema(data));
-    const coords = asObjectSchema(asObjectSchema(schema.items!).properties!['coordinates']);
+    const coords = asObjectSchema(
+      asObjectSchema(schema.items!).properties!['coordinates'],
+    );
     expect(coords).toEqual({
       type: 'array',
       items: { type: 'number' },
@@ -111,7 +123,9 @@ describe('inferSchema', () => {
     const now = Date.now();
     const data = Array.from({ length: 3 }, (_, i) => ({ createdAt: now + i }));
     const schema = asObjectSchema(inferSchema(data));
-    const ts = asObjectSchema(asObjectSchema(schema.items!).properties!['createdAt']);
+    const ts = asObjectSchema(
+      asObjectSchema(schema.items!).properties!['createdAt'],
+    );
     expect(ts.format).toBe('unix-timestamp');
   });
 });

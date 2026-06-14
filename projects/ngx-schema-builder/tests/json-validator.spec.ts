@@ -92,7 +92,10 @@ describe('extractErrorPosition', () => {
 
   it('derives line/column from a position offset', () => {
     const input = 'line1\nline2broken';
-    const pos = extractErrorPosition(new Error('Unexpected at position 8'), input);
+    const pos = extractErrorPosition(
+      new Error('Unexpected at position 8'),
+      input,
+    );
     expect(pos.line).toBe(2);
     expect(pos.column).toBeGreaterThan(0);
   });

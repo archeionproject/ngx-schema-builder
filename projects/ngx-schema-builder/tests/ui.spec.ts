@@ -22,7 +22,11 @@ import { SwitchComponent } from '../src/lib/components/ui/switch.component';
     <span libJsonjoyBadge variant="destructive">b</span>
     <input libJsonjoyInput />
     <label libJsonjoyLabel>l</label>
-    <lib-jsonjoy-switch [(checked)]="on" [disabled]="disabled()" ariaLabel="t" />
+    <lib-jsonjoy-switch
+      [(checked)]="on"
+      [disabled]="disabled()"
+      ariaLabel="t"
+    />
   `,
 })
 class HostComponent {

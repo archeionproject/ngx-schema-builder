@@ -1,5 +1,5 @@
-import { cn, getTypeColor, getTypeLabel } from '../src/lib/internal/cn';
 import { en } from '../src/lib/i18n/locales/en';
+import { cn, getTypeColor, getTypeLabel } from '../src/lib/internal/cn';
 import type { SchemaEditorType } from '../src/lib/types/json-schema';
 
 describe('cn', () => {

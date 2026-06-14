@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
 import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 
-import { fuzz } from './test-helpers';
+import { TypeEditorComponent } from '../src/lib/components/schema-editor-internal/type-editor.component';
 import { ArrayEditorComponent } from '../src/lib/components/type-editors/array-editor.component';
 import { BooleanEditorComponent } from '../src/lib/components/type-editors/boolean-editor.component';
 import { CombinatorEditorComponent } from '../src/lib/components/type-editors/combinator-editor.component';
@@ -9,11 +9,11 @@ import { NumberEditorComponent } from '../src/lib/components/type-editors/number
 import { ObjectEditorComponent } from '../src/lib/components/type-editors/object-editor.component';
 import { RefEditorComponent } from '../src/lib/components/type-editors/ref-editor.component';
 import { StringEditorComponent } from '../src/lib/components/type-editors/string-editor.component';
-import { TypeEditorComponent } from '../src/lib/components/schema-editor-internal/type-editor.component';
-import { buildValidationTree } from '../src/lib/types/validation';
 import { en } from '../src/lib/i18n/locales/en';
-import { provideSchemaBuilder } from '../src/provide';
 import type { JsonSchema } from '../src/lib/types/json-schema';
+import { buildValidationTree } from '../src/lib/types/validation';
+import { provideSchemaBuilder } from '../src/provide';
+import { fuzz } from './test-helpers';
 
 function mountEditor<T>(
   component: Type<T>,
@@ -23,8 +23,12 @@ function mountEditor<T>(
   const fixture = TestBed.createComponent(component);
   fixture.componentRef.setInput('schema', schema);
   fixture.componentRef.setInput('readOnly', false);
-  fixture.componentRef.setInput('validationNode', buildValidationTree(schema, en));
-  for (const [k, v] of Object.entries(extra)) fixture.componentRef.setInput(k, v);
+  fixture.componentRef.setInput(
+    'validationNode',
+    buildValidationTree(schema, en),
+  );
+  for (const [k, v] of Object.entries(extra))
+    fixture.componentRef.setInput(k, v);
   fixture.detectChanges();
   return fixture;
 }
@@ -75,7 +79,9 @@ describe('type editors (direct mount)', () => {
 
   it('NumberEditorComponent renders for number and integer', () => {
     for (const integer of [false, true]) {
-      const fixture = mountEditor(NumberEditorComponent, NUMBER_SCHEMA, { integer });
+      const fixture = mountEditor(NumberEditorComponent, NUMBER_SCHEMA, {
+        integer,
+      });
       fuzz(fixture);
       expect(fixture.componentInstance).toBeTruthy();
     }
@@ -112,7 +118,9 @@ describe('type editors (direct mount)', () => {
       ['allOf', { allOf: [{ type: 'object' }] }],
     ];
     for (const [combinator, schema] of cases) {
-      const fixture = mountEditor(CombinatorEditorComponent, schema, { combinator });
+      const fixture = mountEditor(CombinatorEditorComponent, schema, {
+        combinator,
+      });
       fuzz(fixture);
       expect(fixture.componentInstance).toBeTruthy();
     }

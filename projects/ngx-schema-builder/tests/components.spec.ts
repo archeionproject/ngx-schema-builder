@@ -1,28 +1,51 @@
-import { TestBed } from '@angular/core/testing';
 import { Type, signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 
+import { InferSchemaDialogComponent } from '../src/lib/components/infer-schema-dialog/infer-schema-dialog.component';
 import { SchemaBuilderComponent } from '../src/lib/components/schema-builder/schema-builder.component';
 import { SchemaFieldsEditorComponent } from '../src/lib/components/schema-fields-editor/schema-fields-editor.component';
 import { SchemaJsonEditorComponent } from '../src/lib/components/schema-json-editor/schema-json-editor.component';
-import { InferSchemaDialogComponent } from '../src/lib/components/infer-schema-dialog/infer-schema-dialog.component';
 import { ValidateJsonDialogComponent } from '../src/lib/components/validate-json-dialog/validate-json-dialog.component';
+import type { JsonSchema } from '../src/lib/types/json-schema';
 import {
   provideSchemaBuilder,
   provideSchemaBuilderRefSuggestions,
 } from '../src/provide';
-import type { JsonSchema } from '../src/lib/types/json-schema';
 import { fuzz } from './test-helpers';
 
 const RICH_SCHEMA: JsonSchema = {
   type: 'object',
   required: ['str'],
   properties: {
-    str: { type: 'string', minLength: 1, maxLength: 10, pattern: '.*', format: 'email', enum: ['a', 'b'] },
-    num: { type: 'number', minimum: 0, maximum: 10, multipleOf: 2, enum: [2, 4] },
+    str: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 10,
+      pattern: '.*',
+      format: 'email',
+      enum: ['a', 'b'],
+    },
+    num: {
+      type: 'number',
+      minimum: 0,
+      maximum: 10,
+      multipleOf: 2,
+      enum: [2, 4],
+    },
     int: { type: 'integer', minimum: 0, maximum: 5 },
     bool: { type: 'boolean' },
-    arr: { type: 'array', items: { type: 'string' }, minItems: 1, maxItems: 3, uniqueItems: true },
-    obj: { type: 'object', properties: { nested: { type: 'string' } }, required: ['nested'] },
+    arr: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 1,
+      maxItems: 3,
+      uniqueItems: true,
+    },
+    obj: {
+      type: 'object',
+      properties: { nested: { type: 'string' } },
+      required: ['nested'],
+    },
     any: { anyOf: [{ type: 'string' }, { type: 'number' }] },
     one: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
     all: { allOf: [{ type: 'object' }] },
@@ -74,14 +97,19 @@ describe('schema editor components (render + interaction)', () => {
 
   it('SchemaBuilderComponent renders every mode', () => {
     for (const mode of ['visual', 'json', 'both'] as const) {
-      const fixture = mount(SchemaBuilderComponent, { value: RICH_SCHEMA, mode });
+      const fixture = mount(SchemaBuilderComponent, {
+        value: RICH_SCHEMA,
+        mode,
+      });
       fuzz(fixture);
       expect(fixture.componentInstance.value()).toBeDefined();
     }
   });
 
   it('SchemaJsonEditorComponent edits JSON through the editor', async () => {
-    const fixture = mount(SchemaJsonEditorComponent, { value: { type: 'object' } });
+    const fixture = mount(SchemaJsonEditorComponent, {
+      value: { type: 'object' },
+    });
     await fixture.whenStable();
     fuzz(fixture);
     expect(fixture.componentInstance.value()).toBeDefined();

@@ -99,7 +99,9 @@ describe('updateArrayItems / getArrayItemsSchema', () => {
   });
 
   it('reads items back, null when absent or not an array', () => {
-    expect(getArrayItemsSchema({ type: 'array', items: { type: 'string' } })).toEqual({
+    expect(
+      getArrayItemsSchema({ type: 'array', items: { type: 'string' } }),
+    ).toEqual({
       type: 'string',
     });
     expect(getArrayItemsSchema({ type: 'array' })).toBeNull();
@@ -122,19 +124,34 @@ describe('createFieldSchema', () => {
 
   it('falls back to empty $ref', () => {
     expect(
-      createFieldSchema({ name: 'r', type: '$ref', required: false, description: '' }),
+      createFieldSchema({
+        name: 'r',
+        type: '$ref',
+        required: false,
+        description: '',
+      }),
     ).toEqual({ $ref: '' });
   });
 
   it('builds default combinators', () => {
     expect(
-      createFieldSchema({ name: 'c', type: 'anyOf', required: false, description: '' }),
+      createFieldSchema({
+        name: 'c',
+        type: 'anyOf',
+        required: false,
+        description: '',
+      }),
     ).toEqual({
       anyOf: [{ type: 'string' }, { type: 'number' }],
       description: undefined,
     });
     expect(
-      createFieldSchema({ name: 'c', type: 'allOf', required: false, description: '' }),
+      createFieldSchema({
+        name: 'c',
+        type: 'allOf',
+        required: false,
+        description: '',
+      }),
     ).toEqual({
       allOf: [{ type: 'object' }],
       description: undefined,
@@ -160,7 +177,12 @@ describe('createFieldSchema', () => {
 
   it('builds a bare primitive when no validation', () => {
     expect(
-      createFieldSchema({ name: 'p', type: 'string', required: false, description: 'd' }),
+      createFieldSchema({
+        name: 'p',
+        type: 'string',
+        required: false,
+        description: 'd',
+      }),
     ).toEqual({ type: 'string', description: 'd' });
   });
 });
@@ -183,8 +205,16 @@ describe('validateFieldName', () => {
 describe('getSchemaProperties / getSchemaPatternProperties', () => {
   it('lists properties with required flags', () => {
     const props = getSchemaProperties(base);
-    expect(props).toContainEqual({ name: 'a', schema: { type: 'string' }, required: true });
-    expect(props).toContainEqual({ name: 'b', schema: { type: 'number' }, required: false });
+    expect(props).toContainEqual({
+      name: 'a',
+      schema: { type: 'string' },
+      required: true,
+    });
+    expect(props).toContainEqual({
+      name: 'b',
+      schema: { type: 'number' },
+      required: false,
+    });
   });
 
   it('lists pattern properties (never required)', () => {
@@ -233,7 +263,10 @@ describe('hasChildren', () => {
 
   it('is true for arrays of objects with properties', () => {
     expect(
-      hasChildren({ type: 'array', items: { type: 'object', properties: { a: {} } } }),
+      hasChildren({
+        type: 'array',
+        items: { type: 'object', properties: { a: {} } },
+      }),
     ).toBe(true);
   });
 
@@ -241,6 +274,8 @@ describe('hasChildren', () => {
     expect(hasChildren({ type: 'string' })).toBe(false);
     expect(hasChildren(true)).toBe(false);
     expect(hasChildren({ type: 'object' })).toBe(false);
-    expect(hasChildren({ type: 'array', items: { type: 'string' } })).toBe(false);
+    expect(hasChildren({ type: 'array', items: { type: 'string' } })).toBe(
+      false,
+    );
   });
 });

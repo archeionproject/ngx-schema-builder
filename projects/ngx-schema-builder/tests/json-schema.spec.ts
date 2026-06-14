@@ -48,7 +48,9 @@ describe('schema guards', () => {
   });
 
   it('getSchemaDescription reads description or empty string', () => {
-    expect(getSchemaDescription({ type: 'string', description: 'hi' })).toBe('hi');
+    expect(getSchemaDescription({ type: 'string', description: 'hi' })).toBe(
+      'hi',
+    );
     expect(getSchemaDescription({ type: 'string' })).toBe('');
     expect(getSchemaDescription(true)).toBe('');
   });
@@ -57,9 +59,9 @@ describe('schema guards', () => {
     expect(
       withObjectSchema<string>({ type: 'string' }, (s) => String(s.type), 'x'),
     ).toBe('string');
-    expect(withObjectSchema<string>(true, (s) => String(s.type), 'fallback')).toBe(
-      'fallback',
-    );
+    expect(
+      withObjectSchema<string>(true, (s) => String(s.type), 'fallback'),
+    ).toBe('fallback');
   });
 });
 
