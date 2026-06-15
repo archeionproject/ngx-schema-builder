@@ -165,6 +165,44 @@ describe('RefEditor handlers', () => {
     expect(changes.length).toBeGreaterThan(0);
   });
 
+  it('does not concatenate the ref when typing a "#"-prefixed URL', () => {
+    // Regression: the controlled URL input re-split the round-tripped ref on
+    // '#', fighting the user and appending the ref on every keystroke.
+    const { fixture, ci } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    // Mimic the parent two-way binding so the emitted ref flows back in.
+    ci.schemaChange.subscribe((s: JsonSchema) =>
+      fixture.componentRef.setInput('schema', s),
+    );
+    const urlInput = (fixture.nativeElement as HTMLElement).querySelector(
+      'input[type="url"]',
+    ) as HTMLInputElement;
+
+    const target = '#definitions/LegalEntity';
+    for (const ch of target) {
+      urlInput.value = urlInput.value + ch;
+      urlInput.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    }
+
+    expect(ci.schema()).toEqual({ $ref: '#definitions/LegalEntity' });
+  });
+
+  it('mirrors an external ref change into the url/pointer fields', () => {
+    const { fixture, ci } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    fixture.componentRef.setInput('schema', {
+      $ref: 'https://x/foo#/properties/id',
+    } satisfies JsonSchema);
+    fixture.detectChanges();
+    expect(ci.urlValue()).toBe('https://x/foo');
+    expect(ci.pointerValue()).toBe('/properties/id');
+  });
+
   it('shows the suggestions section when a provider is registered', () => {
     const { fixture } = mount(RefEditorComponent, {
       schema: { $ref: '' } satisfies JsonSchema,

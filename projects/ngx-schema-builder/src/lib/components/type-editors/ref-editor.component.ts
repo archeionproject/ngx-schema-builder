@@ -3,10 +3,12 @@ import {
   Component,
   type Signal,
   computed,
+  effect,
   inject,
   input,
   output,
   signal,
+  untracked,
 } from '@angular/core';
 
 import type { RefSuggestion } from '../../interfaces/ref-suggestion.interface';
@@ -165,17 +167,33 @@ export class RefEditorComponent {
   protected readonly pointerId = `jsonjoy-ref-pointer-${this.id}`;
 
   private readonly currentRef = computed(() => asRefSchema(this.schema()).$ref);
-  protected readonly urlValue = computed(() => splitRef(this.currentRef()).url);
-  protected readonly pointerValue = computed(
-    () => splitRef(this.currentRef()).pointer,
-  );
 
-  private readonly urlOverride = signal<string | null>(null);
-  private readonly pointerOverride = signal<string | null>(null);
+  // Local editable state for the two inputs. Mirrors the bound `$ref` only when
+  // it changes externally; user edits update these directly so the controlled
+  // inputs never fight the round-tripped value (which would otherwise re-split
+  // on '#' and concatenate the ref on every keystroke).
+  protected readonly urlValue = signal('');
+  protected readonly pointerValue = signal('');
+
+  /** The last `$ref` this component emitted, to distinguish self vs external
+   * changes to `currentRef()` inside the sync effect. */
+  private lastEmitted: string | null = null;
+
+  constructor() {
+    effect(() => {
+      const ref = this.currentRef();
+      if (ref === this.lastEmitted) return;
+      const { url, pointer } = splitRef(ref);
+      untracked(() => {
+        this.urlValue.set(url);
+        this.pointerValue.set(pointer);
+      });
+    });
+  }
 
   protected readonly filteredSuggestions = computed(() => {
     const all = this.suggestionsSignal();
-    const query = (this.urlOverride() ?? this.urlValue()).toLowerCase().trim();
+    const query = this.urlValue().toLowerCase().trim();
     if (!query) return all;
     return all.filter(
       (s) =>
@@ -185,32 +203,32 @@ export class RefEditorComponent {
   });
 
   protected onUrlInput(event: Event): void {
-    const newUrl = (event.target as HTMLInputElement).value;
-    this.urlOverride.set(newUrl);
-    this.emitRef(newUrl, this.pointerOverride() ?? this.pointerValue());
+    this.urlValue.set((event.target as HTMLInputElement).value);
+    this.emitRef();
   }
 
   protected onPointerInput(event: Event): void {
-    const newPointer = (event.target as HTMLInputElement).value;
-    this.pointerOverride.set(newPointer);
-    this.emitRef(this.urlOverride() ?? this.urlValue(), newPointer);
+    this.pointerValue.set((event.target as HTMLInputElement).value);
+    this.emitRef();
   }
 
   protected pickSuggestion(suggestion: RefSuggestion): void {
-    this.urlOverride.set(suggestion.url);
-    this.emitRef(suggestion.url, this.pointerOverride() ?? this.pointerValue());
+    this.urlValue.set(suggestion.url);
+    this.emitRef();
   }
 
   protected pickLocalDefinition(def: LocalDefinition): void {
     // A local def ref is a pure fragment (no URL part), e.g. #/$defs/Address.
-    this.urlOverride.set('');
-    this.pointerOverride.set(def.ref.replace(/^#/, ''));
-    this.schemaChange.emit({ $ref: def.ref });
+    this.urlValue.set('');
+    this.pointerValue.set(def.ref.replace(/^#/, ''));
+    this.emitRef();
   }
 
-  private emitRef(url: string, pointer: string): void {
-    const trimmedPointer = pointer.replace(/^#/, '');
-    const fullRef = trimmedPointer ? `${url}#${trimmedPointer}` : url;
+  private emitRef(): void {
+    const url = this.urlValue();
+    const pointer = this.pointerValue().replace(/^#/, '');
+    const fullRef = pointer ? `${url}#${pointer}` : url;
+    this.lastEmitted = fullRef;
     this.schemaChange.emit({ $ref: fullRef });
   }
 }
