@@ -308,3 +308,13 @@
   --color-input-bg: hsl(0 0% 12%);
   --color-ring: hsl(0 0% 83%);
 }
+
+/*
+ * Modal dialog centering. A host application's Tailwind Preflight resets every
+ * element's margin (`*, ::backdrop { margin: 0 }`), which clobbers the user-
+ * agent `margin: auto` that centers an open modal <dialog> — pinning it to the
+ * top-left. Restore it for the editor's own dialogs (specificity beats `*`).
+ */
+dialog.jsonjoy {
+  margin: auto;
+}
