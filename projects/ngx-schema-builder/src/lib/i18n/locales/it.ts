@@ -36,6 +36,7 @@ export const it: Translation = {
   fieldTypeObjectDescription: 'Per raggruppare campi correlati',
   fieldTypeArrayLabel: 'Elenco',
   fieldTypeArrayDescription: 'Per collezioni di elementi',
+  fieldTypeRefDescription: 'Riferimento a una definizione o schema esterno',
 
   propertyDescriptionPlaceholder: 'Aggiungi descrizione...',
   propertyDescriptionButton: 'Aggiungi descrizione...',
@@ -191,11 +192,12 @@ export const it: Translation = {
 
   schemaTypeRef: 'Riferimento',
   refUrlLabel: 'URL di riferimento',
-  refUrlPlaceholder: 'https://esempio.com/blueprints/UUID/schema',
+  refUrlPlaceholder: '',
   refPointerLabel: 'JSON Pointer (opzionale)',
   refPointerPlaceholder: '/properties/indirizzo',
   refSuggestionsLabel: 'Suggerimenti',
   refNoSuggestions: 'Nessun suggerimento disponibile',
+  refLocalDefinitionsLabel: 'Definizioni locali',
 
   definitionsPanelTitle: 'Definizioni riutilizzabili',
   definitionsAddButton: 'Aggiungi definizione',

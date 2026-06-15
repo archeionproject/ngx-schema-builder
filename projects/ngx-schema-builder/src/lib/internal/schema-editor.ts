@@ -15,6 +15,33 @@ export interface SchemaProperty {
   required: boolean;
 }
 
+/** A local `$defs`/`definitions` entry, ready to use as a `$ref` target. */
+export interface LocalDefinition {
+  /** Definition name as stored under `$defs`/`definitions`. */
+  name: string;
+  /** JSON Pointer ref to the definition, e.g. `#/$defs/Address`. */
+  ref: string;
+}
+
+/**
+ * Lists the schema's local definitions as ready-to-use `$ref` targets.
+ *
+ * Mirrors the Definitions tab's key preference: `definitions` is used only when
+ * present and `$defs` is absent, otherwise `$defs`.
+ */
+export function listLocalDefinitions(
+  schema: JsonSchema,
+): readonly LocalDefinition[] {
+  if (isBooleanSchema(schema)) return [];
+  const key = schema.definitions && !schema.$defs ? 'definitions' : '$defs';
+  const source = schema[key];
+  if (!source) return [];
+  return Object.keys(source).map((name) => ({
+    name,
+    ref: `#/${key}/${name}`,
+  }));
+}
+
 export function copySchema<T extends JsonSchema>(schema: T): T {
   if (typeof structuredClone === 'function') return structuredClone(schema);
   return JSON.parse(JSON.stringify(schema)) as T;

@@ -5,6 +5,7 @@ import {
   getSchemaPatternProperties,
   getSchemaProperties,
   hasChildren,
+  listLocalDefinitions,
   removeObjectPatternProperty,
   removeObjectProperty,
   renameObjectPatternProperty,
@@ -277,5 +278,39 @@ describe('hasChildren', () => {
     expect(hasChildren({ type: 'array', items: { type: 'string' } })).toBe(
       false,
     );
+  });
+});
+
+describe('listLocalDefinitions', () => {
+  it('lists $defs as #/$defs/<name> refs', () => {
+    const defs = listLocalDefinitions({
+      type: 'object',
+      $defs: { Address: { type: 'object' }, User: { type: 'object' } },
+    });
+    expect(defs).toEqual([
+      { name: 'Address', ref: '#/$defs/Address' },
+      { name: 'User', ref: '#/$defs/User' },
+    ]);
+  });
+
+  it('falls back to legacy definitions key', () => {
+    const defs = listLocalDefinitions({
+      type: 'object',
+      definitions: { Foo: { type: 'string' } },
+    });
+    expect(defs).toEqual([{ name: 'Foo', ref: '#/definitions/Foo' }]);
+  });
+
+  it('prefers $defs when both keys are present', () => {
+    const defs = listLocalDefinitions({
+      $defs: { A: { type: 'object' } },
+      definitions: { B: { type: 'object' } },
+    });
+    expect(defs).toEqual([{ name: 'A', ref: '#/$defs/A' }]);
+  });
+
+  it('returns [] for boolean schema or no definitions', () => {
+    expect(listLocalDefinitions(true)).toEqual([]);
+    expect(listLocalDefinitions({ type: 'object' })).toEqual([]);
   });
 });

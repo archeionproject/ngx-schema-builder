@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 
 import type { RefSuggestion } from '../../interfaces/ref-suggestion.interface';
+import type { LocalDefinition } from '../../internal/schema-editor';
+import { LocalDefinitionsContextService } from '../../services/local-definitions.service';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import { SCHEMA_BUILDER_REF_SUGGESTIONS } from '../../tokens/ref-suggestions.token';
 import {
@@ -63,7 +65,32 @@ let nextRefEditorId = 0;
         </div>
       </div>
 
-      @if (!readOnly()) {
+      @if (!readOnly() && localDefinitions().length > 0) {
+        <div class="space-y-2">
+          <label libJsonjoyLabel>{{ t().refLocalDefinitionsLabel }}</label>
+          <ul
+            class="flex flex-col gap-1 max-h-48 overflow-y-auto rounded-md border border-border p-1"
+          >
+            @for (def of localDefinitions(); track def.ref) {
+              <li>
+                <button
+                  type="button"
+                  class="w-full text-left px-2 py-1.5 rounded-sm hover:bg-secondary/50 transition-colors"
+                  (click)="pickLocalDefinition(def)"
+                >
+                  <span class="block text-sm font-medium">{{ def.name }}</span>
+                  <span
+                    class="block text-xs text-muted-foreground font-mono truncate"
+                    >{{ def.ref }}</span
+                  >
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (!readOnly() && hasSuggestionsProvider) {
         <div class="space-y-2">
           <label libJsonjoyLabel>{{ t().refSuggestionsLabel }}</label>
           @if (filteredSuggestions().length === 0) {
@@ -113,9 +140,25 @@ export class RefEditorComponent {
 
   protected readonly t = inject(JsonjoyTranslationService).providerLocale;
 
+  private readonly injectedSuggestions = inject(
+    SCHEMA_BUILDER_REF_SUGGESTIONS,
+    {
+      optional: true,
+    },
+  );
   private readonly suggestionsSignal: Signal<readonly RefSuggestion[]> =
-    inject(SCHEMA_BUILDER_REF_SUGGESTIONS, { optional: true }) ??
-    computed(() => [] as readonly RefSuggestion[]);
+    this.injectedSuggestions ?? computed(() => [] as readonly RefSuggestion[]);
+
+  /** The host registered a suggestions provider; gates the suggestions list. */
+  protected readonly hasSuggestionsProvider = this.injectedSuggestions !== null;
+
+  private readonly localDefinitionsCtx = inject(
+    LocalDefinitionsContextService,
+    { optional: true },
+  );
+  protected readonly localDefinitions = computed<readonly LocalDefinition[]>(
+    () => this.localDefinitionsCtx?.definitions() ?? [],
+  );
 
   private readonly id = ++nextRefEditorId;
   protected readonly urlId = `jsonjoy-ref-url-${this.id}`;
@@ -156,6 +199,13 @@ export class RefEditorComponent {
   protected pickSuggestion(suggestion: RefSuggestion): void {
     this.urlOverride.set(suggestion.url);
     this.emitRef(suggestion.url, this.pointerOverride() ?? this.pointerValue());
+  }
+
+  protected pickLocalDefinition(def: LocalDefinition): void {
+    // A local def ref is a pure fragment (no URL part), e.g. #/$defs/Address.
+    this.urlOverride.set('');
+    this.pointerOverride.set(def.ref.replace(/^#/, ''));
+    this.schemaChange.emit({ $ref: def.ref });
   }
 
   private emitRef(url: string, pointer: string): void {

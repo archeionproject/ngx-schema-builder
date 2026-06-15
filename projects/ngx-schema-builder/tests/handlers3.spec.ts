@@ -113,4 +113,23 @@ describe('AddFieldButton handlers', () => {
       ci.onDialogClose();
     }).not.toThrow();
   });
+
+  it('offers a $ref type tile and emits a reference field', () => {
+    const { fixture, ci } = mount(AddFieldButtonComponent, {
+      variant: 'primary',
+    });
+    // $ref is a selectable type in the add-field panel.
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Reference');
+
+    const emitted: unknown[] = [];
+    ci.addField.subscribe((f: unknown) => emitted.push(f));
+    ci.fieldName.set('myRef');
+    ci.fieldType.set('$ref');
+    ci.onSubmit({ preventDefault() {} } as unknown as Event);
+
+    expect(emitted).toContainEqual(
+      expect.objectContaining({ name: 'myRef', type: '$ref' }),
+    );
+  });
 });

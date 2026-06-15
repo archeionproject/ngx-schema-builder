@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
@@ -13,6 +14,7 @@ import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
 import {
   createFieldSchema,
+  listLocalDefinitions,
   removeObjectPatternProperty,
   removeObjectProperty,
   renameObjectPatternProperty,
@@ -21,6 +23,7 @@ import {
   updateObjectProperty,
   updatePropertyRequired,
 } from '../../internal/schema-editor';
+import { LocalDefinitionsContextService } from '../../services/local-definitions.service';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
   type JsonSchema,
@@ -75,6 +78,7 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
     forwardRef(() => TypeEditorComponent),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LocalDefinitionsContextService],
   host: { class: 'jsonjoy' },
   template: `
     <div [class]="rootClasses()">
@@ -197,6 +201,15 @@ export class SchemaFieldsEditorComponent {
   readonly className = input<string | undefined>(undefined);
   readonly locale = input<Translation | undefined>(undefined);
   readonly messages = input<Partial<Translation> | undefined>(undefined);
+
+  private readonly localDefinitions = inject(LocalDefinitionsContextService);
+
+  constructor() {
+    // Keep the $ref editor's local-definition quick-pick in sync with the
+    // root schema's $defs/definitions (incl. edits made in the Definitions tab,
+    // which flow back through value()).
+    effect(() => this.localDefinitions.set(listLocalDefinitions(this.value())));
+  }
 
   private readonly translations = inject(JsonjoyTranslationService);
   protected readonly t = this.translations.withOverrides(

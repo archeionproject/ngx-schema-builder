@@ -36,6 +36,7 @@ export const en: Translation = {
   fieldTypeObjectDescription: 'For grouping related fields together',
   fieldTypeArrayLabel: 'List',
   fieldTypeArrayDescription: 'For collections of items',
+  fieldTypeRefDescription: 'Reference to a definition or external schema',
 
   propertyDescriptionPlaceholder: 'Add description...',
   propertyDescriptionButton: 'Add description...',
@@ -186,11 +187,12 @@ export const en: Translation = {
 
   schemaTypeRef: 'Reference',
   refUrlLabel: 'Reference URL',
-  refUrlPlaceholder: 'https://example.com/blueprints/UUID/schema',
+  refUrlPlaceholder: '',
   refPointerLabel: 'JSON Pointer (optional)',
   refPointerPlaceholder: '/properties/address',
   refSuggestionsLabel: 'Suggestions',
   refNoSuggestions: 'No suggestions available',
+  refLocalDefinitionsLabel: 'Local definitions',
 
   definitionsPanelTitle: 'Reusable definitions',
   definitionsAddButton: 'Add definition',

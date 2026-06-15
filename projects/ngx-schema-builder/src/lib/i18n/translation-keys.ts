@@ -203,6 +203,12 @@ export interface Translation {
    * > For collections of items
    */
   readonly fieldTypeArrayDescription: string;
+  /**
+   * The translation for the key `fieldTypeRefDescription`. English default is:
+   *
+   * > Reference to a definition or external schema
+   */
+  readonly fieldTypeRefDescription: string;
 
   /**
    * The translation for the key `propertyDescriptionPlaceholder`. English default is:
@@ -989,6 +995,12 @@ export interface Translation {
    * > No suggestions available
    */
   readonly refNoSuggestions: string;
+  /**
+   * The translation for the key `refLocalDefinitionsLabel`. English default is:
+   *
+   * > Local definitions
+   */
+  readonly refLocalDefinitionsLabel: string;
 
   /**
    * The translation for the key `definitionsPanelTitle`. English default is:

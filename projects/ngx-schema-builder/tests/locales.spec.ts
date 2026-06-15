@@ -8,11 +8,14 @@ describe('locales', () => {
     expect(itKeys).toEqual(enKeys);
   });
 
-  it('every value is a non-empty string', () => {
+  it('every value is a string, non-empty except placeholders', () => {
+    // Placeholders may be intentionally empty (e.g. refUrlPlaceholder).
     for (const locale of [en, itLocale]) {
-      for (const value of Object.values(locale)) {
+      for (const [key, value] of Object.entries(locale)) {
         expect(typeof value).toBe('string');
-        expect((value as string).length).toBeGreaterThan(0);
+        if (!key.endsWith('Placeholder')) {
+          expect((value as string).length).toBeGreaterThan(0);
+        }
       }
     }
   });

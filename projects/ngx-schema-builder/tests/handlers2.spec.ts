@@ -7,6 +7,7 @@ import { BooleanEditorComponent } from '../src/lib/components/type-editors/boole
 import { NumberEditorComponent } from '../src/lib/components/type-editors/number-editor.component';
 import { ObjectEditorComponent } from '../src/lib/components/type-editors/object-editor.component';
 import { RefEditorComponent } from '../src/lib/components/type-editors/ref-editor.component';
+import { LocalDefinitionsContextService } from '../src/lib/services/local-definitions.service';
 import type { JsonSchema, NewField } from '../src/lib/types/json-schema';
 import {
   provideSchemaBuilder,
@@ -162,6 +163,68 @@ describe('RefEditor handlers', () => {
     ci.pickSuggestion({ id: '1', label: 'Foo', url: 'https://x/foo' });
 
     expect(changes.length).toBeGreaterThan(0);
+  });
+
+  it('shows the suggestions section when a provider is registered', () => {
+    const { fixture } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Suggestions');
+  });
+});
+
+describe('RefEditor without a suggestions provider', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({ providers: [provideSchemaBuilder()] }),
+  );
+
+  it('hides the suggestions section entirely', () => {
+    const { fixture } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).not.toContain('Suggestions');
+    expect(text).not.toContain('No suggestions available');
+  });
+});
+
+describe('RefEditor local definitions', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [provideSchemaBuilder(), LocalDefinitionsContextService],
+    }),
+  );
+
+  it('lists local defs and emits #/$defs/<name> on pick', () => {
+    const ctx = TestBed.inject(LocalDefinitionsContextService);
+    ctx.set([
+      { name: 'Address', ref: '#/$defs/Address' },
+      { name: 'User', ref: '#/$defs/User' },
+    ]);
+
+    const { fixture, ci } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('Local definitions');
+    expect(text).toContain('#/$defs/Address');
+
+    const changes = changeCollector(fixture);
+    ci.pickLocalDefinition({ name: 'User', ref: '#/$defs/User' });
+    expect(changes).toContainEqual({ $ref: '#/$defs/User' });
+  });
+
+  it('omits the local section when there are no defs', () => {
+    const { fixture } = mount(RefEditorComponent, {
+      schema: { $ref: '' } satisfies JsonSchema,
+      readOnly: false,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).not.toContain('Local definitions');
   });
 });
 

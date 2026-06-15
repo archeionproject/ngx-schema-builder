@@ -67,6 +67,12 @@ const TYPE_OPTIONS: readonly TypeOption[] = [
     description: 'allOfDescription',
     group: 'composition',
   },
+  {
+    id: '$ref',
+    label: 'schemaTypeRef',
+    description: 'fieldTypeRefDescription',
+    group: 'composition',
+  },
 ];
 
 @Component({
