@@ -28,4 +28,23 @@ describe('SchemaFieldsEditorComponent', () => {
       (fixture.nativeElement as HTMLElement).classList.contains('jsonjoy'),
     ).toBe(true);
   });
+
+  it('root-type select reflects a non-object root (array -> "array", not "object")', () => {
+    // Regression: the root <select> bound [value] on the element, which does
+    // not reliably select a native <option>, so an array root rendered as the
+    // first option ("object"/Group) instead of "array"/List.
+    const fixture = TestBed.createComponent(SchemaFieldsEditorComponent);
+    const schema: JsonSchema = {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'integer' }] },
+    };
+    fixture.componentRef.setInput('value', schema);
+    fixture.componentRef.setInput('readOnly', false);
+    fixture.detectChanges();
+
+    const select = (fixture.nativeElement as HTMLElement).querySelector(
+      'select',
+    ) as HTMLSelectElement;
+    expect(select.value).toBe('array');
+  });
 });

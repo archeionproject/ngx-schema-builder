@@ -16,8 +16,8 @@ import {
   type JsonSchema,
   type ObjectJsonSchema,
   type SchemaEditorType,
-  type SchemaType,
   asObjectSchema,
+  getEditorType,
   isBooleanSchema,
   withObjectSchema,
 } from '../../types/json-schema';
@@ -182,11 +182,7 @@ export class ArrayEditorComponent {
   });
 
   protected readonly itemType = computed<SchemaEditorType>(() =>
-    withObjectSchema(
-      this.itemsSchema(),
-      (s) => (s.type ?? 'string') as SchemaType,
-      'string' as SchemaType,
-    ),
+    getEditorType(this.itemsSchema()),
   );
 
   private readonly errorsByPath = computed(() => {

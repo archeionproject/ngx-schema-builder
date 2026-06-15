@@ -109,11 +109,13 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
               <label class="text-xs text-muted-foreground">Root type:</label>
               <select
                 class="text-xs rounded-md border bg-background px-2 py-1 shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
-                [value]="rootType()"
                 (change)="onRootTypeChange($event)"
               >
                 @for (option of rootTypeOptions; track option.id) {
-                  <option [value]="option.id">
+                  <option
+                    [value]="option.id"
+                    [selected]="option.id === rootType()"
+                  >
                     {{ t()[option.labelKey] }}
                   </option>
                 }
@@ -128,11 +130,12 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
           >
           <select
             class="text-sm rounded-md border bg-background px-2 py-1 shadow-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
-            [value]="rootType()"
             (change)="onRootTypeChange($event)"
           >
             @for (option of rootTypeOptions; track option.id) {
-              <option [value]="option.id">{{ t()[option.labelKey] }}</option>
+              <option [value]="option.id" [selected]="option.id === rootType()">
+                {{ t()[option.labelKey] }}
+              </option>
             }
           </select>
         </div>

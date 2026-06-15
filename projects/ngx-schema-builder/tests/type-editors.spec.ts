@@ -105,6 +105,22 @@ describe('type editors (direct mount)', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
+  it('ArrayEditorComponent item-type reflects combinator/ref items (not "string")', () => {
+    // Regression: items that are a combinator or $ref were mislabeled as
+    // the default "string" because itemType read schema.type directly.
+    const cases: Array<[JsonSchema, string]> = [
+      [{ type: 'array', items: { oneOf: [{ type: 'string' }] } }, 'oneOf'],
+      [{ type: 'array', items: { anyOf: [{ type: 'number' }] } }, 'anyOf'],
+      [{ type: 'array', items: { allOf: [{ type: 'object' }] } }, 'allOf'],
+      [{ type: 'array', items: { $ref: '#/$defs/Foo' } }, '$ref'],
+      [{ type: 'array', items: { type: 'object' } }, 'object'],
+    ];
+    for (const [schema, expected] of cases) {
+      const fixture = mountEditor(ArrayEditorComponent, schema);
+      expect(fixture.componentInstance['itemType']()).toBe(expected);
+    }
+  });
+
   it('RefEditorComponent renders with suggestions', () => {
     const fixture = mountEditor(RefEditorComponent, { $ref: '#/$defs/Foo' });
     fuzz(fixture);
