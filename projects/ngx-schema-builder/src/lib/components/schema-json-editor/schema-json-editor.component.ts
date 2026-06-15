@@ -9,6 +9,7 @@ import {
   input,
   model,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 
@@ -140,24 +141,45 @@ export class SchemaJsonEditorComponent {
   protected readonly loaded = computed(() => this.editorDirective().loaded());
 
   constructor() {
+    // value -> text. Reacts only to value(); the current text is read
+    // untracked so a user edit (which changes jsonText, then value) does not
+    // wake this effect and revert the edit before it is applied. Skips
+    // reformatting when the text already represents the same schema, so the
+    // caret is not disturbed while typing.
     effect(() => {
       const next = this.stringify(this.value());
-      if (next === this.jsonText()) return;
+      const current = untracked(this.jsonText);
+      if (current === next || this.textMatchesValue(current)) return;
       this.jsonText.set(next);
     });
 
+    // text -> value. Reacts only to jsonText(); value() is read untracked so
+    // an external value change does not re-run this effect.
     effect(() => {
       const raw = this.jsonText();
-      if (this.readOnly()) return;
+      if (untracked(this.readOnly)) return;
       try {
         const parsed = JSON.parse(raw) as JsonSchema;
-        const current = this.stringify(this.value());
-        if (current === raw) return;
+        if (this.jsonEqual(parsed, untracked(this.value))) return;
         this.value.set(parsed);
       } catch {
         // The editor surfaces the parse error inline — silently ignore here.
       }
     });
+  }
+
+  /** Whether `text` parses to a schema deep-equal to the current `value()`. */
+  private textMatchesValue(text: string): boolean {
+    try {
+      return this.jsonEqual(JSON.parse(text) as JsonSchema, this.value());
+    } catch {
+      return false;
+    }
+  }
+
+  /** Order-insensitive structural equality for two JSON values. */
+  private jsonEqual(a: JsonSchema, b: JsonSchema): boolean {
+    return stableStringify(a) === stableStringify(b);
   }
 
   protected onDownload(): void {
@@ -177,4 +199,23 @@ export class SchemaJsonEditorComponent {
   private stringify(value: JsonSchema): string {
     return JSON.stringify(value, null, 2);
   }
+}
+
+/** JSON stringify with object keys sorted recursively, for stable comparison. */
+function stableStringify(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(',')}]`;
+  }
+  if (value && typeof value === 'object') {
+    const entries = Object.keys(value as Record<string, unknown>)
+      .sort()
+      .map(
+        (key) =>
+          `${JSON.stringify(key)}:${stableStringify(
+            (value as Record<string, unknown>)[key],
+          )}`,
+      );
+    return `{${entries.join(',')}}`;
+  }
+  return JSON.stringify(value) ?? 'null';
 }

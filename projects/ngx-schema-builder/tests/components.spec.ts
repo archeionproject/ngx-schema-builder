@@ -115,6 +115,58 @@ describe('schema editor components (render + interaction)', () => {
     expect(fixture.componentInstance.value()).toBeDefined();
   });
 
+  it('SchemaJsonEditorComponent propagates a raw-JSON edit to value()', () => {
+    // Regression: the value->text and text->value effects fed back on each
+    // other; a raw edit was reverted before it reached value().
+    const fixture = mount(SchemaJsonEditorComponent, {
+      value: { type: 'object' },
+    });
+    const ci = fixture.componentInstance as unknown as {
+      jsonText: { set: (v: string) => void };
+      value: () => JsonSchema;
+    };
+    const emitted: JsonSchema[] = [];
+    fixture.componentInstance.value.subscribe((v) => emitted.push(v));
+
+    ci.jsonText.set('{"type":"string","title":"x"}');
+    fixture.detectChanges();
+
+    expect(ci.value()).toEqual({ type: 'string', title: 'x' });
+    expect(emitted).toContainEqual({ type: 'string', title: 'x' });
+  });
+
+  it('SchemaJsonEditorComponent mirrors an external value() change into the text', () => {
+    const fixture = mount(SchemaJsonEditorComponent, {
+      value: { type: 'object' },
+    });
+    const ci = fixture.componentInstance as unknown as {
+      jsonText: () => string;
+    };
+    fixture.componentRef.setInput('value', {
+      type: 'array',
+      items: { type: 'number' },
+    });
+    fixture.detectChanges();
+
+    expect(JSON.parse(ci.jsonText())).toEqual({
+      type: 'array',
+      items: { type: 'number' },
+    });
+  });
+
+  it('SchemaJsonEditorComponent ignores invalid JSON (keeps last value)', () => {
+    const fixture = mount(SchemaJsonEditorComponent, {
+      value: { type: 'object' },
+    });
+    const ci = fixture.componentInstance as unknown as {
+      jsonText: { set: (v: string) => void };
+      value: () => JsonSchema;
+    };
+    ci.jsonText.set('{ not json');
+    fixture.detectChanges();
+    expect(ci.value()).toEqual({ type: 'object' });
+  });
+
   it('InferSchemaDialogComponent opens, infers and emits', async () => {
     const fixture = mount(InferSchemaDialogComponent, { open: true });
     await fixture.whenStable();
