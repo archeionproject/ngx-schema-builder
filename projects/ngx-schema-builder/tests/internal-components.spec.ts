@@ -1,4 +1,4 @@
-import { Type, signal } from '@angular/core';
+import { Type, type WritableSignal, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { AddFieldButtonComponent } from '../src/lib/components/schema-editor-internal/add-field-button.component';
@@ -82,6 +82,40 @@ describe('schema-editor-internal components', () => {
       fuzz(fixture);
       expect(fixture.componentInstance).toBeTruthy();
     }
+  });
+
+  it('SchemaPropertyEditorComponent keeps in-progress edits on external schema change', () => {
+    const schema: JsonSchema = { type: 'object', title: 'Original' };
+    const fixture = mount(SchemaPropertyEditorComponent, {
+      name: 'prop',
+      schema,
+      readOnly: false,
+      required: false,
+      mode: 'property',
+      validationNode: buildValidationTree(schema, en),
+    });
+    const inst = fixture.componentInstance as unknown as {
+      isEditingName: WritableSignal<boolean>;
+      tempName: WritableSignal<string>;
+      isEditingTitle: WritableSignal<boolean>;
+      tempTitle: WritableSignal<string>;
+    };
+
+    // User is mid-edit (focused, not yet blurred) on both name and title.
+    inst.isEditingName.set(true);
+    inst.tempName.set('draftName');
+    inst.isEditingTitle.set(true);
+    inst.tempTitle.set('draftTitle');
+
+    // An external update arrives (e.g. the JSON editor in `both` mode).
+    fixture.componentRef.setInput('schema', {
+      type: 'object',
+      title: 'Changed',
+    });
+    fixture.detectChanges();
+
+    expect(inst.tempName()).toBe('draftName');
+    expect(inst.tempTitle()).toBe('draftTitle');
   });
 
   it('SchemaPropertyRowsComponent renders rows (and empty)', () => {

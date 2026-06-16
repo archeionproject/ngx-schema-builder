@@ -9,6 +9,7 @@ import {
   input,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 
@@ -249,6 +250,7 @@ import {
                   [value]="tempTitle()"
                   [disabled]="readOnly()"
                   [placeholder]="t().propertyTitlePlaceholder"
+                  (focus)="isEditingTitle.set(true)"
                   (input)="onTempTitleInput($event)"
                   (blur)="submitTitle()"
                 />
@@ -265,6 +267,7 @@ import {
                   [value]="tempDefault()"
                   [disabled]="readOnly()"
                   [placeholder]="t().propertyDefaultPlaceholder"
+                  (focus)="isEditingDefault.set(true)"
                   (input)="onTempDefaultInput($event)"
                   (blur)="submitDefault()"
                 />
@@ -316,6 +319,8 @@ export class SchemaPropertyEditorComponent {
   protected readonly expanded = signal(false);
   protected readonly isEditingName = signal(false);
   protected readonly isEditingDesc = signal(false);
+  protected readonly isEditingTitle = signal(false);
+  protected readonly isEditingDefault = signal(false);
   protected readonly tempName = signal('');
   protected readonly tempDesc = signal('');
   protected readonly tempTitle = signal('');
@@ -365,14 +370,27 @@ export class SchemaPropertyEditorComponent {
     viewChild<ElementRef<HTMLInputElement>>('descInput');
 
   constructor() {
+    // Sync the editable buffers from external schema/name changes, but never
+    // overwrite a field the user is currently editing (otherwise an external
+    // update — e.g. the JSON editor in `both` mode — clobbers their draft).
     effect(() => {
-      this.tempName.set(this.name());
-      this.tempDesc.set(getSchemaDescription(this.schema()));
-      const s = asObjectSchema(this.schema());
-      this.tempTitle.set(typeof s.title === 'string' ? s.title : '');
-      this.tempDefault.set(
-        s.default === undefined ? '' : formatDefault(s.default),
-      );
+      const name = this.name();
+      const schema = this.schema();
+      untracked(() => {
+        if (!this.isEditingName()) this.tempName.set(name);
+        if (!this.isEditingDesc()) {
+          this.tempDesc.set(getSchemaDescription(schema));
+        }
+        const s = asObjectSchema(schema);
+        if (!this.isEditingTitle()) {
+          this.tempTitle.set(typeof s.title === 'string' ? s.title : '');
+        }
+        if (!this.isEditingDefault()) {
+          this.tempDefault.set(
+            s.default === undefined ? '' : formatDefault(s.default),
+          );
+        }
+      });
     });
 
     effect(() => {
@@ -439,6 +457,7 @@ export class SchemaPropertyEditorComponent {
   }
 
   protected submitTitle(): void {
+    this.isEditingTitle.set(false);
     const trimmed = this.tempTitle().trim();
     const base = asObjectSchema(this.schema());
     const current = typeof base.title === 'string' ? base.title : '';
@@ -452,6 +471,7 @@ export class SchemaPropertyEditorComponent {
   }
 
   protected submitDefault(): void {
+    this.isEditingDefault.set(false);
     const raw = this.tempDefault().trim();
     const base = asObjectSchema(this.schema());
     if (!raw) {
