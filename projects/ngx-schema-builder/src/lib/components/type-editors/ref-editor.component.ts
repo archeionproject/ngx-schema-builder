@@ -46,7 +46,7 @@ let nextRefEditorId = 0;
             type="url"
             [value]="urlValue()"
             [disabled]="readOnly()"
-            [placeholder]="t().refUrlPlaceholder"
+            [placeholder]="readOnly() ? '' : t().refUrlPlaceholder"
             (input)="onUrlInput($event)"
           />
         </div>
@@ -61,7 +61,7 @@ let nextRefEditorId = 0;
             type="text"
             [value]="pointerValue()"
             [disabled]="readOnly()"
-            [placeholder]="t().refPointerPlaceholder"
+            [placeholder]="readOnly() ? '' : t().refPointerPlaceholder"
             (input)="onPointerInput($event)"
           />
         </div>
