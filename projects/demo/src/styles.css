@@ -1,14 +1,6 @@
 @import 'tailwindcss';
 
-/* Generate the utilities used only inside the library's component templates
- * (e.g. the dialogs' `w-[95vw]`, `md:max-w-4xl`) so the demo renders them. */
 @source '../../ngx-schema-builder/src/lib/**/*.ts';
-
-/* Restore modal <dialog> centering that Tailwind Preflight's `*{margin:0}`
- * reset would otherwise zero (the library ships the same rule in jsonjoy.css). */
-dialog {
-  margin: auto;
-}
 
 @theme {
   --color-background: oklch(1 0 0);

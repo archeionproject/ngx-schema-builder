@@ -171,6 +171,8 @@ export interface EnumChangeContext {
           (schemaChange)="schemaChange.emit($event)"
         />
       }
+      <!--  -->
+      @case ('null') {}
       @default {
         <p class="text-sm text-muted-foreground italic">
           Unsupported editor type: {{ editorType() }}

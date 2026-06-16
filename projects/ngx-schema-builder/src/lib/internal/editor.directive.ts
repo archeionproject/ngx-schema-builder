@@ -39,11 +39,6 @@ export interface JsonjoyEditorHandle {
   focus(): void;
   setValue(value: string): void;
   getValue(): string;
-  /**
-   * Force a re-measure of the host element's size. Call this when the editor
-   * is unhidden (e.g. its containing `<dialog>` opens) — a hidden container
-   * can mount at 0×0 and benefits from an explicit re-measure on reveal.
-   */
   layout(): void;
 }
 
@@ -54,15 +49,6 @@ const External = Annotation.define<boolean>();
 /**
  * CodeMirror 6 JSON editor. Attached to a host element, it creates an editor
  * instance and bridges CodeMirror's imperative API to Angular signals.
- *
- * Unlike a Monaco-based editor, CodeMirror needs no web-worker bootstrap and
- * no `MonacoEnvironment` wiring — it works out of the box once the package is
- * installed. JSON Schema validation is driven by the library's own AJV-backed
- * {@link validateJson}, surfaced inline through CodeMirror's lint gutter.
- *
- * Zoneless note: CodeMirror update callbacks run outside Angular's zone.
- * Signal writes inside those callbacks auto-schedule change detection, so no
- * `NgZone.run` is needed.
  */
 @Directive({
   selector: '[libJsonjoyEditor]',

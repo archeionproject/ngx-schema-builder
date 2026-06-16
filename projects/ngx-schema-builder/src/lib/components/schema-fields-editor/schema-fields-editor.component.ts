@@ -53,6 +53,8 @@ const ROOT_TYPE_OPTIONS: readonly {
   { id: 'anyOf', labelKey: 'schemaTypeAnyOf' },
   { id: 'oneOf', labelKey: 'schemaTypeOneOf' },
   { id: 'allOf', labelKey: 'schemaTypeAllOf' },
+  { id: '$ref', labelKey: 'schemaTypeRef' },
+  { id: 'null', labelKey: 'schemaTypeNull' },
 ];
 
 @Component({

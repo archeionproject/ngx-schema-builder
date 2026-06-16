@@ -2,16 +2,11 @@ import type { Signal } from '@angular/core';
 
 /**
  * A single ref-target presented to the user in the `$ref` editor's
- * suggestion list. Host applications produce these by translating their
- * domain entities (blueprints, schemas, etc.) into a URL the backend
- * resolver understands.
- *
+ * suggestion list.
  * @public
  */
 export interface RefSuggestion {
-  /** Stable identifier (e.g. blueprint UUID). Used for `trackBy`. */
   readonly id: string;
-  /** Human-readable label shown in the suggestion list. */
   readonly label: string;
   /** Absolute URL (no fragment) that becomes the `$ref` value. */
   readonly url: string;

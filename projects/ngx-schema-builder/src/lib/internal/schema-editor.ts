@@ -21,10 +21,6 @@ export const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   $ref: { $ref: '' },
 };
 
-/**
- * Field shape used by every editor row.
- * Mirrors `Property` from `lib/schemaEditor.ts` in the React port.
- */
 export interface SchemaProperty {
   name: string;
   schema: JsonSchema;
@@ -39,12 +35,6 @@ export interface LocalDefinition {
   ref: string;
 }
 
-/**
- * Lists the schema's local definitions as ready-to-use `$ref` targets.
- *
- * Mirrors the Definitions tab's key preference: `definitions` is used only when
- * present and `$defs` is absent, otherwise `$defs`.
- */
 export function listLocalDefinitions(
   schema: JsonSchema,
 ): readonly LocalDefinition[] {

@@ -4,13 +4,6 @@ import { en } from '../i18n/locales/en';
 import type { Translation } from '../i18n/translation-keys';
 import { SCHEMA_BUILDER_CONFIG } from '../tokens';
 
-/**
- * Replaces React's `useTranslation()` hook and `SchemaBuilderConfigContext`.
- *
- * Components inject this service and either read `messages()` directly or
- * call `withOverrides()` to produce a `computed()` that layers their own
- * `locale` / `messages` inputs over the provided config.
- */
 @Injectable({ providedIn: 'root' })
 export class JsonjoyTranslationService {
   private readonly config = inject(SCHEMA_BUILDER_CONFIG, { optional: true });
@@ -43,10 +36,6 @@ export class JsonjoyTranslationService {
   }
 }
 
-/**
- * Replaces `formatTranslation()` from the React lib. Substitutes `{key}`
- * tokens in a template string with values from a record.
- */
 export function formatTranslation(
   template: string,
   values: Record<string, string | number>,

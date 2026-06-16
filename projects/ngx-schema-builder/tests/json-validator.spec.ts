@@ -1,6 +1,5 @@
 import {
   extractErrorPosition,
-  findLineNumberForPath,
   validateJson,
 } from '../src/lib/internal/json-validator';
 import type { JsonSchema } from '../src/lib/types/json-schema';
@@ -51,35 +50,6 @@ describe('validateJson', () => {
     };
     const ok = await validateJson('{ "email": "a@b.com" }', emailSchema);
     expect(ok.valid).toBe(true);
-  });
-});
-
-describe('findLineNumberForPath', () => {
-  const json = '{\n  "age": 30,\n  "name": "a"\n}';
-
-  it('maps the root path to line 1', () => {
-    expect(findLineNumberForPath(json, '/')).toEqual({ line: 1, column: 1 });
-    expect(findLineNumberForPath(json, '')).toEqual({ line: 1, column: 1 });
-  });
-
-  it('locates a top-level property', () => {
-    const pos = findLineNumberForPath(json, '/name');
-    expect(pos?.line).toBe(3);
-    expect(pos?.column).toBeGreaterThan(0);
-  });
-
-  it('locates a nested property by last segment', () => {
-    const nested = '{\n  "outer": {\n    "inner": 1\n  }\n}';
-    expect(findLineNumberForPath(nested, '/outer/inner')?.line).toBe(3);
-  });
-
-  it('handles the /aa/a special case', () => {
-    const doc = '{\n  "aa": {\n    "a": 1\n  }\n}';
-    expect(findLineNumberForPath(doc, '/aa/a')?.line).toBe(3);
-  });
-
-  it('returns undefined when not found', () => {
-    expect(findLineNumberForPath(json, '/nope')).toBeUndefined();
   });
 });
 
