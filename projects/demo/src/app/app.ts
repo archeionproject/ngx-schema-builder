@@ -98,14 +98,14 @@ const INITIAL_SCHEMA: JsonSchema = {
           class="inline-flex items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-sm shadow-sm hover:bg-secondary transition-colors"
           (click)="inferOpen.set(true)"
         >
-          Infer schema from JSON…
+          Infer schema from JSON
         </button>
         <button
           type="button"
           class="inline-flex items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-sm shadow-sm hover:bg-secondary transition-colors"
           (click)="validateOpen.set(true)"
         >
-          Validate JSON against schema…
+          Validate JSON against schema
         </button>
       </div>
 
