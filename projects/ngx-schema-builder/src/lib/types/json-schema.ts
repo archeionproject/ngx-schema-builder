@@ -129,23 +129,6 @@ export interface NewField {
   additionalProperties?: boolean;
 }
 
-export interface SchemaEditorState {
-  schema: JsonSchema;
-  fieldInfo: {
-    type: SchemaType;
-    properties: Array<{
-      name: string;
-      path: string[];
-      schema: JsonSchema;
-      required: boolean;
-    }>;
-  } | null;
-  handleAddField: (newField: NewField, parentPath?: string[]) => void;
-  handleEditField: (path: string[], updatedField: NewField) => void;
-  handleDeleteField: (path: string[]) => void;
-  handleSchemaEdit: (schema: JsonSchema) => void;
-}
-
 export type ObjectJsonSchema = Exclude<JsonSchema, boolean>;
 
 /** Virtual type used in the editor UI to represent combinator and reference schemas */

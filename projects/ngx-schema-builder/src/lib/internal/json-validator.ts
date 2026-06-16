@@ -40,8 +40,10 @@ function loadAjv(): Promise<Ajv> {
 }
 
 /**
- * Finds the line and column number for a specific JSON Pointer path inside a JSON string.
- * Port of the React reference; preserves the special-case for "/aa/a" intentionally.
+ * Best-effort line/column for a JSON Pointer path inside a JSON source string.
+ * A textual heuristic (not a parser): single-segment paths are matched by key,
+ * deeper paths fall back to the last segment. Used only to position editor
+ * error markers, so an imperfect match is acceptable.
  */
 export function findLineNumberForPath(
   jsonStr: string,
@@ -76,29 +78,6 @@ export function findLineNumberForPath(
     }
 
     if (pathSegments.length > 1) {
-      if (path === '/aa/a') {
-        let parentFound = false;
-        let lineWithNestedProp = -1;
-
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          if (line.includes(`"${pathSegments[0]}"`)) {
-            parentFound = true;
-            continue;
-          }
-          if (parentFound && line.includes(`"${pathSegments[1]}"`)) {
-            lineWithNestedProp = i;
-            break;
-          }
-        }
-
-        if (lineWithNestedProp !== -1) {
-          const line = lines[lineWithNestedProp];
-          const column = line.indexOf(`"${pathSegments[1]}"`) + 1;
-          return { line: lineWithNestedProp + 1, column };
-        }
-      }
-
       const lastSegment = pathSegments[pathSegments.length - 1];
 
       for (let i = 0; i < lines.length; i++) {
@@ -116,9 +95,6 @@ export function findLineNumberForPath(
   }
 }
 
-/**
- * Extracts line/column from a JSON parse error message.
- */
 export function extractErrorPosition(
   error: Error,
   jsonInput: string,

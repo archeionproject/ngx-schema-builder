@@ -47,11 +47,9 @@ export const it: Translation = {
   propertyDelete: 'Elimina campo',
 
   schemaEditorTitle: 'Editor Schema JSON',
-  schemaEditorToggleFullscreen: 'Schermo intero',
   schemaEditorEditModeVisual: 'Visuale',
   schemaEditorEditModeJson: 'JSON',
   schemaEditorEditModeBoth: 'Entrambi',
-  schemaEditorLoading: 'Caricamento editor...',
 
   arrayNoConstraint: 'Nessun vincolo',
   arrayMinimumLabel: 'Numero minimo di elementi',

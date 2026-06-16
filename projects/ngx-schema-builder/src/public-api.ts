@@ -21,7 +21,6 @@ export type {
   SchemaEditorType,
   RefJsonSchema,
   NewField,
-  SchemaEditorState,
 } from './lib/types/json-schema';
 export {
   isBooleanSchema,
@@ -42,6 +41,11 @@ export {
   inferSchema,
   createSchemaFromJson,
 } from './lib/internal/schema-inference';
+
+// --- Field-name validation (opt-in) -----------------------------------------
+// Validates a name against JS-identifier rules. The editor itself accepts any
+// JSON Schema property name; use this only if you want to restrict names.
+export { validateFieldName } from './lib/internal/schema-editor';
 
 // --- JSON validation (AJV; lazy-loaded) -------------------------------------
 export type {

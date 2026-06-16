@@ -47,11 +47,9 @@ export const en: Translation = {
   propertyDelete: 'Delete field',
 
   schemaEditorTitle: 'JSON Schema Editor',
-  schemaEditorToggleFullscreen: 'Toggle fullscreen',
   schemaEditorEditModeVisual: 'Visual',
   schemaEditorEditModeJson: 'JSON',
   schemaEditorEditModeBoth: 'Both',
-  schemaEditorLoading: 'Loading editor...',
 
   arrayNoConstraint: 'No constraint',
   arrayMinimumLabel: 'Minimum Items',

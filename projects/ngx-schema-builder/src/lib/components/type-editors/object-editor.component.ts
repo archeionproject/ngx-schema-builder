@@ -25,7 +25,6 @@ import {
   type JsonSchema,
   type NewField,
   type ObjectJsonSchema,
-  asObjectSchema,
   isBooleanSchema,
 } from '../../types/json-schema';
 import type { ValidationTreeNode } from '../../types/validation';
@@ -224,10 +223,10 @@ export class ObjectEditorComponent {
 
   protected onAdditionalPropertiesToggle(): void {
     const { additionalProperties, ...rest } = this.normalized();
-    const next = asObjectSchema(rest);
-    if (additionalProperties !== false) {
-      next.additionalProperties = false;
-    }
-    this.schemaChange.emit(next);
+    this.schemaChange.emit(
+      additionalProperties !== false
+        ? { ...rest, additionalProperties: false }
+        : rest,
+    );
   }
 }

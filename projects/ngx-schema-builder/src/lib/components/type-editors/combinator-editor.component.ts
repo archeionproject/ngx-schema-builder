@@ -12,6 +12,7 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
+import { DEFAULT_SCHEMAS } from '../../internal/schema-editor';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
   type JsonSchema,
@@ -69,20 +70,6 @@ function getCombinatorStrings(
       };
   }
 }
-
-const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
-  string: { type: 'string' },
-  number: { type: 'number' },
-  integer: { type: 'integer' },
-  boolean: { type: 'boolean' },
-  object: { type: 'object' },
-  array: { type: 'array' },
-  null: { type: 'null' },
-  anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
-  oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-  allOf: { allOf: [{ type: 'object' }] },
-  $ref: { $ref: '' },
-};
 
 interface OptionRow {
   readonly id: string;
@@ -311,9 +298,17 @@ export class CombinatorEditorComponent {
     return schema[this.combinator()] ?? [];
   });
 
-  protected readonly ids = linkedSignal<readonly string[]>(() =>
-    this.options().map(() => nextId()),
-  );
+  // Stable per-row ids: preserve each slot's id across content edits (so an
+  // expanded row stays expanded when its schema changes); only mint a new id
+  // for a newly added slot, and drop trailing ids when slots are removed.
+  protected readonly ids = linkedSignal<
+    readonly JsonSchema[],
+    readonly string[]
+  >({
+    source: this.options,
+    computation: (options, previous) =>
+      options.map((_, index) => previous?.value[index] ?? nextId()),
+  });
 
   protected readonly expandedId = signal<string | null>(null);
   protected readonly descFocusId = signal<string | null>(null);

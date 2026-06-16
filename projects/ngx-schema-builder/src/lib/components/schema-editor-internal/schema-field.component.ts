@@ -43,12 +43,10 @@ export class SchemaFieldComponent {
   readonly schema = input.required<JsonSchema>();
   readonly required = input<boolean>(false);
   readonly readOnly = input.required<boolean>();
-  readonly isNested = input<boolean>(false);
   readonly depth = input<number>(0);
 
   readonly delete = output<void>();
   readonly edit = output<NewField>();
-  readonly addField = output<NewField>();
 
   protected readonly t = inject(JsonjoyTranslationService).providerLocale;
 

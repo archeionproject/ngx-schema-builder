@@ -2,8 +2,24 @@ import type {
   JsonSchema,
   NewField,
   ObjectJsonSchema,
+  SchemaEditorType,
 } from '../types/json-schema';
 import { isBooleanSchema, isObjectSchema } from '../types/json-schema';
+
+/** Starting schema for each editor type, used when creating or switching fields. */
+export const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
+  string: { type: 'string' },
+  number: { type: 'number' },
+  integer: { type: 'integer' },
+  boolean: { type: 'boolean' },
+  object: { type: 'object' },
+  array: { type: 'array' },
+  null: { type: 'null' },
+  anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+  oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+  allOf: { allOf: [{ type: 'object' }] },
+  $ref: { $ref: '' },
+};
 
 /**
  * Field shape used by every editor row.

@@ -774,12 +774,6 @@ export interface Translation {
    */
   readonly schemaEditorTitle: string;
   /**
-   * The translation for the key `schemaEditorToggleFullscreen`. English default is:
-   *
-   * > Toggle fullscreen
-   */
-  readonly schemaEditorToggleFullscreen: string;
-  /**
    * The translation for the key `schemaEditorEditModeVisual`. English default is:
    *
    * > Visual
@@ -797,12 +791,6 @@ export interface Translation {
    * > Both
    */
   readonly schemaEditorEditModeBoth: string;
-  /**
-   * The translation for the key `schemaEditorLoading`. English default is:
-   *
-   * > Loading editor...
-   */
-  readonly schemaEditorLoading: string;
 
   /**
    * The translation for the key `inferrerTitle`. English default is:

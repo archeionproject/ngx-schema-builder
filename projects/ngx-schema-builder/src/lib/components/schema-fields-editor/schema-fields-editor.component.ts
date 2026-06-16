@@ -13,6 +13,7 @@ import {
 import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
 import {
+  DEFAULT_SCHEMAS,
   createFieldSchema,
   listLocalDefinitions,
   removeObjectPatternProperty,
@@ -53,20 +54,6 @@ const ROOT_TYPE_OPTIONS: readonly {
   { id: 'oneOf', labelKey: 'schemaTypeOneOf' },
   { id: 'allOf', labelKey: 'schemaTypeAllOf' },
 ];
-
-const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
-  string: { type: 'string' },
-  number: { type: 'number' },
-  integer: { type: 'integer' },
-  boolean: { type: 'boolean' },
-  object: { type: 'object' },
-  array: { type: 'array' },
-  null: { type: 'null' },
-  anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
-  oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-  allOf: { allOf: [{ type: 'object' }] },
-  $ref: { $ref: '' },
-};
 
 @Component({
   selector: 'lib-jsonjoy-schema-fields-editor',
@@ -195,7 +182,6 @@ const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
 })
 export class SchemaFieldsEditorComponent {
   readonly value = model<JsonSchema>({ type: 'object' });
-  readonly defaultValue = input<JsonSchema | undefined>(undefined);
   readonly readOnly = input<boolean>(false);
   readonly autoFocus = input<boolean>(true);
   readonly className = input<string | undefined>(undefined);

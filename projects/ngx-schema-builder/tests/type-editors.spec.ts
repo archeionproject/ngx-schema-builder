@@ -141,6 +141,27 @@ describe('type editors (direct mount)', () => {
       expect(fixture.componentInstance).toBeTruthy();
     }
   });
+
+  it('CombinatorEditorComponent keeps row ids stable when an option changes', () => {
+    const fixture = mountEditor(
+      CombinatorEditorComponent,
+      { anyOf: [{ type: 'string' }, { type: 'number' }] },
+      { combinator: 'anyOf' },
+    );
+    const ids = () =>
+      (
+        fixture.componentInstance as unknown as { ids: () => readonly string[] }
+      ).ids();
+    const before = [...ids()];
+
+    // Edit an option's content without changing the number of options.
+    fixture.componentRef.setInput('schema', {
+      anyOf: [{ type: 'string', minLength: 1 }, { type: 'number' }],
+    });
+    fixture.detectChanges();
+
+    expect(ids()).toEqual(before);
+  });
 });
 
 describe('TypeEditorComponent dispatcher', () => {
