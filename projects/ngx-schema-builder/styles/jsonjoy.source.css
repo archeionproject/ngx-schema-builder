@@ -1,5 +1,5 @@
 /*
- * @archeion/jsonjoy-builder — theme-neutral, self-contained stylesheet.
+ * @archeion/ngx-schema-builder — theme-neutral, self-contained stylesheet.
  *
  * Built with Tailwind CSS v4. Preflight (global reset) is intentionally
  * omitted via layered imports — the host application keeps its own resets.
@@ -23,9 +23,9 @@
 @source "../src/lib/**/*.ts";
 
 @theme {
-  /* Archeion palette — neutral monochrome (see @archeion/ui-kit variables.scss).
-   * primary = softened near-black (#1f1f1f), secondary = #F3F3F3,
-   * danger = #FF3333, borders = #d9d9d9, input fill = #f9f9f9. */
+  /* Neutral monochrome palette: primary = softened near-black (#1f1f1f),
+   * secondary = #F3F3F3, danger = #FF3333, borders = #d9d9d9,
+   * input fill = #f9f9f9. */
   --color-background: hsl(0 0% 98%);
   --color-foreground: hsl(0 0% 12%);
 

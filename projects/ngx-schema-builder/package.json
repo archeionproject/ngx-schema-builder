@@ -11,7 +11,10 @@
     "jsonjoy",
     "codemirror"
   ],
-  "author": "Archeion",
+  "author": {
+    "name": "Archeion",
+    "url": "https://github.com/archeionproject"
+  },
   "contributors": [
     {
       "name": "Ophir LOJKINE",
@@ -21,7 +24,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/archeionproject/ngx-schema-builder.git"
+    "url": "git+https://github.com/archeionproject/ngx-schema-builder.git",
+    "directory": "projects/ngx-schema-builder"
   },
   "bugs": {
     "url": "https://github.com/archeionproject/ngx-schema-builder/issues"

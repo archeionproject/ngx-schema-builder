@@ -1,5 +1,9 @@
 # @archeion/ngx-schema-builder
 
+[![CI](https://github.com/archeionproject/ngx-schema-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/archeionproject/ngx-schema-builder/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@archeion/ngx-schema-builder.svg)](https://www.npmjs.com/package/@archeion/ngx-schema-builder)
+[![license](https://img.shields.io/npm/l/@archeion/ngx-schema-builder.svg)](./LICENSE)
+
 Visual JSON Schema editor for Angular. Lets users author and edit JSON Schema definitions through a tabbed interface (RAW JSON / Visual Editor / Preview) with first-class support for primitives, objects, arrays, combinators (`anyOf` / `oneOf` / `allOf`) and `$ref` references.
 
 ## Install

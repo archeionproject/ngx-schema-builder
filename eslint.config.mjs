@@ -9,6 +9,7 @@ export default tseslint.config(
       'dist/**',
       'out-tsc/**',
       'coverage/**',
+      '.angular/**',
       'projects/demo/**',
       '**/*.css',
     ],
