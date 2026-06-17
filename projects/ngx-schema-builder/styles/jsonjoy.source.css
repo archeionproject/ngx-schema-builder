@@ -1,20 +1,14 @@
 /*
  * @archeion/ngx-schema-builder — theme-neutral, self-contained stylesheet.
+ * Built with Tailwind v4. Preflight is omitted; the host keeps its own resets.
  *
- * Built with Tailwind CSS v4. Preflight (global reset) is intentionally
- * omitted via layered imports — the host application keeps its own resets.
+ * `@theme inline` registers the namespaces (so utilities like `bg-primary` are
+ * generated) without emitting the tokens to `:root`. Each value points at a
+ * `--jsonjoy-*` property declared scoped to `.jsonjoy` below — so the only
+ * custom properties that reach the page are jsonjoy-prefixed and never bleed
+ * into the host's `:root`.
  *
- * Scope notes:
- *   - Design tokens (CSS custom properties) and the form-control resets are
- *     scoped under `.jsonjoy`, so the editor's theming does not bleed into
- *     surrounding UI.
- *   - Utility classes (e.g. `.flex`, `.p-4`) and the `@theme` `:root` tokens
- *     are emitted globally, as Tailwind requires. They only paint elements
- *     that carry those classes (i.e. the editor's own markup), but a host app
- *     that also runs Tailwind may see duplicate utility definitions. This is
- *     expected and harmless ordering, not a correctness issue.
- *
- * Regenerate with `npm run build:styles` (or via `npm run build`).
+ * Regenerate with `npm run build:styles`.
  */
 
 @import 'tailwindcss/theme.css';
@@ -22,95 +16,93 @@
 
 @source "../src/lib/**/*.ts";
 
-@theme {
-  /* Neutral monochrome palette: primary = softened near-black (#1f1f1f),
-   * secondary = #F3F3F3, danger = #FF3333, borders = #d9d9d9,
-   * input fill = #f9f9f9. */
-  --color-background: hsl(0 0% 98%);
-  --color-foreground: hsl(0 0% 12%);
+@theme inline {
+  --color-background: var(--jsonjoy-color-background);
+  --color-foreground: var(--jsonjoy-color-foreground);
 
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(0 0% 12%);
+  --color-card: var(--jsonjoy-color-card);
+  --color-card-foreground: var(--jsonjoy-color-card-foreground);
 
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(0 0% 12%);
+  --color-popover: var(--jsonjoy-color-popover);
+  --color-popover-foreground: var(--jsonjoy-color-popover-foreground);
 
-  --color-primary: hsl(0 0% 12%);
-  --color-primary-foreground: hsl(0 0% 100%);
+  --color-primary: var(--jsonjoy-color-primary);
+  --color-primary-foreground: var(--jsonjoy-color-primary-foreground);
 
-  --color-secondary: hsl(0 0% 95.3%);
-  --color-secondary-foreground: hsl(0 0% 12%);
+  --color-secondary: var(--jsonjoy-color-secondary);
+  --color-secondary-foreground: var(--jsonjoy-color-secondary-foreground);
 
-  --color-muted: hsl(0 0% 95.3%);
-  --color-muted-foreground: hsl(0 0% 45%);
+  --color-muted: var(--jsonjoy-color-muted);
+  --color-muted-foreground: var(--jsonjoy-color-muted-foreground);
 
-  --color-accent: hsl(0 0% 95.3%);
-  --color-accent-foreground: hsl(0 0% 12%);
+  --color-accent: var(--jsonjoy-color-accent);
+  --color-accent-foreground: var(--jsonjoy-color-accent-foreground);
 
-  --color-destructive: hsl(0 100% 60%);
-  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-destructive: var(--jsonjoy-color-destructive);
+  --color-destructive-foreground: var(--jsonjoy-color-destructive-foreground);
 
-  --color-border: hsl(0 0% 85%);
-  --color-input: hsl(0 0% 85%);
-  --color-input-bg: hsl(0 0% 97.6%);
-  --color-ring: hsl(0 0% 12%);
+  --color-border: var(--jsonjoy-color-border);
+  --color-input: var(--jsonjoy-color-input);
+  --color-input-bg: var(--jsonjoy-color-input-bg);
+  --color-ring: var(--jsonjoy-color-ring);
 
-  --radius-xl: 0.5rem;
-  --radius-lg: 0.375rem;
-  --radius-md: 0.25rem;
-  --radius-sm: 0.125rem;
+  --radius-xl: var(--jsonjoy-radius-xl);
+  --radius-lg: var(--jsonjoy-radius-lg);
+  --radius-md: var(--jsonjoy-radius-md);
+  --radius-sm: var(--jsonjoy-radius-sm);
 
-  --animate-fade-in: jsonjoy-fade-in 0.3s ease-out;
-  --animate-fade-out: jsonjoy-fade-out 0.3s ease-out;
-  --animate-scale-in: jsonjoy-scale-in 0.2s ease-out;
-  --animate-scale-out: jsonjoy-scale-out 0.2s ease-out;
-  --animate-enter:
-    jsonjoy-fade-in 0.4s ease-out, jsonjoy-scale-in 0.3s ease-out;
-  --animate-exit:
-    jsonjoy-fade-out 0.3s ease-out, jsonjoy-scale-out 0.2s ease-out;
+  --font-sans: var(--jsonjoy-font-sans);
 
-  --ease-bounce-in: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-fade-in: var(--jsonjoy-animate-fade-in);
+  --animate-fade-out: var(--jsonjoy-animate-fade-out);
+  --animate-scale-in: var(--jsonjoy-animate-scale-in);
+  --animate-scale-out: var(--jsonjoy-animate-scale-out);
+  --animate-enter: var(--jsonjoy-animate-enter);
+  --animate-exit: var(--jsonjoy-animate-exit);
 
-  @keyframes jsonjoy-fade-in {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  --ease-bounce-in: var(--jsonjoy-ease-bounce-in);
+  --ease-smooth: var(--jsonjoy-ease-smooth);
+}
+
+/* Declared top-level (not in @theme) so they ship even when unused internally. */
+@keyframes jsonjoy-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  @keyframes jsonjoy-fade-out {
-    0% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  @keyframes jsonjoy-scale-in {
-    0% {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+}
+@keyframes jsonjoy-fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  @keyframes jsonjoy-scale-out {
-    from {
-      transform: scale(1);
-      opacity: 1;
-    }
-    to {
-      transform: scale(0.95);
-      opacity: 0;
-    }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes jsonjoy-scale-in {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes jsonjoy-scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
   }
 }
 
@@ -203,60 +195,63 @@
   animation: jsonjoy-dialog-content-out 0.2s ease-in;
 }
 
-/*
- * Theme-neutral defaults. All tokens are scoped to `.jsonjoy` so they
- * cannot bleed into the host app. Override per-instance by setting any of
- * these CSS variables on a parent of the editor.
- */
+/* Theme tokens, scoped to .jsonjoy. Override by setting any on a parent. */
 .jsonjoy {
-  --color-background: hsl(0 0% 98%);
-  --color-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-background: hsl(0 0% 98%);
+  --jsonjoy-color-foreground: hsl(0 0% 12%);
 
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-card: hsl(0 0% 100%);
+  --jsonjoy-color-card-foreground: hsl(0 0% 12%);
 
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-popover: hsl(0 0% 100%);
+  --jsonjoy-color-popover-foreground: hsl(0 0% 12%);
 
-  --color-primary: hsl(0 0% 12%);
-  --color-primary-foreground: hsl(0 0% 100%);
+  --jsonjoy-color-primary: hsl(0 0% 12%);
+  --jsonjoy-color-primary-foreground: hsl(0 0% 100%);
 
-  --color-secondary: hsl(0 0% 95.3%);
-  --color-secondary-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-secondary: hsl(0 0% 95.3%);
+  --jsonjoy-color-secondary-foreground: hsl(0 0% 12%);
 
-  --color-muted: hsl(0 0% 95.3%);
-  --color-muted-foreground: hsl(0 0% 45%);
+  --jsonjoy-color-muted: hsl(0 0% 95.3%);
+  --jsonjoy-color-muted-foreground: hsl(0 0% 45%);
 
-  --color-accent: hsl(0 0% 95.3%);
-  --color-accent-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-accent: hsl(0 0% 95.3%);
+  --jsonjoy-color-accent-foreground: hsl(0 0% 12%);
 
-  --color-destructive: hsl(0 100% 60%);
-  --color-destructive-foreground: hsl(0 0% 100%);
+  --jsonjoy-color-destructive: hsl(0 100% 60%);
+  --jsonjoy-color-destructive-foreground: hsl(0 0% 100%);
 
-  --color-border: hsl(0 0% 85%);
-  --color-input: hsl(0 0% 85%);
-  --color-input-bg: hsl(0 0% 97.6%);
-  --color-ring: hsl(0 0% 12%);
+  --jsonjoy-color-border: hsl(0 0% 85%);
+  --jsonjoy-color-input: hsl(0 0% 85%);
+  --jsonjoy-color-input-bg: hsl(0 0% 97.6%);
+  --jsonjoy-color-ring: hsl(0 0% 12%);
 
-  --jsonjoy-radius: 0.25rem;
+  --jsonjoy-radius-xl: 0.5rem;
+  --jsonjoy-radius-lg: 0.375rem;
+  --jsonjoy-radius-md: 0.25rem;
+  --jsonjoy-radius-sm: 0.125rem;
 
-  --font-sans:
+  --jsonjoy-animate-fade-in: jsonjoy-fade-in 0.3s ease-out;
+  --jsonjoy-animate-fade-out: jsonjoy-fade-out 0.3s ease-out;
+  --jsonjoy-animate-scale-in: jsonjoy-scale-in 0.2s ease-out;
+  --jsonjoy-animate-scale-out: jsonjoy-scale-out 0.2s ease-out;
+  --jsonjoy-animate-enter:
+    jsonjoy-fade-in 0.4s ease-out, jsonjoy-scale-in 0.3s ease-out;
+  --jsonjoy-animate-exit:
+    jsonjoy-fade-out 0.3s ease-out, jsonjoy-scale-out 0.2s ease-out;
+
+  --jsonjoy-ease-bounce-in: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --jsonjoy-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --jsonjoy-font-sans:
     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
 
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
+  color: var(--jsonjoy-color-foreground);
+  font-family: var(--jsonjoy-font-sans);
 }
 
-/*
- * Scoped form-control reset.
- *
- * Tailwind preflight is intentionally omitted (host keeps its own resets),
- * which means native <button>/<input>/<select>/<textarea> keep their UA
- * defaults (e.g. `background-color: buttonface`). On dark-themed OSes this
- * paints unstyled buttons gray. Normalize ONLY inside `.jsonjoy` so pills
- * and type-dropdowns inherit the editor's theme.
- */
+/* Preflight is omitted, so normalize native controls inside .jsonjoy only. */
 :where(.jsonjoy)
   :where(button, [type='button'], [type='submit'], [type='reset']) {
   background-color: transparent;
@@ -279,42 +274,37 @@
 
 .jsonjoy.dark,
 .dark .jsonjoy {
-  --color-background: hsl(0 0% 8%);
-  --color-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-background: hsl(0 0% 8%);
+  --jsonjoy-color-foreground: hsl(0 0% 95%);
 
-  --color-card: hsl(0 0% 8%);
-  --color-card-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-card: hsl(0 0% 8%);
+  --jsonjoy-color-card-foreground: hsl(0 0% 95%);
 
-  --color-popover: hsl(0 0% 8%);
-  --color-popover-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-popover: hsl(0 0% 8%);
+  --jsonjoy-color-popover-foreground: hsl(0 0% 95%);
 
-  --color-primary: hsl(0 0% 92%);
-  --color-primary-foreground: hsl(0 0% 10%);
+  --jsonjoy-color-primary: hsl(0 0% 92%);
+  --jsonjoy-color-primary-foreground: hsl(0 0% 10%);
 
-  --color-secondary: hsl(0 0% 16%);
-  --color-secondary-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-secondary: hsl(0 0% 16%);
+  --jsonjoy-color-secondary-foreground: hsl(0 0% 95%);
 
-  --color-muted: hsl(0 0% 16%);
-  --color-muted-foreground: hsl(0 0% 64%);
+  --jsonjoy-color-muted: hsl(0 0% 16%);
+  --jsonjoy-color-muted-foreground: hsl(0 0% 64%);
 
-  --color-accent: hsl(0 0% 16%);
-  --color-accent-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-accent: hsl(0 0% 16%);
+  --jsonjoy-color-accent-foreground: hsl(0 0% 95%);
 
-  --color-destructive: hsl(0 72% 48%);
-  --color-destructive-foreground: hsl(0 0% 98%);
+  --jsonjoy-color-destructive: hsl(0 72% 48%);
+  --jsonjoy-color-destructive-foreground: hsl(0 0% 98%);
 
-  --color-border: hsl(0 0% 20%);
-  --color-input: hsl(0 0% 20%);
-  --color-input-bg: hsl(0 0% 12%);
-  --color-ring: hsl(0 0% 83%);
+  --jsonjoy-color-border: hsl(0 0% 20%);
+  --jsonjoy-color-input: hsl(0 0% 20%);
+  --jsonjoy-color-input-bg: hsl(0 0% 12%);
+  --jsonjoy-color-ring: hsl(0 0% 83%);
 }
 
-/*
- * Modal dialog centering. A host application's Tailwind Preflight resets every
- * element's margin (`*, ::backdrop { margin: 0 }`), which clobbers the user-
- * agent `margin: auto` that centers an open modal <dialog> — pinning it to the
- * top-left. Restore it for the editor's own dialogs (specificity beats `*`).
- */
+/* Restore margin:auto a host's Preflight (`*{margin:0}`) strips from <dialog>. */
 dialog.jsonjoy {
   margin: auto;
 }

@@ -201,7 +201,7 @@ export class JsonjoyEditorDirective {
           height: '100%',
           fontSize: '14px',
           backgroundColor: 'transparent',
-          color: 'var(--color-foreground)',
+          color: 'var(--jsonjoy-color-foreground)',
         },
         '&.cm-focused': { outline: 'none' },
         '.cm-scroller': {
@@ -211,11 +211,11 @@ export class JsonjoyEditorDirective {
         '.cm-gutters': {
           backgroundColor: 'transparent',
           border: 'none',
-          color: 'var(--color-muted-foreground)',
+          color: 'var(--jsonjoy-color-muted-foreground)',
         },
         '.cm-activeLine, .cm-activeLineGutter': {
           backgroundColor:
-            'color-mix(in srgb, var(--color-muted) 40%, transparent)',
+            'color-mix(in srgb, var(--jsonjoy-color-muted) 40%, transparent)',
         },
       },
       { dark },
