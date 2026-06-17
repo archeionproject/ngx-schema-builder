@@ -4,6 +4,8 @@ Angular workspace for **[`@archeion/ngx-schema-builder`][pkg]**, a visual JSON
 Schema editor for Angular. The published package's README (install, usage,
 theming, i18n) lives at [`projects/ngx-schema-builder/README.md`](./projects/ngx-schema-builder/README.md).
 
+**▶ [Live demo](https://archeionproject.github.io/ngx-schema-builder/)**
+
 ## Layout
 
 | Path                          | What                                          |
