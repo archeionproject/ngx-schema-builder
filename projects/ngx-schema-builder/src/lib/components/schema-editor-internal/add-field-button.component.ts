@@ -62,7 +62,7 @@ let nextAddFieldId = 0;
 
     <dialog
       #dialogRef
-      class="md:max-w-[1200px] max-h-[85vh] w-[95vw] p-4 sm:p-6 jsonjoy rounded-lg border bg-background shadow-lg backdrop:bg-black/40"
+      class="md:max-w-[1200px] max-h-[85vh] w-[95vw] m-auto p-4 sm:p-6 jsonjoy rounded-lg border bg-background shadow-lg backdrop:bg-black/40"
       (close)="onDialogClose()"
     >
       <div class="mb-4">
