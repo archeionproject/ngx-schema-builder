@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "ng": "ng",
+    "prestart": "npm run build:styles",
     "start": "ng serve demo",
-    "build": "npm run build:styles && ng build ngx-schema-builder",
+    "prebuild": "npm run build:styles",
+    "build": "ng build ngx-schema-builder",
     "build:styles": "tailwindcss -i projects/ngx-schema-builder/styles/jsonjoy.source.css -o projects/ngx-schema-builder/assets/styles/jsonjoy.css --minify",
+    "prebuild:demo": "npm run build:styles",
     "build:demo": "ng build demo",
     "watch": "ng build ngx-schema-builder --watch --configuration development",
     "test": "ng test",
