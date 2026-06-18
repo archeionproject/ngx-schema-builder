@@ -77,7 +77,10 @@
                 "input": "projects/demo/public"
               }
             ],
-            "styles": ["projects/demo/src/styles.css"],
+            "styles": [
+              "projects/ngx-schema-builder/assets/styles/jsonjoy.css",
+              "projects/demo/src/styles.css"
+            ],
             "loader": {
               ".ttf": "file"
             }
