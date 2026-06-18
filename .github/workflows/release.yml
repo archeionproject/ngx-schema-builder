@@ -45,13 +45,15 @@ jobs:
           VERSION_TYPE=${{ github.event.inputs.version_type }}
 
           if [[ "$VERSION_TYPE" == "alpha" ]]; then
-            DEBUG=release-it:* npx release-it --config .release-it.ngx-schema-builder.json --npm.publishArgs="--registry=https://registry.npmjs.org" --preRelease=alpha --ci
+            npx release-it --config .release-it.ngx-schema-builder.json --preRelease=alpha --ci
           else
-            DEBUG=release-it:* npx release-it --config .release-it.ngx-schema-builder.json --npm.publishArgs="--registry=https://registry.npmjs.org" $VERSION_TYPE --ci
+            npx release-it --config .release-it.ngx-schema-builder.json $VERSION_TYPE --ci
           fi
 
-      - name: Manual publish to npm
+      - name: Publish to npm
         working-directory: ./dist/ngx-schema-builder
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           VERSION_TYPE=${{ github.event.inputs.version_type }}
 

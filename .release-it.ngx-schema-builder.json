@@ -5,7 +5,7 @@
     "tagName": "ngx-schema-builder/v${version}"
   },
   "npm": {
-    "publish": true,
+    "publish": false,
     "publishPath": "./dist/ngx-schema-builder"
   },
   "github": {
