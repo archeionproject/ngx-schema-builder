@@ -49,3 +49,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}

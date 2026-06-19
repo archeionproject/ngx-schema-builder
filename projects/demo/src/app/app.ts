@@ -1,7 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  inject,
   signal,
 } from '@angular/core';
 import {
@@ -133,8 +136,7 @@ const INITIAL_SCHEMA: JsonSchema = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.dark]': 'isDark()',
-    class: 'block min-h-screen',
+    class: 'block min-h-screen bg-background text-foreground',
   },
   template: `
     <div
@@ -524,6 +526,14 @@ export class AppComponent {
   protected readonly isDark = signal(false);
   protected readonly copied = signal(false);
   protected readonly schemaCopied = signal(false);
+
+  private readonly document = inject(DOCUMENT);
+
+  constructor() {
+    effect(() => {
+      this.document.documentElement.classList.toggle('dark', this.isDark());
+    });
+  }
 
   protected onInferred(inferred: JsonSchema): void {
     this.schema.set(inferred);

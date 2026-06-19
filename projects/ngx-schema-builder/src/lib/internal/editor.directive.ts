@@ -247,12 +247,10 @@ export class JsonjoyEditorDirective {
   private observeDark(): void {
     if (typeof MutationObserver === 'undefined') return;
     this.observer = new MutationObserver(() => this.detectDark());
-    // `.dark` may be toggled on any ancestor (html, body, or a host wrapper),
-    // so watch class changes across the whole tree, not just <html>.
+    // The dark toggle lives on the document root, so watch only its class.
     this.observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
-      subtree: true,
     });
   }
 
