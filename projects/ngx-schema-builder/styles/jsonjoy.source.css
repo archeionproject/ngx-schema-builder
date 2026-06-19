@@ -52,6 +52,9 @@
   --animate-enter: var(--jsonjoy-animate-enter);
   --animate-exit: var(--jsonjoy-animate-exit);
 
+  /* Use a namespaced keyframe so it can't clash with a host's `spin`. */
+  --animate-spin: jsonjoy-spin 1s linear infinite;
+
   --ease-bounce-in: var(--jsonjoy-ease-bounce-in);
   --ease-smooth: var(--jsonjoy-ease-smooth);
 }
@@ -95,6 +98,11 @@
   to {
     transform: scale(0.95);
     opacity: 0;
+  }
+}
+@keyframes jsonjoy-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
