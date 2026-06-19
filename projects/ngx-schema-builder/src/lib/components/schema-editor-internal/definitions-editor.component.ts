@@ -14,6 +14,7 @@ import {
   type ObjectJsonSchema,
   asObjectSchema,
 } from '../../types/json-schema';
+import { ButtonDirective } from '../ui/button.directive';
 import { SchemaPropertyEditorComponent } from './schema-property-editor.component';
 
 interface DefinitionRow {
@@ -24,22 +25,38 @@ interface DefinitionRow {
 @Component({
   selector: 'lib-jsonjoy-definitions-editor',
   standalone: true,
-  imports: [forwardRef(() => SchemaPropertyEditorComponent)],
+  imports: [ButtonDirective, forwardRef(() => SchemaPropertyEditorComponent)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy block grow min-h-0' },
   template: `
     <div class="flex flex-col h-full">
       @if (!readOnly()) {
-        <div class="mb-4 shrink-0 flex items-center justify-between gap-2">
-          <span class="text-xs text-muted-foreground">
-            {{ activeKey() }}
-          </span>
+        <div class="mb-4 shrink-0 flex justify-end">
           <button
+            libJsonjoyButton
             type="button"
-            class="text-xs font-medium px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            variant="default"
+            size="sm"
+            class="flex items-center gap-1.5 group"
             (click)="addDefinition()"
           >
-            + {{ t().definitionsAddButton }}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="group-hover:scale-110 transition-transform"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12h8" />
+              <path d="M12 8v8" />
+            </svg>
+            <span>{{ t().definitionsAddButton }}</span>
           </button>
         </div>
       }
