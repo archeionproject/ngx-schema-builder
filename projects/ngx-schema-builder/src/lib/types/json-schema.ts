@@ -189,6 +189,12 @@ export function asRefSchema(schema: JsonSchema): RefJsonSchema {
   return isRefSchema(schema) ? { $ref: schema.$ref } : { $ref: '' };
 }
 
+/**
+ * Collapses a schema into the single editor type that drives which type-editor
+ * renders. Precedence is lossy and ordered ($ref → anyOf → oneOf → allOf →
+ * type): the first match wins for a mixed schema, but the full schema is kept
+ * in the data, so the JSON tab round-trips the hidden keywords.
+ */
 export function getEditorType(schema: JsonSchema): SchemaEditorType {
   if (isRefSchema(schema)) return '$ref';
   if (isAnyOfSchema(schema)) return 'anyOf';

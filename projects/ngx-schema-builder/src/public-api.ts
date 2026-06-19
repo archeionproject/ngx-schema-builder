@@ -20,6 +20,8 @@ export {
   asRefSchema,
   getEditorType,
 } from './lib/types/json-schema';
+// zod/mini schemas for runtime `JsonSchema` validation.
+export { jsonSchemaType, baseSchema } from './lib/types/json-schema';
 
 // --- Schema inference (pure functions) --------------------------------------
 export {
