@@ -122,22 +122,30 @@ export class SchemaBuilderComponent {
     );
   }
 
+  private seededDefault = false;
+
   constructor() {
+    // Seed `defaultValue` once, on first run, and only if the consumer hasn't
+    // bound a value — so it never clobbers a real binding.
     effect(() => {
       const initial = this.defaultValue();
-      if (!initial) return;
+      if (this.seededDefault || !initial) return;
       untracked(() => {
-        const current = this.value();
-        const isDefaultEmpty =
-          typeof current === 'object' &&
-          current !== null &&
-          !Array.isArray(current) &&
-          Object.keys(current).length === 1 &&
-          (current as { type?: unknown }).type === 'object';
-        if (isDefaultEmpty) {
+        this.seededDefault = true;
+        if (this.isUnseededDefault(this.value())) {
           this.value.set(initial);
         }
       });
     });
+  }
+
+  private isUnseededDefault(current: JsonSchema): boolean {
+    return (
+      typeof current === 'object' &&
+      current !== null &&
+      !Array.isArray(current) &&
+      Object.keys(current).length === 1 &&
+      (current as { type?: unknown }).type === 'object'
+    );
   }
 }
