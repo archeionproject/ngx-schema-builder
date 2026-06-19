@@ -171,6 +171,7 @@ export const en: Translation = {
   validatorErrorPathRoot: 'Root',
   validatorErrorLocationLineAndColumn: 'Line {line}, Col {column}',
   validatorErrorLocationLineOnly: 'Line {line}',
+  validatorClose: 'Close',
 
   visualizerDownloadTitle: 'Download Schema',
   visualizerDownloadFileName: 'schema.json',

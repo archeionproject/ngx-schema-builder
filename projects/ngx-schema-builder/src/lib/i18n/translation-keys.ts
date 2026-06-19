@@ -889,6 +889,12 @@ export interface Translation {
    * > Line {line}
    */
   readonly validatorErrorLocationLineOnly: string;
+  /**
+   * The translation for the key `validatorClose`. English default is:
+   *
+   * > Close
+   */
+  readonly validatorClose: string;
 
   /**
    * The translation for the key `visualizerDownloadTitle`. English default is:

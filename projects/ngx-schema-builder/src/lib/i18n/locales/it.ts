@@ -175,6 +175,7 @@ export const it: Translation = {
   validatorErrorPathRoot: 'Radice',
   validatorErrorLocationLineAndColumn: 'Riga {line}, Col {column}',
   validatorErrorLocationLineOnly: 'Riga {line}',
+  validatorClose: 'Chiudi',
 
   visualizerDownloadTitle: 'Scarica schema',
   visualizerDownloadFileName: 'schema.json',

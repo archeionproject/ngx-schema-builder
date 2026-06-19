@@ -25,6 +25,7 @@ import {
   formatTranslation,
 } from '../../services/translation.service';
 import type { JsonSchema } from '../../types/json-schema';
+import { ButtonDirective } from '../ui/button.directive';
 
 const VALIDATION_DEBOUNCE_MS = 500;
 
@@ -36,7 +37,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
 @Component({
   selector: 'lib-jsonjoy-validate-json-dialog',
   standalone: true,
-  imports: [JsonjoyEditorDirective],
+  imports: [ButtonDirective, JsonjoyEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'jsonjoy' },
   template: `
@@ -186,6 +187,18 @@ const VALIDATION_DEBOUNCE_MS = 500;
           }
         </div>
       }
+
+      <div class="mt-4 gap-2 flex flex-wrap justify-end">
+        <button
+          libJsonjoyButton
+          type="button"
+          variant="outline"
+          size="sm"
+          (click)="close()"
+        >
+          {{ t().validatorClose }}
+        </button>
+      </div>
     </dialog>
   `,
 })
@@ -312,6 +325,10 @@ export class ValidateJsonDialogComponent {
       });
     }
     return formatTranslation(this.t().validatorErrorLocationLineOnly, { line });
+  }
+
+  protected close(): void {
+    this.open.set(false);
   }
 
   protected onDialogClose(): void {
