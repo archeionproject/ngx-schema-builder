@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/npm/l/@archeion/ngx-schema-builder.svg)](./LICENSE)
 [![live demo](https://img.shields.io/badge/demo-live-2ea44f)](https://archeionproject.github.io/ngx-schema-builder/)
 
-Visual JSON Schema editor for Angular. Lets users author and edit JSON Schema definitions through a tabbed interface (RAW JSON / Visual Editor / Preview) with first-class support for primitives, objects, arrays, combinators (`anyOf` / `oneOf` / `allOf`) and `$ref` references.
+Visual JSON Schema editor for Angular. Lets users author and edit JSON Schema definitions through a tabbed interface — a **Visual Editor**, a **JSON** source view, or **both** side by side (`mode` ∈ `visual | json | both`) — with first-class support for primitives, objects, arrays, combinators (`anyOf` / `oneOf` / `allOf`) and `$ref` references.
 
 ## Install
 
@@ -26,7 +26,9 @@ Add the standalone stylesheet to your app's global styles once (e.g. in `angular
 ]
 ```
 
-The stylesheet is a sandbox: every rule — utilities and tokens — is scoped under the `.jsonjoy` class that each component applies automatically. It omits Tailwind's preflight, nothing leaks into your `:root`, and its utility classes (`.flex`, `.bg-primary`, …) cannot collide with your own Tailwind. Load order does not matter.
+The stylesheet is a sandbox: every **style rule** — utilities and tokens — is scoped under the `.jsonjoy` class that each component applies automatically, and it omits Tailwind's preflight, so its utility classes (`.flex`, `.bg-primary`, …) cannot collide with your own styles. Load order does not matter.
+
+A few constructs are necessarily global, because the CSS spec forbids nesting them under a selector: the `@property --tw-*` registrations Tailwind emits and the `@keyframes` definitions. These do **not** add selectors to your `:root` and are namespaced (`--tw-*`, `jsonjoy-*`) to avoid clashing with your own. So while no _style rule_ leaks, those at-rules do live at the top level by design.
 
 ### Theming
 
