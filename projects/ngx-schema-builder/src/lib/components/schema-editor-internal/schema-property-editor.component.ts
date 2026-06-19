@@ -361,7 +361,7 @@ export class SchemaPropertyEditorComponent {
     cn(
       'text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center cursor-pointer hover:shadow-xs hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all whitespace-nowrap',
       this.required()
-        ? 'bg-red-50 text-red-500'
+        ? 'bg-red-500/10 text-red-500'
         : 'bg-secondary text-muted-foreground',
     ),
   );

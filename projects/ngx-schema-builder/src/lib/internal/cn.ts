@@ -13,17 +13,17 @@ export function cn(...inputs: ClassValue[]): string {
 }
 
 const typeColorClasses: Record<SchemaEditorType, string> = {
-  string: 'text-blue-500 bg-blue-50',
-  number: 'text-purple-500 bg-purple-50',
-  integer: 'text-purple-500 bg-purple-50',
-  boolean: 'text-green-500 bg-green-50',
-  object: 'text-orange-500 bg-orange-50',
-  array: 'text-pink-500 bg-pink-50',
-  null: 'text-gray-500 bg-gray-50',
-  anyOf: 'text-teal-500 bg-teal-50',
-  oneOf: 'text-cyan-500 bg-cyan-50',
-  allOf: 'text-indigo-500 bg-indigo-50',
-  $ref: 'text-amber-600 bg-amber-50',
+  string: 'text-blue-500 bg-blue-500/10',
+  number: 'text-purple-500 bg-purple-500/10',
+  integer: 'text-purple-500 bg-purple-500/10',
+  boolean: 'text-green-500 bg-green-500/10',
+  object: 'text-orange-500 bg-orange-500/10',
+  array: 'text-pink-500 bg-pink-500/10',
+  null: 'text-gray-500 bg-gray-500/10',
+  anyOf: 'text-teal-500 bg-teal-500/10',
+  oneOf: 'text-cyan-500 bg-cyan-500/10',
+  allOf: 'text-indigo-500 bg-indigo-500/10',
+  $ref: 'text-amber-600 bg-amber-500/10',
 };
 
 export function getTypeColor(type: SchemaEditorType): string {

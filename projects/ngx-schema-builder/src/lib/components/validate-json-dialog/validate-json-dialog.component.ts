@@ -108,14 +108,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
       </div>
 
       @if (validationResult(); as result) {
-        <div
-          class="rounded-md p-4 mt-3 transition-all duration-300 ease-in-out"
-          [class.bg-green-50]="result.valid"
-          [class.border]="true"
-          [class.border-green-200]="result.valid"
-          [class.bg-red-50]="!result.valid"
-          [class.border-red-200]="!result.valid"
-        >
+        <div [class]="resultBannerClasses()">
           <div class="flex items-center">
             @if (result.valid) {
               <svg
@@ -132,7 +125,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
               >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <p class="text-green-700 font-medium">{{ t().validatorValid }}</p>
+              <p class="text-green-600 font-medium">{{ t().validatorValid }}</p>
             } @else {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +143,7 @@ const VALIDATION_DEBOUNCE_MS = 500;
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
-              <p class="text-red-700 font-medium">{{ headerMessage() }}</p>
+              <p class="text-red-600 font-medium">{{ headerMessage() }}</p>
             }
           </div>
 
@@ -161,25 +154,25 @@ const VALIDATION_DEBOUNCE_MS = 500;
                   <li>
                     <button
                       type="button"
-                      class="w-full text-left bg-white border border-red-100 rounded-md p-3 shadow-xs hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                      class="w-full text-left bg-card border border-destructive/30 rounded-md p-3 shadow-xs hover:shadow-md transition-shadow duration-200 cursor-pointer"
                       (click)="goToError(error.line, error.column)"
                     >
                       <div class="flex items-start justify-between">
                         <div class="flex-1">
-                          <p class="text-sm font-medium text-red-700">
+                          <p class="text-sm font-medium text-destructive">
                             {{
                               error.path === '/'
                                 ? t().validatorErrorPathRoot
                                 : error.path
                             }}
                           </p>
-                          <p class="text-sm text-gray-600 mt-1">
+                          <p class="text-sm text-muted-foreground mt-1">
                             {{ error.message }}
                           </p>
                         </div>
                         @if (error.line) {
                           <div
-                            class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600"
+                            class="text-xs bg-muted px-2 py-1 rounded text-muted-foreground"
                           >
                             {{ formatLocation(error.line, error.column) }}
                           </div>
@@ -230,6 +223,14 @@ export class ValidateJsonDialogComponent {
     return formatTranslation(this.t().validatorErrorCount, {
       count: errors.length,
     });
+  });
+
+  protected readonly resultBannerClasses = computed(() => {
+    const base =
+      'rounded-md p-4 mt-3 border transition-all duration-300 ease-in-out';
+    return this.validationResult()?.valid
+      ? `${base} border-green-500/30 bg-green-500/10`
+      : `${base} border-red-500/30 bg-red-500/10`;
   });
 
   private readonly dialogRef =

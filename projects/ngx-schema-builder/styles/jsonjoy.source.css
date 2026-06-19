@@ -1,14 +1,6 @@
 /*
- * @archeion/ngx-schema-builder — theme-neutral, self-contained stylesheet.
- * Built with Tailwind v4. Preflight is omitted; the host keeps its own resets.
- *
- * `@theme inline` registers namespaces (so `bg-primary` etc. are generated)
- * without emitting tokens to `:root`; values point at `--jsonjoy-*` scoped to
- * `.jsonjoy`, so nothing bleeds into the host. Each `--jsonjoy-*` falls back to
- * the host's matching `--color-*`/`--radius-*`/`--font-sans` when defined, so a
- * consumer palette (Tailwind or plain CSS) overrides the base with no setup.
- *
- * Regenerate with `npm run build:styles`.
+ * Sandboxed Tailwind v4 build; `build:styles` scopes every rule under `.jsonjoy`.
+ * Override only via the `--jsonjoy-*` tokens below. Preflight omitted.
  */
 
 @import 'tailwindcss/theme.css';
@@ -115,11 +107,11 @@
 }
 
 @utility json-editor-container {
-  @apply bg-white rounded-xl border border-border shadow-xs;
+  @apply bg-card rounded-xl border border-border shadow-xs;
 }
 
 @utility glass-panel {
-  @apply bg-white/90 rounded-xl border border-border shadow-xs;
+  @apply bg-card/90 rounded-xl border border-border shadow-xs;
 }
 
 @utility animate-in {
@@ -195,57 +187,33 @@
   animation: jsonjoy-dialog-content-out 0.2s ease-in;
 }
 
-/*
- * Base tokens, scoped to .jsonjoy. Each falls back to the host's matching
- * Tailwind v4 token (`--color-*`, `--radius-*`, `--font-sans`): define any of
- * those — or the `--jsonjoy-*` directly — in the host to override the palette.
- * The `--color-*`/`--radius-*`/`--font-sans` aliases `@theme inline` emits to
- * `:root` are stripped post-build (build:styles) so nothing bleeds into the host.
- */
+/* Base tokens — the only override surface. */
 .jsonjoy {
-  --jsonjoy-color-background: var(--color-background, hsl(0 0% 98%));
-  --jsonjoy-color-foreground: var(--color-foreground, hsl(0 0% 12%));
-  --jsonjoy-color-card: var(--color-card, hsl(0 0% 100%));
-  --jsonjoy-color-card-foreground: var(--color-card-foreground, hsl(0 0% 12%));
-  --jsonjoy-color-popover: var(--color-popover, hsl(0 0% 100%));
-  --jsonjoy-color-popover-foreground: var(
-    --color-popover-foreground,
-    hsl(0 0% 12%)
-  );
-  --jsonjoy-color-primary: var(--color-primary, hsl(0 0% 12%));
-  --jsonjoy-color-primary-foreground: var(
-    --color-primary-foreground,
-    hsl(0 0% 100%)
-  );
-  --jsonjoy-color-secondary: var(--color-secondary, hsl(0 0% 95.3%));
-  --jsonjoy-color-secondary-foreground: var(
-    --color-secondary-foreground,
-    hsl(0 0% 12%)
-  );
-  --jsonjoy-color-muted: var(--color-muted, hsl(0 0% 95.3%));
-  --jsonjoy-color-muted-foreground: var(
-    --color-muted-foreground,
-    hsl(0 0% 45%)
-  );
-  --jsonjoy-color-accent: var(--color-accent, hsl(0 0% 95.3%));
-  --jsonjoy-color-accent-foreground: var(
-    --color-accent-foreground,
-    hsl(0 0% 12%)
-  );
-  --jsonjoy-color-destructive: var(--color-destructive, hsl(0 100% 60%));
-  --jsonjoy-color-destructive-foreground: var(
-    --color-destructive-foreground,
-    hsl(0 0% 100%)
-  );
-  --jsonjoy-color-border: var(--color-border, hsl(0 0% 85%));
-  --jsonjoy-color-input: var(--color-input, hsl(0 0% 85%));
-  --jsonjoy-color-input-bg: var(--color-input-bg, hsl(0 0% 97.6%));
-  --jsonjoy-color-ring: var(--color-ring, hsl(0 0% 12%));
+  --jsonjoy-color-background: hsl(0 0% 98%);
+  --jsonjoy-color-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-card: hsl(0 0% 100%);
+  --jsonjoy-color-card-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-popover: hsl(0 0% 100%);
+  --jsonjoy-color-popover-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-primary: hsl(0 0% 12%);
+  --jsonjoy-color-primary-foreground: hsl(0 0% 100%);
+  --jsonjoy-color-secondary: hsl(0 0% 95.3%);
+  --jsonjoy-color-secondary-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-muted: hsl(0 0% 95.3%);
+  --jsonjoy-color-muted-foreground: hsl(0 0% 45%);
+  --jsonjoy-color-accent: hsl(0 0% 95.3%);
+  --jsonjoy-color-accent-foreground: hsl(0 0% 12%);
+  --jsonjoy-color-destructive: hsl(0 100% 60%);
+  --jsonjoy-color-destructive-foreground: hsl(0 0% 100%);
+  --jsonjoy-color-border: hsl(0 0% 85%);
+  --jsonjoy-color-input: hsl(0 0% 85%);
+  --jsonjoy-color-input-bg: hsl(0 0% 97.6%);
+  --jsonjoy-color-ring: hsl(0 0% 12%);
 
-  --jsonjoy-radius-xl: var(--radius-xl, 0.5rem);
-  --jsonjoy-radius-lg: var(--radius-lg, 0.375rem);
-  --jsonjoy-radius-md: var(--radius-md, 0.25rem);
-  --jsonjoy-radius-sm: var(--radius-sm, 0.125rem);
+  --jsonjoy-radius-xl: 0.5rem;
+  --jsonjoy-radius-lg: 0.375rem;
+  --jsonjoy-radius-md: 0.25rem;
+  --jsonjoy-radius-sm: 0.125rem;
 
   --jsonjoy-animate-fade-in: jsonjoy-fade-in 0.3s ease-out;
   --jsonjoy-animate-fade-out: jsonjoy-fade-out 0.3s ease-out;
@@ -259,18 +227,9 @@
   --jsonjoy-ease-bounce-in: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --jsonjoy-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --jsonjoy-font-sans: var(
-    --font-sans,
-    'Inter',
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif
-  );
+  --jsonjoy-font-sans:
+    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
 
   color: var(--jsonjoy-color-foreground);
   font-family: var(--jsonjoy-font-sans);
@@ -297,47 +256,29 @@
   font: inherit;
 }
 
-/* Dark base; host `--color-*` (incl. under its own `.dark`) still win. */
+/* Dark base; toggled by a `dark` class on `.jsonjoy` or an ancestor. */
 .jsonjoy.dark,
 .dark .jsonjoy {
-  --jsonjoy-color-background: var(--color-background, hsl(0 0% 8%));
-  --jsonjoy-color-foreground: var(--color-foreground, hsl(0 0% 95%));
-  --jsonjoy-color-card: var(--color-card, hsl(0 0% 8%));
-  --jsonjoy-color-card-foreground: var(--color-card-foreground, hsl(0 0% 95%));
-  --jsonjoy-color-popover: var(--color-popover, hsl(0 0% 8%));
-  --jsonjoy-color-popover-foreground: var(
-    --color-popover-foreground,
-    hsl(0 0% 95%)
-  );
-  --jsonjoy-color-primary: var(--color-primary, hsl(0 0% 92%));
-  --jsonjoy-color-primary-foreground: var(
-    --color-primary-foreground,
-    hsl(0 0% 10%)
-  );
-  --jsonjoy-color-secondary: var(--color-secondary, hsl(0 0% 16%));
-  --jsonjoy-color-secondary-foreground: var(
-    --color-secondary-foreground,
-    hsl(0 0% 95%)
-  );
-  --jsonjoy-color-muted: var(--color-muted, hsl(0 0% 16%));
-  --jsonjoy-color-muted-foreground: var(
-    --color-muted-foreground,
-    hsl(0 0% 64%)
-  );
-  --jsonjoy-color-accent: var(--color-accent, hsl(0 0% 16%));
-  --jsonjoy-color-accent-foreground: var(
-    --color-accent-foreground,
-    hsl(0 0% 95%)
-  );
-  --jsonjoy-color-destructive: var(--color-destructive, hsl(0 72% 48%));
-  --jsonjoy-color-destructive-foreground: var(
-    --color-destructive-foreground,
-    hsl(0 0% 98%)
-  );
-  --jsonjoy-color-border: var(--color-border, hsl(0 0% 20%));
-  --jsonjoy-color-input: var(--color-input, hsl(0 0% 20%));
-  --jsonjoy-color-input-bg: var(--color-input-bg, hsl(0 0% 12%));
-  --jsonjoy-color-ring: var(--color-ring, hsl(0 0% 83%));
+  --jsonjoy-color-background: hsl(0 0% 8%);
+  --jsonjoy-color-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-card: hsl(0 0% 8%);
+  --jsonjoy-color-card-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-popover: hsl(0 0% 8%);
+  --jsonjoy-color-popover-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-primary: hsl(0 0% 92%);
+  --jsonjoy-color-primary-foreground: hsl(0 0% 10%);
+  --jsonjoy-color-secondary: hsl(0 0% 16%);
+  --jsonjoy-color-secondary-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-muted: hsl(0 0% 16%);
+  --jsonjoy-color-muted-foreground: hsl(0 0% 64%);
+  --jsonjoy-color-accent: hsl(0 0% 16%);
+  --jsonjoy-color-accent-foreground: hsl(0 0% 95%);
+  --jsonjoy-color-destructive: hsl(0 72% 48%);
+  --jsonjoy-color-destructive-foreground: hsl(0 0% 98%);
+  --jsonjoy-color-border: hsl(0 0% 20%);
+  --jsonjoy-color-input: hsl(0 0% 20%);
+  --jsonjoy-color-input-bg: hsl(0 0% 12%);
+  --jsonjoy-color-ring: hsl(0 0% 83%);
 }
 
 /* Restore margin:auto a host's Preflight (`*{margin:0}`) strips from <dialog>. */

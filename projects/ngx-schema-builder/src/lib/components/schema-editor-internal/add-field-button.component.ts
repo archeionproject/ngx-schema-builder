@@ -154,7 +154,7 @@ let nextAddFieldId = 0;
                   type="checkbox"
                   [id]="fieldRequiredId"
                   [checked]="fieldRequired()"
-                  class="rounded border-gray-300 shrink-0"
+                  class="rounded border-input shrink-0"
                   (change)="fieldRequired.set($any($event.target).checked)"
                 />
                 <label

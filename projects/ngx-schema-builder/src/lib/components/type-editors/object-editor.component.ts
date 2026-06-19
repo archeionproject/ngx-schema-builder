@@ -133,8 +133,8 @@ export class ObjectEditorComponent {
   protected readonly additionalPropertiesClasses = computed(() => {
     const base = 'text-xs px-3 py-1.5 rounded-md font-medium transition-colors';
     const variant = this.additionalPropertiesForbidden()
-      ? 'bg-amber-50 text-amber-600 hover:bg-amber-100'
-      : 'bg-lime-50 text-lime-600 hover:bg-lime-100';
+      ? 'bg-amber-500/10 text-amber-600 hover:bg-amber-500/20'
+      : 'bg-lime-500/10 text-lime-600 hover:bg-lime-500/20';
     return `${base} ${variant}`;
   });
 
