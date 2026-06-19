@@ -1,4 +1,5 @@
 import type Ajv from 'ajv';
+import type { ValidateFunction } from 'ajv';
 
 import type { JsonSchema } from '../types/json-schema';
 
@@ -37,6 +38,28 @@ function loadAjv(): Promise<Ajv> {
     })();
   }
   return ajvPromise;
+}
+
+const MAX_COMPILED_VALIDATORS = 16;
+const compiledValidators = new Map<string, ValidateFunction>();
+
+// Memoizes compiled validators by serialized schema, bounded as a simple LRU.
+function getValidator(ajv: Ajv, schema: JsonSchema): ValidateFunction {
+  const key = JSON.stringify(schema);
+  const cached = compiledValidators.get(key);
+  if (cached) {
+    compiledValidators.delete(key);
+    compiledValidators.set(key, cached);
+    return cached;
+  }
+
+  const validate = ajv.compile(schema as object);
+  compiledValidators.set(key, validate);
+  if (compiledValidators.size > MAX_COMPILED_VALIDATORS) {
+    const oldest = compiledValidators.keys().next().value;
+    if (oldest !== undefined) compiledValidators.delete(oldest);
+  }
+  return validate;
 }
 
 /**
@@ -138,7 +161,7 @@ export async function validateJson(
   try {
     const jsonObject = JSON.parse(jsonInput);
     const ajv = await loadAjv();
-    const validate = ajv.compile(schema as object);
+    const validate = getValidator(ajv, schema);
     const valid = validate(jsonObject);
 
     if (!valid) {
