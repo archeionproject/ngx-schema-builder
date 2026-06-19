@@ -26,27 +26,16 @@ Add the standalone stylesheet to your app's global styles once (e.g. in `angular
 ]
 ```
 
-It omits Tailwind's preflight, so it will not reset your app, and its theme tokens are scoped under the `.jsonjoy` class that every component applies automatically — nothing leaks into your `:root`.
-
-> If your app also uses Tailwind, list `jsonjoy.css` **before** your own styles. Both ship plain utility classes (`.flex`, `.bg-primary`, …); whichever loads last wins, so keeping your styles last lets your app override.
+The stylesheet is a sandbox: every rule — utilities and tokens — is scoped under the `.jsonjoy` class that each component applies automatically. It omits Tailwind's preflight, nothing leaks into your `:root`, and its utility classes (`.flex`, `.bg-primary`, …) cannot collide with your own Tailwind. Load order does not matter.
 
 ### Theming
 
-The base palette is light/dark and works with no configuration. Each token falls back to your app's matching Tailwind v4 theme token when present, so a consumer palette is picked up automatically:
-
-```css
-/* Tailwind v4 @theme, or any plain CSS on :root / an ancestor */
-@theme {
-  --color-primary: oklch(0.55 0.15 260);
-  --color-border: oklch(0.92 0 0);
-}
-```
-
-To theme only the editor (without touching your app's tokens), set the prefixed variables on `.jsonjoy` or any ancestor:
+The base palette is light/dark and works with no configuration. The **only** override surface is the `--jsonjoy-*` token list — set any of them on `.jsonjoy` or an ancestor to retheme the editor (your app's own `--color-*` are intentionally not read):
 
 ```css
 .jsonjoy {
   --jsonjoy-color-primary: #2563eb;
+  --jsonjoy-color-border: #e5e7eb;
   --jsonjoy-radius-md: 0.5rem;
 }
 ```
