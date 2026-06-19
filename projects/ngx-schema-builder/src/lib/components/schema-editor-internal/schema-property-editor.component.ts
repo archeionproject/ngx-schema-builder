@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 
 import { cn } from '../../internal/cn';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type ObjectJsonSchema,
@@ -310,8 +310,7 @@ export class SchemaPropertyEditorComponent {
   readonly addEnum = output<EnumChangeContext>();
   readonly deleteEnum = output<EnumChangeContext>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   private static nextId = 0;
   private readonly editorId = (SchemaPropertyEditorComponent.nextId += 1);

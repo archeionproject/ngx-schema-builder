@@ -10,7 +10,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import type { NewField, SchemaEditorType } from '../../types/json-schema';
 import { BadgeDirective } from '../ui/badge.directive';
 import { ButtonDirective } from '../ui/button.directive';
@@ -216,8 +216,7 @@ export class AddFieldButtonComponent {
   readonly addField = output<NewField>();
   readonly addPatternField = output<NewField>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   private readonly idSeq = ++nextAddFieldId;
   protected readonly fieldNameId = `jjadd-${this.idSeq}-name`;

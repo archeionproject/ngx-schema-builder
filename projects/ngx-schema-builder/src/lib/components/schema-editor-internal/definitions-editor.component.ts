@@ -8,7 +8,7 @@ import {
   output,
 } from '@angular/core';
 
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type ObjectJsonSchema,
@@ -90,7 +90,7 @@ export class DefinitionsEditorComponent {
 
   readonly schemaChange = output<ObjectJsonSchema>();
 
-  protected readonly t = inject(JsonjoyTranslationService).providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   protected readonly activeKey = computed<'$defs' | 'definitions'>(() => {
     const s = asObjectSchema(this.schema());

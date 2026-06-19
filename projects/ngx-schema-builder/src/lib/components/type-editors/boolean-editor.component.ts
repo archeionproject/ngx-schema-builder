@@ -7,7 +7,7 @@ import {
   output,
 } from '@angular/core';
 
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type ObjectJsonSchema,
@@ -96,8 +96,7 @@ export class BooleanEditorComponent {
   readonly addEnum = output<EnumChangeContext>();
   readonly deleteEnum = output<EnumChangeContext>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   private readonly idSeq = ++nextBooleanEditorId;
   protected readonly allowTrueId = `jjbe-${this.idSeq}-true`;

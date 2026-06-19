@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 import { cn } from '../../internal/cn';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type ObjectJsonSchema,
@@ -294,8 +294,7 @@ export class NumberEditorComponent {
   readonly addEnum = output<EnumChangeContext>();
   readonly deleteEnum = output<EnumChangeContext>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   private readonly idSeq = ++nextNumberEditorId;
   protected readonly minimumId = `jjne-${this.idSeq}-min`;

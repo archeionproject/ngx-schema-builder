@@ -13,7 +13,7 @@ import {
 import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
 import { DEFAULT_SCHEMAS } from '../../internal/schema-editor';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type ObjectJsonSchema,
@@ -285,8 +285,7 @@ export class CombinatorEditorComponent {
   readonly addEnum = output<EnumChangeContext>();
   readonly deleteEnum = output<EnumChangeContext>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   protected readonly strings = computed(() =>
     getCombinatorStrings(this.t(), this.combinator()),

@@ -8,7 +8,7 @@ import {
 
 import type { Translation } from '../../i18n/translation-keys';
 import { cn } from '../../internal/cn';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import type { SchemaEditorType } from '../../types/json-schema';
 
 interface TypeOption {
@@ -106,8 +106,7 @@ export class SchemaTypeSelectorComponent {
   readonly value = model.required<SchemaEditorType>();
 
   protected readonly typeOptions = TYPE_OPTIONS;
-  private readonly translations = inject(JsonjoyTranslationService);
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   protected tileClasses(type: TypeOption): string {
     const selected = this.value() === type.id;

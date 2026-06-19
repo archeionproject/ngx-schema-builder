@@ -25,6 +25,7 @@ import {
   updatePropertyRequired,
 } from '../../internal/schema-editor';
 import { LocalDefinitionsContextService } from '../../services/local-definitions.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import { JsonjoyTranslationService } from '../../services/translation.service';
 import {
   type JsonSchema,
@@ -67,7 +68,7 @@ const ROOT_TYPE_OPTIONS: readonly {
     forwardRef(() => TypeEditorComponent),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LocalDefinitionsContextService],
+  providers: [LocalDefinitionsContextService, JsonjoyTranslationContextService],
   host: { class: 'jsonjoy' },
   template: `
     <div [class]="rootClasses()">
@@ -193,6 +194,8 @@ export class SchemaFieldsEditorComponent {
   private readonly localDefinitions = inject(LocalDefinitionsContextService);
 
   constructor() {
+    // Thread the effective translation down to the inner editors.
+    this.translationContext.setSource(this.t);
     // Keep the $ref editor's local-definition quick-pick in sync with the
     // root schema's $defs/definitions (incl. edits made in the Definitions tab,
     // which flow back through value()).
@@ -200,6 +203,9 @@ export class SchemaFieldsEditorComponent {
   }
 
   private readonly translations = inject(JsonjoyTranslationService);
+  private readonly translationContext = inject(
+    JsonjoyTranslationContextService,
+  );
   protected readonly t = this.translations.withOverrides(
     this.locale,
     this.messages,

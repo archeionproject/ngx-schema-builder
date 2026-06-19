@@ -14,7 +14,7 @@ import {
 import type { RefSuggestion } from '../../interfaces/ref-suggestion.interface';
 import type { LocalDefinition } from '../../internal/schema-editor';
 import { LocalDefinitionsContextService } from '../../services/local-definitions.service';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import { SCHEMA_BUILDER_REF_SUGGESTIONS } from '../../tokens/ref-suggestions.token';
 import {
   type JsonSchema,
@@ -140,7 +140,7 @@ export class RefEditorComponent {
 
   readonly schemaChange = output<ObjectJsonSchema>();
 
-  protected readonly t = inject(JsonjoyTranslationService).providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   private readonly injectedSuggestions = inject(
     SCHEMA_BUILDER_REF_SUGGESTIONS,

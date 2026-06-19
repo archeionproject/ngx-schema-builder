@@ -8,6 +8,7 @@ import type {
   RefSuggestionsFactory,
   SchemaBuilderConfig,
 } from './lib/interfaces';
+import { JsonjoyTranslationContextService } from './lib/services/translation-context.service';
 import {
   SCHEMA_BUILDER_CONFIG,
   SCHEMA_BUILDER_REF_SUGGESTIONS,
@@ -18,6 +19,8 @@ export function provideSchemaBuilder(
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: SCHEMA_BUILDER_CONFIG, useValue: config },
+    // Root fallback so an inner editor used outside an editor subtree still resolves.
+    JsonjoyTranslationContextService,
   ]);
 }
 

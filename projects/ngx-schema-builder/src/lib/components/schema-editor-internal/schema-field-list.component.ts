@@ -12,7 +12,7 @@ import {
   getSchemaPatternProperties,
   getSchemaProperties,
 } from '../../internal/schema-editor';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type NewField,
@@ -87,8 +87,7 @@ export class SchemaFieldListComponent {
   readonly addEnum = output<EnumChangeContext>();
   readonly deleteEnum = output<EnumChangeContext>();
 
-  private readonly translations = inject(JsonjoyTranslationService);
-  private readonly t = this.translations.providerLocale;
+  private readonly t = inject(JsonjoyTranslationContextService).translation;
 
   protected readonly properties = computed(() =>
     getSchemaProperties(this.schema()),

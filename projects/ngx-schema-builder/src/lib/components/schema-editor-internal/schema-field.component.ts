@@ -6,7 +6,7 @@ import {
   output,
 } from '@angular/core';
 
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import {
   type JsonSchema,
   type NewField,
@@ -48,7 +48,7 @@ export class SchemaFieldComponent {
   readonly delete = output<void>();
   readonly edit = output<NewField>();
 
-  protected readonly t = inject(JsonjoyTranslationService).providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
 
   protected onNameChange(newName: string): void {
     if (newName === this.name()) return;

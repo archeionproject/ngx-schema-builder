@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { cn, getTypeColor, getTypeLabel } from '../../internal/cn';
-import { JsonjoyTranslationService } from '../../services/translation.service';
+import { JsonjoyTranslationContextService } from '../../services/translation-context.service';
 import type { SchemaEditorType } from '../../types/json-schema';
 
 const TYPE_OPTIONS: readonly SchemaEditorType[] = [
@@ -100,10 +100,9 @@ export class TypeDropdownComponent {
   protected readonly getTypeColor = getTypeColor;
   protected readonly getTypeLabel = getTypeLabel;
 
-  private readonly translations = inject(JsonjoyTranslationService);
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  protected readonly t = this.translations.providerLocale;
+  protected readonly t = inject(JsonjoyTranslationContextService).translation;
   protected readonly isOpen = signal(false);
 
   protected readonly triggerClasses = computed(() =>
