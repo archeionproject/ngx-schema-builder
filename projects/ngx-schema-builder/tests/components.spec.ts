@@ -6,6 +6,7 @@ import { SchemaBuilderComponent } from '../src/lib/components/schema-builder/sch
 import { SchemaFieldsEditorComponent } from '../src/lib/components/schema-fields-editor/schema-fields-editor.component';
 import { SchemaJsonEditorComponent } from '../src/lib/components/schema-json-editor/schema-json-editor.component';
 import { ValidateJsonDialogComponent } from '../src/lib/components/validate-json-dialog/validate-json-dialog.component';
+import { it as itLocale } from '../src/lib/i18n/locales/it';
 import type { JsonSchema } from '../src/lib/types/json-schema';
 import {
   provideSchemaBuilder,
@@ -93,6 +94,49 @@ describe('schema editor components (render + interaction)', () => {
     });
     fuzz(fixture);
     expect(fixture.componentInstance).toBeTruthy();
+  });
+
+  it('per-component [locale] reaches inner editors (visual tree)', () => {
+    // A string root renders the string-editor directly, so its label localizes.
+    const fixture = mount(SchemaFieldsEditorComponent, {
+      value: { type: 'string' },
+      locale: itLocale,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent as string;
+    expect(text).toContain(itLocale.stringFormatLabel);
+    expect(text).not.toContain('Format:');
+  });
+
+  it('SchemaBuilderComponent [locale] reaches the visual tree', () => {
+    const fixture = mount(SchemaBuilderComponent, {
+      value: { type: 'string' },
+      mode: 'visual',
+      locale: itLocale,
+    });
+    const text = (fixture.nativeElement as HTMLElement).textContent as string;
+    expect(text).toContain(itLocale.stringFormatLabel);
+  });
+
+  it('SchemaBuilderComponent seeds defaultValue when no value is provided', () => {
+    const fixture = mount(SchemaBuilderComponent, {
+      defaultValue: { type: 'string', title: 'seed' },
+    });
+    expect(fixture.componentInstance.value()).toEqual({
+      type: 'string',
+      title: 'seed',
+    });
+  });
+
+  it('SchemaBuilderComponent does not clobber a bound {type:object} value once edited', () => {
+    const fixture = mount(SchemaBuilderComponent, {
+      defaultValue: { type: 'string' },
+    });
+    expect(fixture.componentInstance.value()).toEqual({ type: 'string' });
+
+    // Editing to {type:'object'} must not re-trigger the default seed.
+    fixture.componentInstance.value.set({ type: 'object' });
+    fixture.detectChanges();
+    expect(fixture.componentInstance.value()).toEqual({ type: 'object' });
   });
 
   it('SchemaBuilderComponent renders every mode', () => {

@@ -4,7 +4,6 @@ import {
   getArrayItemsSchema,
   getSchemaPatternProperties,
   getSchemaProperties,
-  hasChildren,
   listLocalDefinitions,
   removeObjectPatternProperty,
   removeObjectProperty,
@@ -69,6 +68,18 @@ describe('removeObjectProperty / removeObjectPatternProperty', () => {
   it('no-ops when the container is missing', () => {
     const schema: ObjectJsonSchema = { type: 'object' };
     expect(removeObjectPatternProperty(schema, 'x')).toBe(schema);
+  });
+
+  it('prunes a stale required entry without mutating the original', () => {
+    // `required` lists a property absent from `properties`: still clone before pruning.
+    const schema: ObjectJsonSchema = {
+      type: 'object',
+      required: ['ghost'],
+    };
+    const next = removeObjectProperty(schema, 'ghost');
+    expect(next).not.toBe(schema);
+    expect(next.required).toEqual([]);
+    expect(schema.required).toEqual(['ghost']);
   });
 });
 
@@ -254,30 +265,6 @@ describe('rename helpers', () => {
   it('no-ops without a container', () => {
     const schema: ObjectJsonSchema = { type: 'object' };
     expect(renameObjectPatternProperty(schema, 'a', 'b')).toBe(schema);
-  });
-});
-
-describe('hasChildren', () => {
-  it('is true for objects with properties', () => {
-    expect(hasChildren(base)).toBe(true);
-  });
-
-  it('is true for arrays of objects with properties', () => {
-    expect(
-      hasChildren({
-        type: 'array',
-        items: { type: 'object', properties: { a: {} } },
-      }),
-    ).toBe(true);
-  });
-
-  it('is false for primitives, booleans and empty objects', () => {
-    expect(hasChildren({ type: 'string' })).toBe(false);
-    expect(hasChildren(true)).toBe(false);
-    expect(hasChildren({ type: 'object' })).toBe(false);
-    expect(hasChildren({ type: 'array', items: { type: 'string' } })).toBe(
-      false,
-    );
   });
 });
 

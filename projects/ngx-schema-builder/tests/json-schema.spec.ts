@@ -9,8 +9,31 @@ import {
   isObjectSchema,
   isOneOfSchema,
   isRefSchema,
+  jsonSchemaType,
   withObjectSchema,
 } from '../src/lib/types/json-schema';
+
+describe('jsonSchemaType (runtime validation)', () => {
+  it('accepts a valid nested JsonSchema', () => {
+    const result = jsonSchemaType.safeParse({
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { $ref: '#/$defs/X' } },
+      required: ['a'],
+      $defs: { X: { type: 'number' } },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts the boolean schema form', () => {
+    expect(jsonSchemaType.safeParse(true).success).toBe(true);
+    expect(jsonSchemaType.safeParse(false).success).toBe(true);
+  });
+
+  it('rejects an invalid type keyword', () => {
+    const result = jsonSchemaType.safeParse({ type: 'not-a-type' });
+    expect(result.success).toBe(false);
+  });
+});
 
 describe('schema guards', () => {
   it('detects boolean schemas', () => {
