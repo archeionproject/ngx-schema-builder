@@ -98,13 +98,19 @@ export function removeObjectProperty(
   schema: ObjectJsonSchema,
   propertyName: string,
 ): ObjectJsonSchema {
-  const newSchema = removeObjectSchemaEntry(schema, 'properties', propertyName);
+  const withoutEntry = removeObjectSchemaEntry(
+    schema,
+    'properties',
+    propertyName,
+  );
 
-  if (newSchema.required) {
-    newSchema.required = newSchema.required.filter(
-      (name) => name !== propertyName,
-    );
-  }
+  if (!withoutEntry.required?.includes(propertyName)) return withoutEntry;
+
+  // Clone if the helper returned the original, so pruning `required` stays pure.
+  const newSchema = withoutEntry === schema ? copySchema(schema) : withoutEntry;
+  newSchema.required = newSchema.required?.filter(
+    (name) => name !== propertyName,
+  );
 
   return newSchema;
 }
@@ -259,18 +265,20 @@ export function renameObjectProperty(
   oldName: string,
   newName: string,
 ): ObjectJsonSchema {
-  const newSchema = renameObjectSchemaEntry(
+  const renamed = renameObjectSchemaEntry(
     schema,
     'properties',
     oldName,
     newName,
   );
 
-  if (newSchema.required) {
-    newSchema.required = newSchema.required.map((field) =>
-      field === oldName ? newName : field,
-    );
-  }
+  if (!renamed.required?.includes(oldName)) return renamed;
+
+  // Clone if the helper returned the original, so remapping `required` stays pure.
+  const newSchema = renamed === schema ? copySchema(schema) : renamed;
+  newSchema.required = newSchema.required?.map((field) =>
+    field === oldName ? newName : field,
+  );
 
   return newSchema;
 }
@@ -301,18 +309,4 @@ function renameObjectSchemaEntry(
 
   newSchema[schemaProperty] = renamed;
   return newSchema;
-}
-
-export function hasChildren(schema: JsonSchema): boolean {
-  if (!isObjectSchema(schema)) return false;
-
-  if (schema.type === 'object' && schema.properties) {
-    return Object.keys(schema.properties).length > 0;
-  }
-
-  if (schema.type === 'array' && schema.items && isObjectSchema(schema.items)) {
-    return schema.items.type === 'object' && !!schema.items.properties;
-  }
-
-  return false;
 }
