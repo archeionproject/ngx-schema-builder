@@ -44,6 +44,7 @@
     "@codemirror/lint": "^6.0.0",
     "@codemirror/state": "^6.0.0",
     "@codemirror/view": "^6.0.0",
+    "@lezer/highlight": "^1.0.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "clsx": "^2.1.1",

@@ -15,6 +15,11 @@ import {
 import { indentWithTab } from '@codemirror/commands';
 import { json, jsonParseLinter } from '@codemirror/lang-json';
 import {
+  HighlightStyle,
+  defaultHighlightStyle,
+  syntaxHighlighting,
+} from '@codemirror/language';
+import {
   type Diagnostic,
   forceLinting,
   lintGutter,
@@ -23,6 +28,7 @@ import {
 import { Annotation, Compartment, EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { keymap } from '@codemirror/view';
+import { tags as t } from '@lezer/highlight';
 import { basicSetup } from 'codemirror';
 
 import type { JsonSchema } from '../types/json-schema';
@@ -45,6 +51,17 @@ export interface JsonjoyEditorHandle {
 /** Marks transactions the directive dispatches itself, so the write-back
  * listener can ignore them and avoid echoing programmatic value updates. */
 const External = Annotation.define<boolean>();
+
+/** Readable JSON syntax colors for the dark surface (default style is light). */
+const DARK_HIGHLIGHT_STYLE = HighlightStyle.define([
+  { tag: [t.propertyName, t.definition(t.propertyName)], color: '#7dd3fc' },
+  { tag: [t.string, t.special(t.string)], color: '#86efac' },
+  { tag: [t.number, t.bool, t.null], color: '#fca5a5' },
+  { tag: [t.keyword, t.operator], color: '#c4b5fd' },
+  { tag: [t.punctuation, t.separator, t.bracket], color: '#a3a3a3' },
+  { tag: t.comment, color: '#6b7280', fontStyle: 'italic' },
+  { tag: t.invalid, color: '#fca5a5' },
+]);
 
 /**
  * CodeMirror 6 JSON editor. Attached to a host element, it creates an editor
@@ -220,15 +237,22 @@ export class JsonjoyEditorDirective {
       },
       { dark },
     );
-    return base;
+    // `basicSetup` only ships a light highlight style; swap in a dark one when dark.
+    const highlight = dark
+      ? syntaxHighlighting(DARK_HIGHLIGHT_STYLE)
+      : syntaxHighlighting(defaultHighlightStyle);
+    return [base, highlight];
   }
 
   private observeDark(): void {
     if (typeof MutationObserver === 'undefined') return;
     this.observer = new MutationObserver(() => this.detectDark());
+    // `.dark` may be toggled on any ancestor (html, body, or a host wrapper),
+    // so watch class changes across the whole tree, not just <html>.
     this.observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
+      subtree: true,
     });
   }
 
