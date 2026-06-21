@@ -1,7 +1,9 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  PLATFORM_ID,
   computed,
   effect,
   inject,
@@ -210,6 +212,7 @@ export class ValidateJsonDialogComponent {
   readonly messages = input<Partial<Translation> | undefined>(undefined);
 
   private readonly translations = inject(JsonjoyTranslationService);
+  private readonly platformId = inject(PLATFORM_ID);
   protected readonly t = this.translations.withOverrides(
     this.locale,
     this.messages,
@@ -259,13 +262,17 @@ export class ValidateJsonDialogComponent {
       if (!el) return;
       if (shouldOpen && !el.open) {
         el.showModal();
-        requestAnimationFrame(() => {
-          this.jsonEditorHandle?.layout();
-          this.schemaEditorHandle?.layout();
-          if (this.autoFocus()) {
-            this.jsonEditorHandle?.focus();
-          }
-        });
+        // Re-measure once the dialog has real dimensions. `requestAnimationFrame`
+        // is browser-only, so skip the re-measure during SSR.
+        if (isPlatformBrowser(this.platformId)) {
+          requestAnimationFrame(() => {
+            this.jsonEditorHandle?.layout();
+            this.schemaEditorHandle?.layout();
+            if (this.autoFocus()) {
+              this.jsonEditorHandle?.focus();
+            }
+          });
+        }
       } else if (!shouldOpen && el.open) {
         el.close();
       }

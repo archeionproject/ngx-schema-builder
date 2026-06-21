@@ -1,7 +1,9 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  PLATFORM_ID,
   effect,
   inject,
   input,
@@ -107,6 +109,7 @@ export class InferSchemaDialogComponent {
   readonly inferred = output<JsonSchema>();
 
   private readonly translations = inject(JsonjoyTranslationService);
+  private readonly platformId = inject(PLATFORM_ID);
   protected readonly t = this.translations.withOverrides(
     this.locale,
     this.messages,
@@ -128,13 +131,16 @@ export class InferSchemaDialogComponent {
       if (shouldOpen && !el.open) {
         el.showModal();
         // The editor mounts while the dialog is display:none; re-measure now
-        // that the host has real dimensions.
-        requestAnimationFrame(() => {
-          this.editorHandle?.layout();
-          if (this.autoFocus()) {
-            this.editorHandle?.focus();
-          }
-        });
+        // that the host has real dimensions. `requestAnimationFrame` is
+        // browser-only, so skip the re-measure during SSR.
+        if (isPlatformBrowser(this.platformId)) {
+          requestAnimationFrame(() => {
+            this.editorHandle?.layout();
+            if (this.autoFocus()) {
+              this.editorHandle?.focus();
+            }
+          });
+        }
       } else if (!shouldOpen && el.open) {
         el.close();
       }
