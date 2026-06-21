@@ -38,8 +38,9 @@ npm run format            # prettier --write .
 ```
 
 Run a single test by passing a vitest filter through `ng`:
-`ng test -- -t "substring of test name"`. Specs are `src/**/*.spec.ts`; `tsconfig.spec.json`
-enables `vitest/globals` and `node` types. There are ~18 spec files.
+`ng test -- -t "substring of test name"`. Specs live in
+`projects/ngx-schema-builder/tests/**/*.spec.ts` (see `tsconfig.spec.json` `include`);
+`tsconfig.spec.json` enables `vitest/globals` and `node` types. There are ~18 spec files.
 
 ## Styles pipeline (read before touching CSS)
 
