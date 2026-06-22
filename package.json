@@ -46,6 +46,7 @@
     "ajv-formats": "^3.0.1",
     "clsx": "^2.1.1",
     "codemirror": "^6.0.2",
+    "marked": "^15.0.12",
     "rxjs": "~7.8.0",
     "tailwind-merge": "^2.5.5",
     "tslib": "^2.3.0",

@@ -82,7 +82,8 @@
               "projects/demo/src/styles.css"
             ],
             "loader": {
-              ".ttf": "file"
+              ".ttf": "file",
+              ".md": "text"
             }
           },
           "configurations": {
