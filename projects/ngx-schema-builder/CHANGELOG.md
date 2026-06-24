@@ -1,5 +1,12 @@
 
 
+## [1.0.3](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.2...ngx-schema-builder/v1.0.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* update background color for gutters in JsonjoyEditorDirective ([d8348a3](https://github.com/archeionproject/ngx-schema-builder/commit/d8348a38fba54ec5c7b7d94b1886b2299c628a22))
+
 ## [1.0.2](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.1...ngx-schema-builder/v1.0.2) (2026-06-24)
 
 
