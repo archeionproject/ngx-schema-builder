@@ -1,5 +1,12 @@
 
 
+## [1.0.1](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.0...ngx-schema-builder/v1.0.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* remove unnecessary justification from button alignment in definitions editor ([5ef61f4](https://github.com/archeionproject/ngx-schema-builder/commit/5ef61f420705794dd824084e59b5ec3c6085be30))
+
 # 1.0.0 (2026-06-22)
 
 

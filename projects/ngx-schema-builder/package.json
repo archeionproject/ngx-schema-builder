@@ -1,6 +1,6 @@
 {
   "name": "@archeion/ngx-schema-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Visual JSON Schema editor for Angular — port of jsonjoy-builder by Ophir LOJKINE.",
   "keywords": [
     "angular",
