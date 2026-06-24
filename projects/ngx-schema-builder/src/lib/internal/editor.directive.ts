@@ -230,7 +230,7 @@ export class JsonjoyEditorDirective {
           overflow: 'auto',
         },
         '.cm-gutters': {
-          backgroundColor: 'transparent',
+          backgroundColor: 'var(--jsonjoy-color-background, #ffffff)',
           border: 'none',
           color: 'var(--jsonjoy-color-muted-foreground)',
         },
