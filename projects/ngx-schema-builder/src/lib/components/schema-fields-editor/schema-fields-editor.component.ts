@@ -138,7 +138,7 @@ const ROOT_TYPE_OPTIONS: readonly {
       @if (rootType() === 'object') {
         @if (activeTab() === 'properties') {
           @if (!readOnly()) {
-            <div class="mb-6 shrink-0 flex justify-end">
+            <div class="mb-6 shrink-0 flex">
               <lib-jsonjoy-add-field-button
                 [autoFocus]="autoFocus()"
                 (addField)="handleAddField($event)"

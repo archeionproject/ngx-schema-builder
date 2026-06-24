@@ -31,7 +31,7 @@ interface DefinitionRow {
   template: `
     <div class="flex flex-col h-full">
       @if (!readOnly()) {
-        <div class="mb-4 shrink-0 flex justify-end">
+        <div class="mb-4 shrink-0 flex">
           <button
             libJsonjoyButton
             type="button"
