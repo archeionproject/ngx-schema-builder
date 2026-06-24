@@ -1,5 +1,12 @@
 
 
+## [1.0.2](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.1...ngx-schema-builder/v1.0.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* add root node to EditorView initialization in JsonjoyEditorDirective ([92960e4](https://github.com/archeionproject/ngx-schema-builder/commit/92960e442d46cbe2b175c32effa7f34938c10277))
+
 ## [1.0.1](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.0...ngx-schema-builder/v1.0.1) (2026-06-24)
 
 
