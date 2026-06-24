@@ -189,7 +189,11 @@ export class JsonjoyEditorDirective {
       ],
     });
 
-    this.view = new EditorView({ state, parent: this.host.nativeElement });
+    this.view = new EditorView({
+      state,
+      parent: this.host.nativeElement,
+      root: this.host.nativeElement.getRootNode() as Document | ShadowRoot,
+    });
 
     if (this.autoFocus()) this.view.focus();
 
