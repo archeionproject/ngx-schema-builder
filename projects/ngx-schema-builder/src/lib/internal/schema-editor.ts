@@ -13,7 +13,7 @@ export const DEFAULT_SCHEMAS: Record<SchemaEditorType, ObjectJsonSchema> = {
   integer: { type: 'integer' },
   boolean: { type: 'boolean' },
   object: { type: 'object' },
-  array: { type: 'array' },
+  array: { type: 'array', items: { type: 'string' } },
   null: { type: 'null' },
   anyOf: { anyOf: [{ type: 'string' }, { type: 'number' }] },
   oneOf: { oneOf: [{ type: 'string' }, { type: 'number' }] },
