@@ -1,5 +1,12 @@
 
 
+## [1.0.4](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.3...ngx-schema-builder/v1.0.4) (2026-06-25)
+
+
+### Bug Fixes
+
+* define items schema for array type in DEFAULT_SCHEMAS ([4b6b940](https://github.com/archeionproject/ngx-schema-builder/commit/4b6b94082302b12baabe6c66d8d4154a970c756a))
+
 ## [1.0.3](https://github.com/archeionproject/ngx-schema-builder/compare/ngx-schema-builder/v1.0.2...ngx-schema-builder/v1.0.3) (2026-06-24)
 
 
