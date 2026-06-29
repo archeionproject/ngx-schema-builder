@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { Marked, type Tokens } from 'marked';
 
 import readme from '../../../ngx-schema-builder/README.md';
@@ -50,17 +51,27 @@ function renderReadme(markdown: string): string {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <article class="mx-auto max-w-3xl py-10">
+    <article class="mx-auto max-w-3xl py-10" (click)="handleAnchorClick($event)">
       <div class="markdown-body" [innerHTML]="content"></div>
     </article>
   `,
 })
 export class DocsComponent {
   protected readonly content: SafeHtml;
+  private readonly router = inject(Router);
 
   constructor() {
     // The README is bundled, trusted content — render it as-is.
     const html = renderReadme(readme);
     this.content = inject(DomSanitizer).bypassSecurityTrustHtml(html);
+  }
+
+  protected handleAnchorClick(event: MouseEvent): void {
+    const anchor = (event.target as HTMLElement).closest('a');
+    const href = anchor?.getAttribute('href');
+    if (!href?.startsWith('#')) return;
+
+    event.preventDefault();
+    this.router.navigate([], { fragment: href.slice(1) });
   }
 }
